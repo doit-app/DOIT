@@ -46,6 +46,15 @@ public static final int RC_SIGN_IN=10;
 
         mAuth = FirebaseAuth.getInstance();
         TextView t=findViewById(R.id.textView6);
+
+        t.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                finish();
+                startActivity(new Intent(GoogleLoginActivity.this,WorkActivity.class));
+            }
+        });
         SignInButton b=findViewById(R.id.button);
 // Configure Google Sign In
         GoogleSignInOptions gsop = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
