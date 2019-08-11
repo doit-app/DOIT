@@ -15,9 +15,12 @@ import android.widget.Toast;
 
 import com.example.doitappfin.R;
 import com.example.doitappfin.utils.MyCustomPagerAdapter;
+import com.example.doitappfin.utils.RecycleViewModel;
 import com.example.doitappfin.utils.RecyclerViewAdapter;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,6 +31,7 @@ public class WorkActivity extends AppCompatActivity {
     RecyclerView recyclerView,recyclerView1;
     RelativeLayout relativeLayout;
     RecyclerView.Adapter recyclerViewAdapter;
+
     RecyclerView.LayoutManager recylerViewLayoutManager;
     int images[] = {R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange};
     MyCustomPagerAdapter myCustomPagerAdapter;
@@ -43,10 +47,11 @@ private TextView tv1,tv2;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work);
 
+
         tv1=findViewById(R.id.t1);
         tv2=findViewById(R.id.t2);
 
-        tv1.setOnClickListener(new View.OnClickListener() {
+        tv2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(WorkActivity.this,TrainCertActivity.class);
@@ -56,7 +61,7 @@ private TextView tv1,tv2;
         });
 
 
-        tv2.setOnClickListener(new View.OnClickListener() {
+        tv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(WorkActivity.this,TrainCertActivity.class);

@@ -13,25 +13,33 @@ import java.util.ArrayList;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.doitappfin.R;
+import com.example.doitappfin.utils.RecycleViewModel;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 
 /**
  * A custom adapter to use with the RecyclerView widget.
  */
+
+
+
 public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<AbstractModel> modelList;
+    private ArrayList<RecycleViewModel> modelList;
 
     private OnItemClickListener mItemClickListener;
 
 
-    public RecyclerViewAdapterTrainCert(Context context, ArrayList<AbstractModel> modelList) {
+    public RecyclerViewAdapterTrainCert(Context context, ArrayList<RecycleViewModel> modelList) {
         this.mContext = context;
         this.modelList = modelList;
+
+        System.out.println(modelList);
     }
 
-    public void updateList(ArrayList<AbstractModel> modelList) {
+    public void updateList(ArrayList<RecycleViewModel> modelList) {
         this.modelList = modelList;
         notifyDataSetChanged();
 
@@ -50,35 +58,39 @@ public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerV
 
         //Here you can fill your row view
         if (holder instanceof ViewHolder) {
-            final AbstractModel model = getItem(position);
+            final RecycleViewModel model = getItem(position);
             ViewHolder genericViewHolder = (ViewHolder) holder;
 
+
+        //    System.out.println(model.getTitle()+" "+model.getPic()+" "+model.getPrice());
+
             genericViewHolder.itemTxtTitle.setText(model.getTitle());
-            genericViewHolder.itemTxtMessage.setText(model.getMessage());
-            genericViewHolder.imgUser.setImageResource(model.getImg());
+            genericViewHolder.itemTxtMessage.setText(model.getPrice());
 
-
+            Picasso.get().load(model.getImage()).networkPolicy(NetworkPolicy.OFFLINE).into( genericViewHolder.imgUser);
         }
+
+
     }
 
 
     @Override
     public int getItemCount() {
 
-        return modelList.size();
+        return  modelList.size();
     }
 
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
 
-    private AbstractModel getItem(int position) {
+    private RecycleViewModel getItem(int position) {
         return modelList.get(position);
     }
 
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, AbstractModel model);
+        void onItemClick(View view, int position, RecycleViewModel model);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

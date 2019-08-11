@@ -6,10 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 import com.example.doitappfin.R;
 import com.example.doitappfin.utils.MyCustomPagerAdapter;
+import com.example.doitappfin.utils.RecycleViewModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import android.widget.Toast;
 import android.os.Handler;
@@ -22,6 +29,7 @@ import android.graphics.Color;
 import android.text.InputFilter;
 import android.text.Spanned;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -42,6 +50,7 @@ public class TrainCertActivity extends AppCompatActivity {
 
     //@BindView(R.id.toolbar)
 
+
     private Intent i;
     //Toolbar toolbar;
     private Toolbar toolbar;
@@ -52,7 +61,7 @@ public class TrainCertActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshRecyclerList;
     private RecyclerViewAdapterTrainCert mAdapter;
 
-    private ArrayList<AbstractModel> modelList = new ArrayList<>();
+private ArrayList<RecycleViewModel> recycleViewModelList;
 
 
     @Override
@@ -60,10 +69,52 @@ public class TrainCertActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_cert);
         i=getIntent();
+
         // ButterKnife.bind(this);
         findViews();
         initToolbar(i.getStringExtra("val"));
+        recycleViewModelList=new ArrayList<RecycleViewModel>();
+
+
+
+        if(i.getStringExtra("val").equals("Certification"))
+        {
+            DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("CertificationData");
+            recycleViewModelList.clear();
+            db.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot d1:dataSnapshot.getChildren())
+                    {
+                        RecycleViewModel obj = d1.getValue(RecycleViewModel.class);
+                        recycleViewModelList.add(obj);
+                        System.out.println("in act  "+obj.getImage());
+
+
+                    }
+                    mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, recycleViewModelList);
+                 //   System.out.println("in act  "+recycleViewModelList.get(1).getPic());
+
+                    setAdapter();
+
+                }
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
+        else {
+
+        }
         setAdapter();
+
+
+
 
         swipeRefreshRecyclerList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -148,17 +199,18 @@ public class TrainCertActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                ArrayList<AbstractModel> filterList = new ArrayList<AbstractModel>();
+                ArrayList<RecycleViewModel> filterList = new ArrayList<RecycleViewModel>();
                 if (s.length() > 0) {
-                    for (int i = 0; i < modelList.size(); i++) {
-                        if (modelList.get(i).getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
-                            filterList.add(modelList.get(i));
+                    for (int i = 0; i < recycleViewModelList.size(); i++) {
+                        if (recycleViewModelList.get(i).getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
+                            filterList.add(recycleViewModelList.get(i));
                             mAdapter.updateList(filterList);
                         }
                     }
 
                 } else {
-                    mAdapter.updateList(modelList);
+
+                    mAdapter.updateList(recycleViewModelList);
                 }
                 return false;
             }
@@ -174,15 +226,14 @@ public class TrainCertActivity extends AppCompatActivity {
 
         for (int i =0;i<imagestc.length;i++)
         {
-            modelList.add(new AbstractModel(fruitstc[i], "Hello " + fruitstc[i],imagestc[i]));
+           // recycleViewModelList.add(new AbstractModel(fruitstc[i], "Hello " + fruitstc[i],imagestc[i]));
 
         }
 
 
 
-        mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, modelList);
+        mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, recycleViewModelList);
 
-        recyclerView.setHasFixedSize(true);
 
 
         final GridLayoutManager layoutManager = new GridLayoutManager(TrainCertActivity.this, 2);
@@ -194,7 +245,7 @@ public class TrainCertActivity extends AppCompatActivity {
 
         mAdapter.SetOnItemClickListener(new RecyclerViewAdapterTrainCert.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position, AbstractModel model) {
+            public void onItemClick(View view, int position, RecycleViewModel model) {
 
                 //handle item click events here
                     startActivity(new Intent(TrainCertActivity.this, MapsActivity.class));

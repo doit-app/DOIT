@@ -50,7 +50,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Popular certifications"
+                    android:text="Popular Trainings"
                     android:layout_weight="1"
                     android:textColor="#000"
                     android:layout_margin="10dp"
@@ -96,7 +96,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Popular Trainings"
+                    android:text="Popular Certifications"
                     android:layout_weight="1"
                     android:textColor="#000"
                     android:layout_margin="10dp"
