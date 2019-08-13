@@ -12,13 +12,10 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.example.doitappfin.login.GoogleLoginActivity;
-import com.example.doitappfin.ui.WorkActivity;
+import com.example.doitappfin.ui.MainWorkActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
@@ -30,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         String data[]={"Microsoft","Oracle", "CCNA", "CCNP","CCNA Wireless", "CCNA Security","CCNP Security","CCIE", "ISTQB - BCS", "Intermidiate - BCS","BCS Certified Tester Advanced Level Test Manager (TM12)", "ISTQB - ISQI", "Agile Tester Extension Level", "ISTQB - ITB","Comptia A+","Comptia N+","Comptia S+","VMWare","Palo Alto","SAS","Pega Systems","Check Point","Juniper","EMC","Citrix", "ITIL Foundation - People Cert", "ITIL Intermediate - People Cert", "ITIL Practioner - People Cert", "Prince 2 Foundation - People Cert", "Prince 2 Practioner - People Cert", "Cobit 5 Foundation - People Cert", "Prince 2 Agile Foundation - People Cert", "Prince 2 Agile Practioner - People Cert", "Exin Agile Scrum Foundation", "Exin Agile Scrum Master", "Exin DevOps Master", "Exin DevOps Foundation", "DevOps Foundation - DevOps Institute", "Certified Scrum Master - GAQM.org", "Certified Scrum Master - Scrum Alliance", "Professional Scrum Master 1 - Scrum.org", "Google Cloud Associate Cloud Engineer", "Google Cloud Professional Cloud Architect", "AWS Associate - VUE", "AWS Professional - VUE", "Python", "Service Now", "Salesforce", "CEH V10", "ECSA V10", "TOGAF", "Blue Prism"};
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 if(Name.equals("h"))
                 {
                     finish();
-                    startActivity(new Intent(MainActivity.this, WorkActivity.class));
+                    startActivity(new Intent(MainActivity.this, MainWorkActivity.class));
 
                     System.out.println(alr);
 
