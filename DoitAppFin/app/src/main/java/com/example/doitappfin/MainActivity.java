@@ -15,6 +15,7 @@ import com.example.doitappfin.login.GoogleLoginActivity;
 import com.example.doitappfin.ui.MainWorkActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+
+
+
         String data[]={"Microsoft","Oracle", "CCNA", "CCNP","CCNA Wireless", "CCNA Security","CCNP Security","CCIE", "ISTQB - BCS", "Intermidiate - BCS","BCS Certified Tester Advanced Level Test Manager (TM12)", "ISTQB - ISQI", "Agile Tester Extension Level", "ISTQB - ITB","Comptia A+","Comptia N+","Comptia S+","VMWare","Palo Alto","SAS","Pega Systems","Check Point","Juniper","EMC","Citrix", "ITIL Foundation - People Cert", "ITIL Intermediate - People Cert", "ITIL Practioner - People Cert", "Prince 2 Foundation - People Cert", "Prince 2 Practioner - People Cert", "Cobit 5 Foundation - People Cert", "Prince 2 Agile Foundation - People Cert", "Prince 2 Agile Practioner - People Cert", "Exin Agile Scrum Foundation", "Exin Agile Scrum Master", "Exin DevOps Master", "Exin DevOps Foundation", "DevOps Foundation - DevOps Institute", "Certified Scrum Master - GAQM.org", "Certified Scrum Master - Scrum Alliance", "Professional Scrum Master 1 - Scrum.org", "Google Cloud Associate Cloud Engineer", "Google Cloud Professional Cloud Architect", "AWS Associate - VUE", "AWS Professional - VUE", "Python", "Service Now", "Salesforce", "CEH V10", "ECSA V10", "TOGAF", "Blue Prism"};
 
         String prefix[]={"INR","$","$","$","$","$","$","$","£","_","$","INR","INR","INR","$","$","$","$","$","$","$","$","$","$","$","£", "£", "£", "£", "£", "£", "£", "£", "INR", "INR", "INR", "INR", "INR", "$", "INR", "$", "$", "$", "$", "$", "INR", "$", "$", "$", "$", "$", "$"};
@@ -38,7 +42,90 @@ public class MainActivity extends AppCompatActivity {
         String lname[]={"_dummy_","ORACLE","CCNA","CCNP","CCNA wireless","CCNA Security","CCNP Security","CCIE","ISTQB","ISTQB FOUNDATION LEVEL","ISTQB","ISQI","Agile Tester","ISTQB","Comptia A+","Comptia N+","Comptia S+","Vmware","Paloalto","Sas","Pega","Checkpoint","Juniper","DELL EMC CP","CITRIX","ITIL Foundation","IITL INTER","IITL PRACTIONER","PRINCE2 Foundation","Prince-2-practitioner","cobit","PRINCE AGILE","PRINCE AGILE","EXIN FOUNDATION","EXIN MASTER","DEVOPS MASTER","DEVOPS FONDATION","Devops Institute","Gaqm","Scrum Csm","Scrum Psm","Google Certified Cloud Manager","Google Certified Cloud Architech","Aws Developer Associate","Aws Professional","Python","Service Now","Salesforce","Ceh","ECSA","Togaf","BLUEPRISM"};
 
 
-//  + =  %2B
+
+
+        String scnna[]={"Alltechz solutions PVT Ltd", "Trichrome Technologies", "Infycle Technologies", "Sevael Technologies", "Msquare networks", "Geo Insys", "V Tech Soft IT Service", " Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Network Geek", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Greens Technologies"};
+        double pcnna[]={12000, 0, 0, 0, 7500, 0, 0, 0, 0, 10000, 10000, 13000, 15999, 20000, 0, 0, 0, 0, 0, 0};
+
+        String  CCNP [] ={"Alltechz solutions PVT Ltd","Msquare networks","Network Geek","IICT Training Institute" ,"G-Tec"};
+        double ncnnp[]={14000, 12000, 10000, 0, 0};
+
+        String linux []= {"Alltechz solutions PVT Ltd", "JPA Solutions", "IICT Training Institute", "Greens Technologies"};
+        double  prlin[]={13000, 0, 0, 0};
+
+        String ui []={"V Tech Soft IT Service", "Hope Tutors", "Geo Insys", "Fita Training & Placement" , "JPA Solutions"};
+        double  prui[]={0, 10000, 0, 0, 0};
+
+        String aws []={"Fita Training & Placement", "Infycle Technologies" , "JPA Solutions", "Hope Tutors", "SA Techno Solutions" , "G-Tec", "Greens Technologies" , "Alltechz solutions PVT Ltd"};
+        double  praws[]={0, 0, 20000, 13000, 0, 0, 15000, 13000};
+
+        String microsoft [] = {"Sevael Technologies", "Alltechz solutions PVT Ltd", "JPA Solutions", "Hope Tutors", "EYE Open", "G-Tec", "Greens Technologies"};
+        double  prms[]={0, 13000, 20000, 18000, 0, 0, 15000};
+
+        String blue [] ={"V Tech Soft IT Service", "Hope Tutors","Geo Insys", "Fita Training & Placement", "JPA Solutions", "Credo Systemz", "Greens Technologies", "Alltechz Solutions Pvt Ltd"};
+        double  prblue[]={0, 0, 0, 0, 0, 13000, 10000, 11000};
+
+        String vmware []= {"Msquare Networks", "Fita Training & Placement", "JPA Solutions", "IICT Training Institute", "SA Techno Solutions", "Alltechz Solutions Pvt Ltd"};
+        double  prvrm[]={0, 0, 0, 0, 0, 14000};
+
+
+        String python [] ={"Infcyle Technologies", "Geo Insys", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Alltechz Solutions Pvt Ltd"};
+        double  prpy[]={0, 20000, 16000, 24000, 15000, 14999, 15000, 15000, 18000, 0, 16000, 0, 7000};
+
+        String automation [] = {"V Tech Soft IT Service", "Hope Tutors", "Fita Training & Placement", "Credo Systemz","Alltechz Solutions Pvt Ltd", "Greens Technologies", "EYE Open"};
+        double  prauto[]={0, 10000, 0, 13000, 9000, 10000, 18000};
+
+        String oracle [] = {"Infycle Technologies", "V Tech Soft IT Service", "Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Eduation", "IICT Training Institute" ,"Ampersand Academy", "EYE Open", "Greens Technologies", "SA Techno Solutions"};
+        double  prorc[]={0, 0, 0, 0, 12000, 15000, 15999, 0, 20000, 0, 10000};
+
+
+        String pega[]={"V Tech Soft IT Service", "Credo Systemz", "IICT Training Institute", "Greens Technologies"};
+        double  prpega[]={0, 0, 0, 0};
+
+        String togaf[]={"Greens Technologies"};
+        double  prtogaf[]={0};
+
+        String devops[]={"Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Greens Technologies"};
+        double  prdevops[]={0, 20000, 13000, 15000};
+
+        String bgdata[]={"JPA Solutions", "Greens Technologies", "EYE Open", "V Tech Soft IT Service", "Fita Training & Placement", "Zuan Eduation", "IICT Training Institute", "SA Techno Solutions"};
+        double  prbgdat[]={0, 0, 0, 0, 0, 0, 0, 0};
+
+        String iot[]={"Zuan Eduation", "EYE Open", "Greens Technologies"};
+        double  priot[]={5999, 0, 0};
+
+
+        String istqb[]={"Alltechz solutions PVT Ltd", "Sevael Technologies", "Credo Systemz"};
+        double  prist[]={0, 0, 0};
+
+
+        String comptia[]={"Msquare", "Alltechz solutions PVT Ltd", "Credo Systemz"};
+        double  prcom[]={0, 0, 0};
+
+        String citrix[]={"Greens Technology", "SA techno"};
+        double  prcit[]={0, 0};
+
+        String iitlf[]={"Alltechz solutions PVT Ltd","Sevael Technologies"};
+        double  priit[]={0, 0};
+
+        String prince[]={"Sevael Technologies"};
+        double  pri[]={0};
+
+        String ethical[]={"Sevael Technologies", "Network geek", "M square"};
+        double  pret[]={0, 0, 0};
+
+
+
+
+        DatabaseReference db=FirebaseDatabase.getInstance().getReference().child("");
+
+
+
+
+
+
+
+       //  + =  %2B
 // space = %20
 /*
         if(data.length==prefix.length && data.length==price.length && lname.length==data.length)

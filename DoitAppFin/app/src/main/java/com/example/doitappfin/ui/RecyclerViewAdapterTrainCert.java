@@ -12,6 +12,9 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.doitappfin.R;
 import com.example.doitappfin.utils.RecycleViewModel;
 import com.squareup.picasso.NetworkPolicy;
@@ -67,7 +70,16 @@ public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerV
             genericViewHolder.itemTxtTitle.setText(model.getTitle());
             genericViewHolder.itemTxtMessage.setText(model.getPrice());
 
-            Picasso.get().load(model.getImage()).networkPolicy(NetworkPolicy.OFFLINE).into( genericViewHolder.imgUser);
+           // Picasso.get().load(model.getImage()).networkPolicy(NetworkPolicy.OFFLINE).centerCrop().into( genericViewHolder.imgUser);
+
+
+
+            RequestOptions myOptions = new RequestOptions()
+                    .override(100, 100);
+
+            Glide.with(mContext)
+                    .load(model.getImage()).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).onlyRetrieveFromCache(true)
+                    .into(genericViewHolder.imgUser);
         }
 
 
