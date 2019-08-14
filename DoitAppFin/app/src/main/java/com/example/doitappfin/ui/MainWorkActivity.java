@@ -194,6 +194,7 @@ public class MainWorkActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+            startActivity(new Intent(getApplicationContext(),proflie.class));
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 

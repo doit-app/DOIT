@@ -78,7 +78,7 @@ public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerV
                     .override(100, 100);
 
             Glide.with(mContext)
-                    .load(model.getImage()).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).onlyRetrieveFromCache(true)
+                    .load(model.getImage()).fitCenter().override(1000,1000)
                     .into(genericViewHolder.imgUser);
         }
 

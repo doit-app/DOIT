@@ -93,7 +93,7 @@ private ArrayList<RecycleViewModel> recycleViewModelList;
 
                     }
                     mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, recycleViewModelList);
-                 //   System.out.println("in act  "+recycleViewModelList.get(1).getPic());
+                    //   System.out.println("in act  "+recycleViewModelList.get(1).getPic());
 
                     setAdapter();
 
@@ -109,6 +109,42 @@ private ArrayList<RecycleViewModel> recycleViewModelList;
 
         }
         else {
+
+
+
+            DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData");
+            recycleViewModelList.clear();
+            db.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for(DataSnapshot d1:dataSnapshot.getChildren())
+                    {
+                        RecycleViewModel obj = d1.getValue(RecycleViewModel.class);
+
+
+                        recycleViewModelList.add(obj);
+                        System.out.println(obj.getImage());
+
+
+                    }
+                    mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, recycleViewModelList);
+                    //   System.out.println("in act  "+recycleViewModelList.get(1).getPic());
+
+                    setAdapter();
+
+                }
+
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+
 
         }
         setAdapter();

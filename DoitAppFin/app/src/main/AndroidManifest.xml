@@ -18,9 +18,13 @@
         android:roundIcon="@drawable/logodoit"
         android:supportsRtl="true">
         <activity
+            android:name=".ui.proflie"
+            android:label="proflie"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".ui.MainWorkActivity"
             android:label="@string/title_activity_main_work"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".login.GoogleLoginActivity"
             android:theme="@style/NoAct" />
