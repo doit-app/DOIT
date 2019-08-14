@@ -49,11 +49,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<String> addr;
     List<String> dist;
 
+    private TextView ttitle,tdesc;
+
     private RecyclerView recyclerView;
     Geocoder geocoder;
     List<Address> addresses;
     private double lat = 0.00, lon = 0.00;
     private final int REQUEST_LOCATION_PERMISSION = 1;
+
+    private String stitle="",sdec="";
     LocationManager locationManager;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -61,6 +65,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         requestLocationPermission();
+        Intent i=getIntent();
+
+
+        ttitle=findViewById(R.id.titl);
+        tdesc=findViewById(R.id.decs);
+
+        stitle=i.getStringExtra("title");
+        sdec=i.getStringExtra("desc");
+        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+System.out.println(stitle+" "+sdec);
+        ttitle.setText(stitle);
+        tdesc.setText(sdec);
         addr=new ArrayList<String>();
         dist=new ArrayList<String>();
         recyclerView=findViewById(R.id.rec);
@@ -70,7 +86,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-       locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
@@ -139,9 +155,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }Location location1;
         //        lat=location.getLatitude();
-  //      lon=location.getLongitude();
+        //      lon=location.getLongitude();
 
-       // System.out.println(location+"-" +lat+" "+lon+" ");
+        // System.out.println(location+"-" +lat+" "+lon+" ");
 
         //LatLng syd = new LatLng(location.getLatitude(), location.getLongitude());
         float f=8;
@@ -161,13 +177,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
         geocoder = new Geocoder(this, Locale.getDefault());
-   adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, addr,dist);
+        adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, addr,dist);
         adapter1.setClickListener(MapsActivity.this);
         recyclerView.setNestedScrollingEnabled(true
         );
         recyclerView.setAdapter(adapter1);
         adapter1.UpdateItemsList(addr,dist);
-System.out.println(addr.size()+" "+addr);
+        System.out.println(addr.size()+" "+addr);
         System.out.println(dist.size()+" "+dist);
     }
 
@@ -205,7 +221,7 @@ System.out.println(addr.size()+" "+addr);
 
 
 
-System.out.println(location+" " +lat+" "+lon+" ");
+        System.out.println(location+" " +lat+" "+lon+" ");
         lat=location.getLatitude();
         lon=location.getLongitude();
         LatLng sydney = new LatLng(lat, lon);

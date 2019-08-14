@@ -284,8 +284,11 @@ private ArrayList<RecycleViewModel> recycleViewModelList;
             public void onItemClick(View view, int position, RecycleViewModel model) {
 
                 //handle item click events here
-                    startActivity(new Intent(TrainCertActivity.this, MapsActivity.class));
+                Intent i =new Intent(TrainCertActivity.this, MapsActivity.class);
 
+                i.putExtra("title",model.getTitle());
+                i.putExtra("desc",model.getDesc());
+                startActivity(i);
                // Toast.makeText(TrainCertActivity.this, "Hey " + model.getTitle(), Toast.LENGTH_SHORT).show();
 
 

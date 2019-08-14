@@ -1,11 +1,19 @@
 package com.example.doitappfin.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
+import com.example.doitappfin.MainActivity;
 import com.example.doitappfin.R;
+import com.example.doitappfin.login.GoogleLoginActivity;
+import com.example.doitappfin.utils.UserDetails;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,26 +39,33 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class proflie extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    EditText name,dob,phone,city,yr,degree,school,face,email;
-    Button b1,b2;
+    EditText name,dob,phone,city,email,address;
+    Button b1;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    ImageView photoTV;
+    TextView heademail;
+    GoogleSignInAccount acct;
+    String n,ph,date,cit,useraddress,em;
     SharedPreferences sharedpreferences;
+    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
     GoogleSignInClient mGoogleSignInClient;
-    private FirebaseAuth mAuth;
-
-    public static final String MyPREFERENCES = "MyPrefs" ;
-    public static final String Name = "nameKey";
-    public static final String Phone = "phoneKey";
-    public static final String Dob = "dobKey";
-    public static final String City = "cityKey";
-    public static final String Email = "emailKey";
-    public static final String Year= "yearKey";
-    public static final String Face = "faceKey";
-    public static final String Degree = "DegreeKey";
-    public static final String School = "schoolKey";
+//
+//    public static final String MyPREFERENCES = "MyPrefs" ;
+//    public static final String Name = "nameKey";
+//    public static final String Phone = "phoneKey";
+//    public static final String Dob = "dobKey";
+//    public static final String City = "cityKey";
+//    public static final String Email = "emailKey";
+//    public static final String Year= "yearKey";
+//    public static final String Face = "faceKey";
+//    public static final String Degree = "DegreeKey";
+//    public static final String School = "schoolKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +76,25 @@ public class proflie extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        if(mAuth.getCurrentUser() == null){ mGoogleSignInClient = GoogleSignIn.getClient(this,gso);}
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+//
+        photoTV = (ImageView) header.findViewById(R.id.imageView123);
+        heademail = header.findViewById(R.id.textView1234);
+
+        acct = GoogleSignIn.getLastSignedInAccount(this);
+        if(acct!= null) {
+            UserDetails.ProfilePhoto = acct.getPhotoUrl();
+            UserDetails.name = acct.getDisplayName();
+            Glide.with(this).load(acct.getPhotoUrl()).into(photoTV);
+            heademail.setText(acct.getDisplayName());
+        }
 
 
 
@@ -74,73 +102,69 @@ public class proflie extends AppCompatActivity
         dob=(EditText)findViewById(R.id.editDOB);
         phone=(EditText)findViewById(R.id.editphone);
         city=(EditText)findViewById(R.id.editcity);
-        yr=(EditText)findViewById(R.id.editclass);
-        degree=(EditText)findViewById(R.id.editboard);
-        face=(EditText)findViewById(R.id.editface);
-        school=(EditText)findViewById(R.id.editschool);
-        email=(EditText)findViewById(R.id.editachievements);
-        b1=(Button)findViewById(R.id.buttonSave);
-        b2 =(Button)findViewById(R.id.buttonsignout);
-        sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        address=(EditText)findViewById(R.id.editaddress);
+        email = (EditText)findViewById(R.id.editemail);
+        b1=(Button)findViewById(R.id.buttonUpdate);
 
-        b1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String n  = name.getText().toString();
-                String ph  = phone.getText().toString();
-                String date  = dob.getText().toString();
-                String cit  = city.getText().toString();
-                String clas  = yr.getText().toString();
-                String deg  = degree.getText().toString();
-                String dep  = face.getText().toString();
-                String sch  = school.getText().toString();
-                String em  = email.getText().toString();
+        n  = name.getText().toString();
+        ph  = phone.getText().toString();
+        date  = dob.getText().toString();
+        cit  = city.getText().toString();
+        useraddress  = address.getText().toString();
+        em  = email.getText().toString();
 
+         //   sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+    //
+            b1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                    if(n.length()>=3){
 
-                SharedPreferences.Editor editor = sharedpreferences.edit();
-
-                editor.putString(Name, n);
-                editor.putString(Phone, ph);
-                editor.putString(Email, em);
-                editor.putString(Dob,date);
-                editor.putString(City,cit);
-                editor.putString(Year,clas);
-                editor.putString(Degree,deg);
-                editor.putString(Face,dep);
-                editor.putString(School,sch);
+                        if(ph.length()==10){
+                            if(cit.length()>3){
 
 
-                editor.commit();
-                Toast.makeText(getApplicationContext(),"Thanks",Toast.LENGTH_LONG).show();
-            }
-        });
 
-        b2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signout();
-            }
-        });
+
+
+                            }else{
+                                city.setError("enter the city properly");
+                            }
+
+                        }else{
+                            phone.setError("Enter phone Number Properly");
+                        }
+
+                    }else{
+                        name.setError("Enter ur name Correctly");
+                    }
+
+
+
+
+    //
+    //                SharedPreferences.Editor editor = sharedpreferences.edit();
+    //
+    //                editor.putString(Name, n);
+    //                editor.putString(Phone, ph);
+    //                editor.putString(Email, em);
+    //                editor.putString(Dob,date);
+    //                editor.putString(City,cit);
+    //                editor.putString(Year,clas);
+    //                editor.putString(Degree,deg);
+    //                editor.putString(Face,dep);
+    //                editor.putString(School,sch);
+    //
+    //
+    //                editor.commit();
+
+                    Toast.makeText(getApplicationContext(),"Thanks",Toast.LENGTH_LONG).show();
+                }
+            });
+
     }
 
-    private void signout() {
-        // Firebase sign out
-        if(mAuth!=null){
-            mAuth.signOut();
-            Toast.makeText(this, "SIgned out" , Toast.LENGTH_SHORT).show();
-        }
-
-        // Google sign out
-
-//        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-//                new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//
-//                    }
-//                });
-    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -190,6 +214,11 @@ public class proflie extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            if(mAuth!=null){
+                mAuth.signOut();
+                Toast.makeText(this, "SIgned out" , Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, GoogleLoginActivity.class));
+            }
 
         }
 

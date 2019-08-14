@@ -18,6 +18,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
     ImageView imv;
@@ -39,93 +41,529 @@ public class MainActivity extends AppCompatActivity {
 
         String price[]={"5,664.00","150.00","383.50","354.00","354.00","354.00","354.00","531.00","98.00","0","227.74","4,750.00","4,751.00","5,000.00","145.14","211.22","224.20","118.00","188.80","212.40","206.50","295.00","236.00","236.00","354.00", "189.00", "283.00", "389.00", "189.00", "389.00", "189.00", "189.00", "389.00", "15,887.52", "16,980.00", "15,887.52", "15,887.52", "24,000.00", "128.00", "24,997.00", "150.00", "125.00", "200.00", "177.00", "354.00", "4,361.28", "150.00", "200.00", "1,414.82", "1,414.82", "584.10", "70.00"};
 
-        String lname[]={"_dummy_","ORACLE","CCNA","CCNP","CCNA wireless","CCNA Security","CCNP Security","CCIE","ISTQB","ISTQB FOUNDATION LEVEL","ISTQB","ISQI","Agile Tester","ISTQB","Comptia A+","Comptia N+","Comptia S+","Vmware","Paloalto","Sas","Pega","Checkpoint","Juniper","DELL EMC CP","CITRIX","ITIL Foundation","IITL INTER","IITL PRACTIONER","PRINCE2 Foundation","Prince-2-practitioner","cobit","PRINCE AGILE","PRINCE AGILE","EXIN FOUNDATION","EXIN MASTER","DEVOPS MASTER","DEVOPS FONDATION","Devops Institute","Gaqm","Scrum Csm","Scrum Psm","Google Certified Cloud Manager","Google Certified Cloud Architech","Aws Developer Associate","Aws Professional","Python","Service Now","Salesforce","Ceh","ECSA","Togaf","BLUEPRISM"};
+        String lname[]={"dummy","ORACLE","CCNA","CCNP","CCNA wireless","CCNA Security","CCNP Security","CCIE","ISTQB","ISTQB FOUNDATION LEVEL","ISTQB","ISQI","Agile Tester","ISTQB","Comptia A+","Comptia N+","Comptia S+","Vmware","Paloalto","Sas","Pega","Checkpoint","Juniper","DELL EMC CP","CITRIX","ITIL Foundation","IITL INTER","IITL PRACTIONER","PRINCE2 Foundation","Prince-2-practitioner","cobit","PRINCE AGILE","PRINCE AGILE","EXIN FOUNDATION","EXIN MASTER","DEVOPS MASTER","DEVOPS FONDATION","Devops Institute","Gaqm","Scrum Csm","Scrum Psm","Google Certified Cloud Manager","Google Certified Cloud Architech","Aws Developer Associate","Aws Professional","Python","Service Now","Salesforce","Ceh","ECSA","Togaf","BLUEPRISM"};
+
+        String ss[]={"CCNA","CCNP","LINUX","UI","PATH","AWS","MICROSOFT","BLUEPRISM","VMWARE","PYTHON","AUTOMATION","ANYWHERE","ORACLE","PEGA","TOGAF","DEVOPS","BIGDATA","HADOOP","IOT","ISTQB","Comptia","SAS","Citrix","*","ITIL","Foundation","Prince2","Foundation","Prince2","Agile","Foundation","Google","Cloud","Associate","Cloud","Engineer","Google","Cloud","Professional","Cloud","Architect","Sales","force","Ethical","Hacking"};
 
 
+
+        DatabaseReference db;
 
 
         String scnna[]={"Alltechz solutions PVT Ltd", "Trichrome Technologies", "Infycle Technologies", "Sevael Technologies", "Msquare networks", "Geo Insys", "V Tech Soft IT Service", " Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Network Geek", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Greens Technologies"};
         double pcnna[]={12000, 0, 0, 0, 7500, 0, 0, 0, 0, 10000, 10000, 13000, 15999, 20000, 0, 0, 0, 0, 0, 0};
 
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("CCNA");
+        db.child("desc").setValue("desc");
+        //  db.child("image").setValue("url");
+        db.child("title").setValue("CCNA");
+        if(scnna.length==pcnna.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < scnna.length; i++) {
+
+                scnna[i]=scnna[i].replace("-","_m");
+                scnna[i]=scnna[i].replace("&","_a");
+                hashMap.put(scnna[i],pcnna[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
         String  CCNP [] ={"Alltechz solutions PVT Ltd","Msquare networks","Network Geek","IICT Training Institute" ,"G-Tec"};
-        double ncnnp[]={14000, 12000, 10000, 0, 0};
+        double pCCNP[]={14000, 12000, 10000, 0, 0};
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("CCNP");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("CCNP");
+
+        if(CCNP.length==pCCNP.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < CCNP.length; i++) {
+
+                CCNP[i]=CCNP[i].replace("-","_m");
+                CCNP[i]=CCNP[i].replace("&","_a");
+                hashMap.put(CCNP[i],pCCNP[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
 
         String linux []= {"Alltechz solutions PVT Ltd", "JPA Solutions", "IICT Training Institute", "Greens Technologies"};
-        double  prlin[]={13000, 0, 0, 0};
+        double  plinux[]={13000, 0, 0, 0};
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("LINUX");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("LINUX");
+        if(linux.length==plinux.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < plinux.length; i++) {
+
+                linux[i]=linux[i].replace("-","_m");
+                linux[i]=linux[i].replace("&","_a");
+                hashMap.put(linux[i],plinux[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
 
         String ui []={"V Tech Soft IT Service", "Hope Tutors", "Geo Insys", "Fita Training & Placement" , "JPA Solutions"};
-        double  prui[]={0, 10000, 0, 0, 0};
+        double  pui[]={0, 10000, 0, 0, 0};
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("UI PATH");
+        db.child("desc").setValue("desc");
+        //  db.child("image").setValue("url");
+        db.child("title").setValue("UI PATH");
+        if(ui.length==pui.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < pui.length; i++) {
+
+                ui[i]=ui[i].replace("-","_m");
+                ui[i]=ui[i].replace("&","_a");
+                hashMap.put(ui[i],pui[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
 
         String aws []={"Fita Training & Placement", "Infycle Technologies" , "JPA Solutions", "Hope Tutors", "SA Techno Solutions" , "G-Tec", "Greens Technologies" , "Alltechz solutions PVT Ltd"};
-        double  praws[]={0, 0, 20000, 13000, 0, 0, 15000, 13000};
+        double  paws[]={0, 0, 20000, 13000, 0, 0, 15000, 13000};
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("AWS");
+        db.child("desc").setValue("desc");
+        //  db.child("image").setValue("url");
+        db.child("title").setValue("AWS");
+        if(aws.length==paws.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < aws.length; i++) {
+
+                aws[i]=aws[i].replace("-","_m");
+                aws[i]=aws[i].replace("&","_a");
+                hashMap.put(aws[i],paws[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+
+
 
         String microsoft [] = {"Sevael Technologies", "Alltechz solutions PVT Ltd", "JPA Solutions", "Hope Tutors", "EYE Open", "G-Tec", "Greens Technologies"};
-        double  prms[]={0, 13000, 20000, 18000, 0, 0, 15000};
+        double  pmicrosoft[]={0, 13000, 20000, 18000, 0, 0, 15000};
+
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("MICROSOFT");
+        db.child("desc").setValue("desc");
+        //  db.child("image").setValue("url");
+        db.child("title").setValue("MICROSOFT");
+        if(microsoft.length==pmicrosoft.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < microsoft.length; i++) {
+
+                microsoft[i]=microsoft[i].replace("-","_m");
+                microsoft[i]=microsoft[i].replace("&","_a");
+                hashMap.put(microsoft[i],pmicrosoft[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
 
         String blue [] ={"V Tech Soft IT Service", "Hope Tutors","Geo Insys", "Fita Training & Placement", "JPA Solutions", "Credo Systemz", "Greens Technologies", "Alltechz Solutions Pvt Ltd"};
-        double  prblue[]={0, 0, 0, 0, 0, 13000, 10000, 11000};
+        double  pblue[]={0, 0, 0, 0, 0, 13000, 10000, 11000};
+
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("BLUEPRISM");
+        db.child("desc").setValue("desc");
+        //  db.child("image").setValue("url");
+        db.child("title").setValue("BLUEPRISM");
+        if(blue.length==pblue.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < blue.length; i++) {
+
+                blue[i]=blue[i].replace("-","_m");
+                blue[i]=blue[i].replace("&","_a");
+                hashMap.put(blue[i],pblue[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
 
         String vmware []= {"Msquare Networks", "Fita Training & Placement", "JPA Solutions", "IICT Training Institute", "SA Techno Solutions", "Alltechz Solutions Pvt Ltd"};
-        double  prvrm[]={0, 0, 0, 0, 0, 14000};
+        double  pvmware[]={0, 0, 0, 0, 0, 14000};
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("VMWARE");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("VMWARE");
+        if(vmware.length==pvmware.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < vmware.length; i++) {
+
+                vmware[i]=vmware[i].replace("-","_m");
+                vmware[i]=vmware[i].replace("&","_a");
+                hashMap.put(vmware[i],pvmware[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
 
 
-        String python [] ={"Infcyle Technologies", "Geo Insys", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Alltechz Solutions Pvt Ltd"};
-        double  prpy[]={0, 20000, 16000, 24000, 15000, 14999, 15000, 15000, 18000, 0, 16000, 0, 7000};
-
-        String automation [] = {"V Tech Soft IT Service", "Hope Tutors", "Fita Training & Placement", "Credo Systemz","Alltechz Solutions Pvt Ltd", "Greens Technologies", "EYE Open"};
-        double  prauto[]={0, 10000, 0, 13000, 9000, 10000, 18000};
-
-        String oracle [] = {"Infycle Technologies", "V Tech Soft IT Service", "Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Eduation", "IICT Training Institute" ,"Ampersand Academy", "EYE Open", "Greens Technologies", "SA Techno Solutions"};
-        double  prorc[]={0, 0, 0, 0, 12000, 15000, 15999, 0, 20000, 0, 10000};
 
 
-        String pega[]={"V Tech Soft IT Service", "Credo Systemz", "IICT Training Institute", "Greens Technologies"};
-        double  prpega[]={0, 0, 0, 0};
+        String PYTHON [] ={"Infcyle Technologies", "Geo Insys", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Alltechz Solutions Pvt Ltd"};
+        double  pPYTHON[]={0, 20000, 16000, 24000, 15000, 14999, 15000, 15000, 18000, 0, 16000, 0, 7000};
 
-        String togaf[]={"Greens Technologies"};
-        double  prtogaf[]={0};
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("PYTHON");
+        db.child("desc").setValue("desc");
+        //  db.child("image").setValue("url");
+        db.child("title").setValue("PYTHON");
+        if(PYTHON.length==pPYTHON.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < PYTHON.length; i++) {
 
-        String devops[]={"Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Greens Technologies"};
-        double  prdevops[]={0, 20000, 13000, 15000};
+                PYTHON[i]=PYTHON[i].replace("-","_m");
+                PYTHON[i]=PYTHON[i].replace("&","_a");
+                hashMap.put(PYTHON[i],pPYTHON[i]+"");
 
-        String bgdata[]={"JPA Solutions", "Greens Technologies", "EYE Open", "V Tech Soft IT Service", "Fita Training & Placement", "Zuan Eduation", "IICT Training Institute", "SA Techno Solutions"};
-        double  prbgdat[]={0, 0, 0, 0, 0, 0, 0, 0};
-
-        String iot[]={"Zuan Eduation", "EYE Open", "Greens Technologies"};
-        double  priot[]={5999, 0, 0};
-
-
-        String istqb[]={"Alltechz solutions PVT Ltd", "Sevael Technologies", "Credo Systemz"};
-        double  prist[]={0, 0, 0};
+            }
+            db.child("Centers").setValue(hashMap);
+        }
 
 
-        String comptia[]={"Msquare", "Alltechz solutions PVT Ltd", "Credo Systemz"};
-        double  prcom[]={0, 0, 0};
 
-        String citrix[]={"Greens Technology", "SA techno"};
-        double  prcit[]={0, 0};
 
-        String iitlf[]={"Alltechz solutions PVT Ltd","Sevael Technologies"};
-        double  priit[]={0, 0};
 
-        String prince[]={"Sevael Technologies"};
-        double  pri[]={0};
+
+        String AUTOMATIONANYWHERE [] = {"V Tech Soft IT Service", "Hope Tutors", "Fita Training & Placement", "Credo Systemz","Alltechz Solutions Pvt Ltd", "Greens Technologies", "EYE Open"};
+        double  pAUTOMATIONANYWHERE[]={0, 10000, 0, 13000, 9000, 10000, 18000};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("AUTOMATION ANYWHERE");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("AUTOMATION ANYWHERE");
+        if(AUTOMATIONANYWHERE.length==pAUTOMATIONANYWHERE.length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < AUTOMATIONANYWHERE.length; i++) {
+
+                AUTOMATIONANYWHERE[i]=AUTOMATIONANYWHERE[i].replace("-","_m");
+                AUTOMATIONANYWHERE[i]=AUTOMATIONANYWHERE[i].replace("&","_a");
+                hashMap.put(AUTOMATIONANYWHERE[i],pAUTOMATIONANYWHERE[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+
+        String ORACLE  [] = {"Infycle Technologies", "V Tech Soft IT Service", "Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Eduation", "IICT Training Institute" ,"Ampersand Academy", "EYE Open", "Greens Technologies", "SA Techno Solutions"};
+        double  pORACLE []={0, 0, 0, 0, 12000, 15000, 15999, 0, 20000, 0, 10000};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("ORACLE");
+        db.child("desc").setValue("desc");
+        // db.child("image").setValue("url");
+        db.child("title").setValue("ORACLE");
+        if(ORACLE .length==pORACLE .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < ORACLE .length; i++) {
+
+                ORACLE [i]=ORACLE [i].replace("-","_m");
+                ORACLE [i]=ORACLE [i].replace("&","_a");
+                hashMap.put(ORACLE [i],pORACLE[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+        String PEGA[]={"V Tech Soft IT Service", "Credo Systemz", "IICT Training Institute", "Greens Technologies"};
+        double  pPEGA[]={0, 0, 0, 0};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("PEGA");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("PEGA");
+        if(PEGA .length==pPEGA .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < PEGA .length; i++) {
+
+                PEGA [i]=PEGA [i].replace("-","_m");
+                PEGA [i]=PEGA [i].replace("&","_a");
+                hashMap.put(PEGA [i],pPEGA[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+        String TOGAF[]={"Greens Technologies"};
+        double  pTOGAF[]={0};
+
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("TOGAF");
+        db.child("desc").setValue("desc");
+        // db.child("image").setValue("url");
+        db.child("title").setValue("TOGAF");
+        if(TOGAF .length==pTOGAF .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < TOGAF .length; i++) {
+
+                TOGAF [i]=TOGAF [i].replace("-","_m");
+                TOGAF [i]=TOGAF [i].replace("&","_a");
+                hashMap.put(TOGAF [i],pTOGAF[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+        String DEVOPS[]={"Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Greens Technologies"};
+        double  pDEVOPS[]={0, 20000, 13000, 15000};
+
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("DEVOPS");
+        db.child("desc").setValue("desc");
+        // db.child("image").setValue("url");
+        db.child("title").setValue("DEVOPS");
+        if(DEVOPS .length==pDEVOPS .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < DEVOPS .length; i++) {
+
+                DEVOPS [i]=DEVOPS [i].replace("-","_m");
+                DEVOPS [i]=DEVOPS [i].replace("&","_a");
+                hashMap.put(DEVOPS [i],pDEVOPS[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+        String BIGDATA  []={"JPA Solutions", "Greens Technologies", "EYE Open", "V Tech Soft IT Service", "Fita Training & Placement", "Zuan Eduation", "IICT Training Institute", "SA Techno Solutions"};
+        double  pBIGDATA[]={0, 0, 0, 0, 0, 0, 0, 0};
+
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("BIGDATA HADOOP");
+        db.child("desc").setValue("desc");
+        // db.child("image").setValue("url");
+        db.child("title").setValue("BIGDATA HADOOP");
+        if(BIGDATA .length==pBIGDATA .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < BIGDATA .length; i++) {
+
+                BIGDATA [i]=BIGDATA [i].replace("-","_m");
+                BIGDATA [i]=BIGDATA [i].replace("&","_a");
+                hashMap.put(BIGDATA [i],pBIGDATA[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+        String IOT[]={"Zuan Eduation", "EYE Open", "Greens Technologies"};
+        double  pIOT[]={5999, 0, 0};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("IOT");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("IOT");
+        if(IOT .length==pIOT .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < IOT .length; i++) {
+
+                IOT [i]=IOT [i].replace("-","_m");
+                IOT [i]=IOT [i].replace("&","_a");
+                hashMap.put(IOT [i],pIOT[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+        String ISTQB[]={"Alltechz solutions PVT Ltd", "Sevael Technologies", "Credo Systemz"};
+        double  pISTQB[]={0, 0, 0};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("ISTQB");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("ISTQB");
+        if(ISTQB .length==pISTQB .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < ISTQB .length; i++) {
+
+                ISTQB [i]=ISTQB [i].replace("-","_m");
+                ISTQB [i]=ISTQB [i].replace("&","_a");
+                hashMap.put(ISTQB [i],pISTQB[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+        String COMPTIA[]={"Msquare", "Alltechz solutions PVT Ltd", "Credo Systemz"};
+        double  pCOMPTIA[]={0, 0, 0};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("COMPTIA");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("DEVOPS");
+        if(COMPTIA .length==pCOMPTIA .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < COMPTIA .length; i++) {
+
+                COMPTIA [i]=COMPTIA [i].replace("-","_m");
+                COMPTIA [i]=COMPTIA [i].replace("&","_a");
+                hashMap.put(COMPTIA [i],pCOMPTIA[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+
+        String Citrix[]={"Greens Technology", "SA techno"};
+        double  pCitrix[]={0, 0};
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Citrix");
+        db.child("desc").setValue("desc");
+        // db.child("image").setValue("url");
+        db.child("title").setValue("Citrix");
+        if(Citrix .length==pCitrix .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < Citrix .length; i++) {
+
+                Citrix [i]=Citrix [i].replace("-","_m");
+                Citrix [i]=Citrix [i].replace("&","_a");
+                hashMap.put(Citrix [i],pCitrix[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+        String ITIL[]={"Alltechz solutions PVT Ltd","Sevael Technologies"};
+        double  pITIL[]={0, 0};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("ITIL Foundation");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("ITIL Foundation");
+        if(ITIL .length==pITIL .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < ITIL .length; i++) {
+
+                ITIL [i]=ITIL [i].replace("-","_m");
+                ITIL [i]=ITIL [i].replace("&","_a");
+                hashMap.put(ITIL [i],pITIL[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
+        String Prince2[]={"Sevael Technologies"};
+        double  pPrince2[]={0};
+
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Prince2 Foundation");
+        db.child("desc").setValue("desc");
+        //  db.child("image").setValue("url");
+        db.child("title").setValue("Prince2 Foundation");
+        if(Prince2 .length==pPrince2 .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < Prince2 .length; i++) {
+
+                Prince2 [i]=Prince2 [i].replace("-","_m");
+                Prince2 [i]=Prince2 [i].replace("&","_a");
+                hashMap.put(Prince2 [i],pPrince2[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
+
+
+
+
 
         String ethical[]={"Sevael Technologies", "Network geek", "M square"};
-        double  pret[]={0, 0, 0};
+        double  pethical[]={0, 0, 0};
+
+        db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Ethical Hacking");
+        db.child("desc").setValue("desc");
+        //db.child("image").setValue("url");
+        db.child("title").setValue("Ethical Hacking");
+        if(ethical .length==pethical .length) {
+            HashMap<String,String> hashMap=new HashMap<>();
+            for (int i = 0; i < ethical .length; i++) {
+
+                ethical [i]=ethical [i].replace("-","_m");
+                ethical [i]=ethical [i].replace("&","_a");
+                hashMap.put(ethical [i],pethical[i]+"");
+
+            }
+            db.child("Centers").setValue(hashMap);
+        }
 
 
 
 
-        DatabaseReference db=FirebaseDatabase.getInstance().getReference().child("");
 
 
 
 
 
+///////////////////////////////////////////////////////////////
 
-
-       //  + =  %2B
+        //  + =  %2B
 // space = %20
 /*
         if(data.length==prefix.length && data.length==price.length && lname.length==data.length)
@@ -143,7 +581,7 @@ public class MainActivity extends AppCompatActivity {
 
                 lname[i].replace("+","%2B");
                 lname[i].replace(" ","%20");
-                link=link.replace("_dummy_",lname[i]);
+                link=link.replace("dummy",lname[i]);
 
                 hashMap.put("image",link);
                 hashMap.put("price",price[i]+" "+prefix[i]);
@@ -160,6 +598,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+
+
+
+
      /*   HashMap<String,String> hashMap1=new HashMap<>();
         DatabaseReference databaseRef =FirebaseDatabase.getInstance().getReference().child("MainData").child("CertificationList");
 
@@ -218,7 +660,3 @@ public class MainActivity extends AppCompatActivity {
     }
 
 }
-
-
-
-

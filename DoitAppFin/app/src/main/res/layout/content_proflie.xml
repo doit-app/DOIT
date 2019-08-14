@@ -74,65 +74,63 @@
                 android:text="Address" />
 
             <EditText
-                android:id="@+id/editclass"
+                android:id="@+id/editaddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Board/Graduation degree" />
-
-            <EditText
-                android:id="@+id/editboard"
+                android:text="Sex" />
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_height="match_parent">
+                    <RadioButton
+                        android:id="@+id/radioButtonMale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Male" />
+                    <RadioButton
+                        android:id="@+id/radioButtonFemale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Female" />
+                    <RadioButton
+                        android:id="@+id/radioButtonOthers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Others" />
+                </RadioGroup>
 
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#000"
+                android:layout_marginBottom="8dp"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="School/college" />
+                android:text="Email id" />
 
             <EditText
-                android:id="@+id/editschool"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:text="facebookid" />
-
-            <EditText
-                android:id="@+id/editface"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine" />
-
-            <TextView
                 android:id="@+id/editemail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="emailid" />
+                android:layout_height="wrap_content" />
 
-            <EditText
-                android:id="@+id/editachievements"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine" />
 
             <Button
-                android:id="@+id/buttonSave"
+                android:id="@+id/buttonUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Save" />
+                android:text="Update" />
 
-            <Button
-                android:id="@+id/buttonsignout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Sign out" />
+
 
         </LinearLayout>
 

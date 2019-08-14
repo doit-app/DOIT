@@ -3,9 +3,16 @@ package com.example.doitappfin.ui;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.example.doitappfin.R;
+import com.example.doitappfin.login.GoogleLoginActivity;
 import com.example.doitappfin.utils.MyCustomPagerAdapter;
 import com.example.doitappfin.utils.RecyclerViewAdapter;
+import com.example.doitappfin.utils.UserDetails;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -18,6 +25,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -28,6 +36,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.view.Menu;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,9 +49,16 @@ public class MainWorkActivity extends AppCompatActivity
 
     private TabLayout indicator;
     private ViewPager viewPager;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    GoogleSignInClient mGoogleInCilients;
+    ImageView photoTV;
+    TextView heademail;
     RecyclerView recyclerView,recyclerView1;
     RelativeLayout relativeLayout;
+    GoogleSignInAccount acct;
     RecyclerView.Adapter recyclerViewAdapter;
+    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
 
     RecyclerView.LayoutManager recylerViewLayoutManager;
     int images[] = {R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange};
@@ -60,6 +76,7 @@ public class MainWorkActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_work);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if(mAuth.getCurrentUser() == null){ mGoogleInCilients = GoogleSignIn.getClient(this,gso);}
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,8 +92,19 @@ public class MainWorkActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+
+        photoTV = (ImageView) header.findViewById(R.id.imageView123);
+        heademail = header.findViewById(R.id.textView123);
 
 
+        acct = GoogleSignIn.getLastSignedInAccount(this);
+        if(acct!= null) {
+            UserDetails.ProfilePhoto = acct.getPhotoUrl();
+            UserDetails.name = acct.getDisplayName();
+            Glide.with(this).load(acct.getPhotoUrl()).into(photoTV);
+            heademail.setText(acct.getDisplayName());
+        }
         tv1=findViewById(R.id.t1);
         tv2=findViewById(R.id.t2);
 
@@ -205,6 +233,12 @@ public class MainWorkActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+
+            if(mAuth!=null){
+                mAuth.signOut();
+                Toast.makeText(this, "SIgned out" , Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, GoogleLoginActivity.class));
+            }
 
         }
 
