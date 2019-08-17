@@ -79,7 +79,7 @@ private ArrayList<RecycleViewModel> recycleViewModelList;
 
         if(i.getStringExtra("val").equals("Certification"))
         {
-            DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("CertificationData");
+            DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification");
             recycleViewModelList.clear();
             db.addValueEventListener(new ValueEventListener() {
                 @Override

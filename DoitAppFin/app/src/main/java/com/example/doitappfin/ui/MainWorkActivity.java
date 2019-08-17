@@ -13,11 +13,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -76,7 +79,7 @@ public class MainWorkActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_work);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(mAuth.getCurrentUser() == null){ mGoogleInCilients = GoogleSignIn.getClient(this,gso);}
+        mGoogleInCilients = GoogleSignIn.getClient(this,gso);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,6 +225,7 @@ public class MainWorkActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
+
             startActivity(new Intent(getApplicationContext(),proflie.class));
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
@@ -235,8 +239,21 @@ public class MainWorkActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
             if(mAuth!=null){
+
                 mAuth.signOut();
+
+                mGoogleInCilients.signOut()
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // ...
+                            }
+                        });
+
+
+
                 Toast.makeText(this, "SIgned out" , Toast.LENGTH_SHORT).show();
+                finish();
                 startActivity(new Intent(this, GoogleLoginActivity.class));
             }
 

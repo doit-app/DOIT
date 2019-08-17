@@ -79,6 +79,8 @@ public class proflie extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+
+        toolbar.setTitle(" ");
         toggle.syncState();
         if(mAuth.getCurrentUser() == null){ mGoogleSignInClient = GoogleSignIn.getClient(this,gso);}
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -216,6 +218,15 @@ public class proflie extends AppCompatActivity
         } else if (id == R.id.nav_send) {
             if(mAuth!=null){
                 mAuth.signOut();
+                mGoogleSignInClient.signOut()
+                        .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // ...
+                            }
+                        });
+
+
                 Toast.makeText(this, "SIgned out" , Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, GoogleLoginActivity.class));
             }

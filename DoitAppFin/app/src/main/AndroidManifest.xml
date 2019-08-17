@@ -17,10 +17,13 @@
         android:largeHeap="true"
         android:roundIcon="@drawable/logodoit"
         android:supportsRtl="true">
+        <activity android:name=".login.Registration"
+            android:theme="@style/NoAct"
+            ></activity>
         <activity
             android:name=".ui.proflie"
-            android:label="proflie"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label=" "
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.MainWorkActivity"
             android:label="@string/title_activity_main_work"

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,12 +27,19 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class GoogleLoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
 public static final int RC_SIGN_IN=10;
     private FirebaseAuth mAuth;
-
+private EditText Enum;
+    String mail="";
+    private Button login;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +47,17 @@ public static final int RC_SIGN_IN=10;
 
         mAuth = FirebaseAuth.getInstance();
         TextView t=findViewById(R.id.textView6);
+        login=findViewById(R.id.button2);
+        Enum=findViewById(R.id.editText2);
+
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
 
         t.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,10 +91,47 @@ public static final int RC_SIGN_IN=10;
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null)
-        {        finish();
-            startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+        {                                  //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+            if(currentUser.getEmail()!=null)
+                mail=currentUser.getEmail().replace(".","_");
+
+            System.out.println(mail);
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (!snapshot.hasChild(mail)) {
+
+                    //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+
+                        Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
+                        i.putExtra("mail",currentUser.getEmail());
+                        startActivity(i);
+                    }
+                    else
+                    {
+                        finish();
+                        Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                        startActivity(i);
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+
+
+            //finish();
+            //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
 
 
         }
@@ -108,10 +165,10 @@ public static final int RC_SIGN_IN=10;
 
 
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d("TAG", "firebaseAuthWithGoogle:" + acct.getId());
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        final AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -119,13 +176,44 @@ public static final int RC_SIGN_IN=10;
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("TAG", "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            final FirebaseUser user = mAuth.getCurrentUser();
 
                             System.out.println("sucess--log");
                            if(user!=null)
                            {
-                               finish();
-                               startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                              // finish();
+                               //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+if(acct.getEmail()!=null)
+    mail=acct.getEmail().replace(".","_");
+
+System.out.println(mail);
+                               DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+                               rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                   @Override
+                                   public void onDataChange(DataSnapshot snapshot) {
+                                       if (!snapshot.hasChild(mail)) {
+
+                                        //   FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+
+                                           Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
+                                           i.putExtra("mail",user.getEmail());
+                                           startActivity(i);
+                                       }
+                                       else
+                                       {
+                                           finish();
+                                           Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                                           startActivity(i);
+
+                                       }
+                                   }
+
+                                   @Override
+                                   public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                   }
+                               });
+
                            }
                            else
                            {

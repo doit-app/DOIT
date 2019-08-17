@@ -13,12 +13,15 @@ import android.widget.ImageView;
 
 import com.example.doitappfin.login.GoogleLoginActivity;
 import com.example.doitappfin.ui.MainWorkActivity;
+import com.example.doitappfin.utils.certModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
@@ -47,10 +50,555 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        DatabaseReference db;
+        DatabaseReference db,test;
+
+      //  test=FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification");
 
 
-        String scnna[]={"Alltechz solutions PVT Ltd", "Trichrome Technologies", "Infycle Technologies", "Sevael Technologies", "Msquare networks", "Geo Insys", "V Tech Soft IT Service", " Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Network Geek", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Greens Technologies"};
+
+
+
+        HashMap<String,certModel> h1=new HashMap<>();
+       String vda[]={"Oracle","MICROSOFT","CISCO","ISTQB","Comptia","Vmware","Palo Alto","SAS","PEGA","Check point","Juniper","Citrix","Dell Emc","AWS","Google","Prince 2","Prince 2 Agile","Cobit 5 Foundation - People Cert", "Service Now", "Salesforce", "CEH V10", "ECSA V10", "TOGAF", "Blue Prism"
+       };
+
+
+        HashMap<String,String> h=new HashMap<>();
+
+
+        for(int i=0;i<vda.length;i++)
+        {
+            h.put(vda[i],"det");
+        }
+
+        FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification").setValue(h);
+
+
+        for(int i=0;i<vda.length;i++)
+{
+  //  h1.put(vda[i],"det");
+
+
+
+    test= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification").child(vda[i]);
+
+if(i==0)
+{
+String tr[]={"Java SE 7 Programmer Certified Associate", "Java SE 7 Programmer Certified Professional", "Java SE 6 Programmer Certified Professional","Oracle Database SQL Certified Expert ", "Oracle PL/SQL Developer Certified Associate", "Oracle Database 11g: Administrator Certified Associate", "Oracle Database 11g: Administrator Certified Professional", "Oracle Database 10g: Administrator Certified Associate", "Oracle Database 10g: Administrator Certified Professional", "Oracle Database 12c Administrator Certified Professional"};
+
+
+for(int j=0;j<tr.length;j++)
+{
+    tr[j]=tr[j].replace("/","_b");
+    certModel model=new certModel(tr[j],"data","data","data","list");
+
+
+    h1.put(tr[j],model);
+}
+
+test.setValue(h1);
+}
+
+
+    if(i==1)
+    {
+        String tr[]={"Microsoft Windows", "Microsoft .NET Framework / Visual Studio", "Microsoft Excel", "Microsoft Office 365", "DevOps", "Microsoft Cloud", "Microsoft Office", "Microsoft Azure", "Microsoft Virtualization", "Microsoft SQL Server", "Microsoft Power BI", "Microsoft Windows Server", "Microsoft Skype for Business", "Microsoft Lync Server", "Microsoft SharePoint", "Microsoft System Center Manager", "Microsoft Exchange Server", "Microsoft PowerShell", "Microsoft Internet Information Services (IIS)", "Microsoft Office Communication Server", "Vendor Neutral - Technical", "Data & Analytics", "Developer edX", "Microsoft PowerApps and Flow", "Collaboration edX", "Microsoft Visual Studio Team Foundation Server (TFS )", "Blockchain", "Python", "Microsoft 365 (M365)", "IT Support", "Microsoft Cybersecurity", "Data Science", "Big Data", "Data Analysis", "Artificial Intelligence"};
+h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+
+            h1.put(tr[j],model);
+
+
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+    if(i==2)
+    {
+        String tr[]={"CCNA Routing & Switching", "CCNP Routing", "CCNP Switching", "CCNP Trouble Shooting", "CCNA Voice", "CCNA Wireless", "CCNA Security", "CCNP Security", "CCIE"};
+        h1.clear();
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            certModel model=new certModel(tr[j],"data","data","data","box");
+
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+    if(i==3)
+    {
+        String tr[]={"ISTQB - BCS", "Intermediate BCS", "BCS Certified advanced Tested level Test Manager", "ISTQB - ISQI", "ISQI Test Manager", "ISTQB - ITB"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            certModel model=new certModel(tr[j],"data","data","data","box");
+
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+    if(i==4)
+    {
+        String tr[]={"Comptia A+", "Comptia N+", "Comptia S+"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","box");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+
+    if(i==5)
+    {
+        String tr[]={"VMware Certified Professional 6 - Data Center Virtualization", "VMware Certified Professional 6.5 - Data Center Virtualization", "VMware Certified Professional 6 - Cloud Management and Automation", "VMware Certified Professional 6 - Network Virtualization 6.2 Exam", "VMware Certified Professional 7 - Cloud Management and Automation (VCP7-CMA)", "VMware Certified Associate 6 - Data Center Virtualization Fundamentals"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+
+    if(i==6)
+    {
+        String tr[]={"Palo Alto Networks Certified Cybersecurity Associate", "Palo Alto Networks Certified Network Security Administrator", "Palo Alto Networks Certified Network Security Engineer"};
+
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+    if(i==7)
+    {
+        String tr[]={"SAS Certified Base Programmer For SAS 9"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+    if(i==8)
+    {
+        String tr[]={"Certified Pega Marketing Consultant (CPMC) 74V1","Certified System Architect (CSA) 74V1", "Pegasystems Certified Senior System Architect","Pegasystems Certified Pega Decisioning Consultant"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+
+    }
+
+
+    if(i==9)
+    {
+        String tr[]={"Check Point Certified Security Principles Associate", "Checkpoint Check Point Certified Security Master", "Check Point Certified Security Administrator", "Check Point Certified Security Expert", "CheckPoint Check Point Certified PenTesting Associate", "Check Point Certified Automation Specialist"};
+
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+
+    }
+
+    if(i==10)
+    {
+        String tr[]={"Juniper Networks Certified Internet Associate, Junos", "Enterprise Routing and Switching, Specialist"
+        };
+
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+    if(i==11)
+    {
+        String tr[]={"Citrix XenApp and XenDesktop 7.15 Administration", "Citrix NetScaler 12 Essentials and Unified Gateway"
+        };
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+    if(i==12)
+    {
+        String tr[]={"Information Storage and Management v3", "Specialist, Technology Architect | Midrange Storage Solutions", "Dell EMC Certified Specialist - Systems Administrator, Data Domain","Storage Administrator, VMAX All Flash and VMAX3 Solutions Specialist Version 2.0"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","list");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("list");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+
+
+    if(i==13)
+    {
+        String tr[]={"AWS Solution Architect Associate", "AWS Solution Architect Professional", "AWS Sysops Admin Associate", "AWS Developer Associate", "AWS Devops Professional"
+        };
+
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","box");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+    if(i==14)
+    {
+        String tr[]={"Google Cloud Associate Cloud Engineer", "Google Cloud Professional Cloud Architect"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","box");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+
+    if(i==15)
+    {
+        String tr[]={"Prince 2 Foundation - People Cert", "Prince 2 Practioner - People Cert"};
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","box");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+    if(i==16)
+    {
+        String tr[]={"Prince 2 Agile Foundation - People Cert", "Prince 2 Agile Practioner - People Cert"
+
+        };
+        h1.clear();
+
+        for(int j=0;j<tr.length;j++)
+        {
+            tr[j]=tr[j].replace("/","_b");
+            tr[j]=tr[j].replace(".","_");
+            tr[j]=tr[j].replace("+","_p");
+            certModel model=new certModel(tr[j],"data","data","data","box");
+
+            h1.put(tr[j],model);
+        }
+
+        test.child("DATA").setValue(h1);
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("addetails").setValue("box");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+    if(i==17)
+    {
+
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("price").setValue("price");
+        test.child("addetails").setValue("single");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+   if(i==18)
+    {
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("price").setValue("price");
+        test.child("addetails").setValue("single");
+        test.child("title").setValue(vda[i]);
+    }    if(i==19)
+{
+    test.child("image").setValue("link");
+    test.child("desc").setValue("desc");
+    test.child("price").setValue("price");
+    test.child("addetails").setValue("single");
+    test.child("title").setValue(vda[i]);
+
+}
+    if(i==20)
+    {
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("price").setValue("price");
+        test.child("addetails").setValue("single");
+        test.child("title").setValue(vda[i]);
+
+    }    if(i==21)
+{
+    test.child("image").setValue("link");
+    test.child("desc").setValue("desc");
+    test.child("price").setValue("price");
+    test.child("addetails").setValue("single");
+    test.child("title").setValue(vda[i]);
+
+}
+
+    if(i==22)
+    { test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("price").setValue("price");
+        test.child("addetails").setValue("single");
+        test.child("title").setValue(vda[i]);
+
+    }
+    if(i==23)
+    {
+        test.child("image").setValue("link");
+        test.child("desc").setValue("desc");
+        test.child("price").setValue("price");
+        test.child("addetails").setValue("single");
+        test.child("title").setValue(vda[i]);
+
+
+    }
+
+
+}
+
+//test.setValue(h1);
+
+
+
+
+
+
+
+        String scnna[]={"Alltechz solutions Pvt Ltd", "Trichrome Technologies", "Infycle Technologies", "Sevael Technologies", "Msquare Networks", "Geo Insys", "V Tech Soft IT Service", " Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Network Geek", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Greens Technologies"};
         double pcnna[]={12000, 0, 0, 0, 7500, 0, 0, 0, 0, 10000, 10000, 13000, 15999, 20000, 0, 0, 0, 0, 0, 0};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("CCNA");
@@ -70,7 +618,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        String  CCNP [] ={"Alltechz solutions PVT Ltd","Msquare networks","Network Geek","IICT Training Institute" ,"G-Tec"};
+        String  CCNP [] ={"Alltechz solutions Pvt Ltd","Msquare Networks","Network Geek","IICT Training Institute" ,"G-Tec"};
         double pCCNP[]={14000, 12000, 10000, 0, 0};
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("CCNP");
         db.child("desc").setValue("desc");
@@ -91,7 +639,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String linux []= {"Alltechz solutions PVT Ltd", "JPA Solutions", "IICT Training Institute", "Greens Technologies"};
+        String linux []= {"Alltechz solutions Pvt Ltd", "JPA Solutions", "IICT Training Institute", "Greens Technologies"};
         double  plinux[]={13000, 0, 0, 0};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("LINUX");
@@ -136,7 +684,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String aws []={"Fita Training & Placement", "Infycle Technologies" , "JPA Solutions", "Hope Tutors", "SA Techno Solutions" , "G-Tec", "Greens Technologies" , "Alltechz solutions PVT Ltd"};
+        String aws []={"Fita Training & Placement", "Infycle Technologies" , "JPA Solutions", "Hope Tutors", "SA Techno Solutions" , "G-Tec", "Greens Technologies" , "Alltechz solutions Pvt Ltd"};
         double  paws[]={0, 0, 20000, 13000, 0, 0, 15000, 13000};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("AWS");
@@ -161,7 +709,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String microsoft [] = {"Sevael Technologies", "Alltechz solutions PVT Ltd", "JPA Solutions", "Hope Tutors", "EYE Open", "G-Tec", "Greens Technologies"};
+        String microsoft [] = {"Sevael Technologies", "Alltechz solutions Pvt Ltd", "JPA Solutions", "Hope Tutors", "EYE Open", "G-Tec", "Greens Technologies"};
         double  pmicrosoft[]={0, 13000, 20000, 18000, 0, 0, 15000};
 
 
@@ -232,7 +780,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String PYTHON [] ={"Infcyle Technologies", "Geo Insys", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Alltechz Solutions Pvt Ltd"};
+        String PYTHON [] ={"Infycle Technologies", "Geo Insys", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Alltechz Solutions Pvt Ltd"};
         double  pPYTHON[]={0, 20000, 16000, 24000, 15000, 14999, 15000, 15000, 18000, 0, 16000, 0, 7000};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("PYTHON");
@@ -280,7 +828,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String ORACLE  [] = {"Infycle Technologies", "V Tech Soft IT Service", "Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Eduation", "IICT Training Institute" ,"Ampersand Academy", "EYE Open", "Greens Technologies", "SA Techno Solutions"};
+        String ORACLE  [] = {"Infycle Technologies", "V Tech Soft IT Service", "Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "IICT Training Institute" ,"Ampersand Academy", "EYE Open", "Greens Technologies", "SA Techno Solutions"};
         double  pORACLE []={0, 0, 0, 0, 12000, 15000, 15999, 0, 20000, 0, 10000};
 
 
@@ -372,7 +920,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String BIGDATA  []={"JPA Solutions", "Greens Technologies", "EYE Open", "V Tech Soft IT Service", "Fita Training & Placement", "Zuan Eduation", "IICT Training Institute", "SA Techno Solutions"};
+        String BIGDATA  []={"JPA Solutions", "Greens Technologies", "EYE Open", "V Tech Soft IT Service", "Fita Training & Placement", "Zuan Education", "IICT Training Institute", "SA Techno Solutions"};
         double  pBIGDATA[]={0, 0, 0, 0, 0, 0, 0, 0};
 
 
@@ -395,7 +943,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String IOT[]={"Zuan Eduation", "EYE Open", "Greens Technologies"};
+        String IOT[]={"Zuan Education", "EYE Open", "Greens Technologies"};
         double  pIOT[]={5999, 0, 0};
 
 
@@ -418,7 +966,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String ISTQB[]={"Alltechz solutions PVT Ltd", "Sevael Technologies", "Credo Systemz"};
+        String ISTQB[]={"Alltechz solutions Pvt Ltd", "Sevael Technologies", "Credo Systemz"};
         double  pISTQB[]={0, 0, 0};
 
 
@@ -441,7 +989,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String COMPTIA[]={"Msquare", "Alltechz solutions PVT Ltd", "Credo Systemz"};
+        String COMPTIA[]={"Msquare Networks", "Alltechz solutions Pvt Ltd", "Credo Systemz"};
         double  pCOMPTIA[]={0, 0, 0};
 
 
@@ -464,8 +1012,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-        String Citrix[]={"Greens Technology", "SA techno"};
+        String Citrix[]={"Greens Technologies", "SA Techno Solutions"};
         double  pCitrix[]={0, 0};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Citrix");
@@ -487,7 +1034,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String ITIL[]={"Alltechz solutions PVT Ltd","Sevael Technologies"};
+        String ITIL[]={"Alltechz solutions Pvt Ltd","Sevael Technologies"};
         double  pITIL[]={0, 0};
 
 
@@ -534,7 +1081,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        String ethical[]={"Sevael Technologies", "Network geek", "M square"};
+        String ethical[]={"Sevael Technologies", "Network Geek", "Msquare Networks"};
         double  pethical[]={0, 0, 0};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Ethical Hacking");
