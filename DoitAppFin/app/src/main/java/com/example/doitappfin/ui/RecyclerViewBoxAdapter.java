@@ -12,38 +12,26 @@ import java.util.ArrayList;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.doitappfin.R;
-import com.example.doitappfin.utils.RecycleViewModel;
-import com.example.doitappfin.utils.certModel;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
 
 
 /**
  * A custom adapter to use with the RecyclerView widget.
  */
-
-
-
-public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RecyclerViewBoxAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<certModel> modelList;
+    private ArrayList<AbstractModelBox> modelList;
 
     private OnItemClickListener mItemClickListener;
 
 
-    public RecyclerViewAdapterTrainCert(Context context, ArrayList<certModel> modelList) {
+    public RecyclerViewBoxAdapter(Context context, ArrayList<AbstractModelBox> modelList) {
         this.mContext = context;
         this.modelList = modelList;
-
-        System.out.println(modelList);
     }
 
-    public void updateList(ArrayList<certModel> modelList) {
+    public void updateList(ArrayList<AbstractModelBox> modelList) {
         this.modelList = modelList;
         notifyDataSetChanged();
 
@@ -52,7 +40,7 @@ public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerV
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_recycler_list, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_recycler_box, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -62,48 +50,34 @@ public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerV
 
         //Here you can fill your row view
         if (holder instanceof ViewHolder) {
-            final certModel model = getItem(position);
+            final AbstractModelBox model = getItem(position);
             ViewHolder genericViewHolder = (ViewHolder) holder;
 
-
-        //    System.out.println(model.getTitle()+" "+model.getPic()+" "+model.getPrice());
-
             genericViewHolder.itemTxtTitle.setText(model.getTitle());
-            genericViewHolder.itemTxtMessage.setText(model.getPrice());
-
-           // Picasso.get().load(model.getImage()).networkPolicy(NetworkPolicy.OFFLINE).centerCrop().into( genericViewHolder.imgUser);
+            genericViewHolder.itemTxtMessage.setText(model.getMessage());
 
 
-
-            RequestOptions myOptions = new RequestOptions()
-                    .override(100, 100);
-
-            Glide.with(mContext)
-                    .load(model.getImage()).fitCenter().override(1000,1000)
-                    .into(genericViewHolder.imgUser);
         }
-
-
     }
 
 
     @Override
     public int getItemCount() {
 
-        return  modelList.size();
+        return modelList.size();
     }
 
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
 
-    private certModel getItem(int position) {
+    private AbstractModelBox getItem(int position) {
         return modelList.get(position);
     }
 
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, certModel model);
+        void onItemClick(View view, int position, AbstractModelBox model);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

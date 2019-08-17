@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,9 +36,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class GoogleLoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
-public static final int RC_SIGN_IN=10;
+    public static final int RC_SIGN_IN=10;
     private FirebaseAuth mAuth;
-private EditText Enum;
+    private EditText Enum;
     String mail="";
     private Button login;
     @Override
@@ -54,6 +55,14 @@ private EditText Enum;
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(Enum.getText().toString().length()!=10 || TextUtils.isEmpty(Enum.getText().toString()))
+                    Enum.setError("Invalid Number");
+                else {
+                    Intent intent = new Intent(GoogleLoginActivity.this, Registration.class);
+                    intent.putExtra("number", Enum.getText().toString());
+                    intent.putExtra("mail", "");
+                    startActivity(intent);
+                }
 
 
             }
@@ -104,10 +113,11 @@ private EditText Enum;
                 public void onDataChange(DataSnapshot snapshot) {
                     if (!snapshot.hasChild(mail)) {
 
-                    //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+                        //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
 
                         Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
                         i.putExtra("mail",currentUser.getEmail());
+                        i.putExtra("number","");
                         startActivity(i);
                     }
                     else
@@ -179,53 +189,54 @@ private EditText Enum;
                             final FirebaseUser user = mAuth.getCurrentUser();
 
                             System.out.println("sucess--log");
-                           if(user!=null)
-                           {
-                              // finish();
-                               //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
-if(acct.getEmail()!=null)
-    mail=acct.getEmail().replace(".","_");
+                            if(user!=null)
+                            {
+                                // finish();
+                                //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                                if(acct.getEmail()!=null)
+                                    mail=acct.getEmail().replace(".","_");
 
-System.out.println(mail);
-                               DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
-                               rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                   @Override
-                                   public void onDataChange(DataSnapshot snapshot) {
-                                       if (!snapshot.hasChild(mail)) {
+                                System.out.println(mail);
+                                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+                                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot snapshot) {
+                                        if (!snapshot.hasChild(mail)) {
 
-                                        //   FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+                                            //   FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
 
-                                           Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
-                                           i.putExtra("mail",user.getEmail());
-                                           startActivity(i);
-                                       }
-                                       else
-                                       {
-                                           finish();
-                                           Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
-                                           startActivity(i);
+                                            Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
+                                            i.putExtra("mail",acct.getEmail());
+                                            i.putExtra("number","");
+                                            startActivity(i);
+                                        }
+                                        else
+                                        {
+                                            finish();
+                                            Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                                            startActivity(i);
 
-                                       }
-                                   }
+                                        }
+                                    }
 
-                                   @Override
-                                   public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                                   }
-                               });
+                                    }
+                                });
 
-                           }
-                           else
-                           {
-                               Toast.makeText(GoogleLoginActivity.this, "heloo", Toast.LENGTH_SHORT).show();
-                           }
-                                                 } else {
+                            }
+                            else
+                            {
+                                Toast.makeText(GoogleLoginActivity.this, "heloo", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
 
                             System.out.println("fail--log");
                             // If sign in fails, display a message to the user.
                             Log.w("TAG", "signInWithCredential:failure", task.getException());
-                 //           Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                       //     updateUI(null);
+                            //           Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            //     updateUI(null);
                         }
 
                         // ...

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.util.HashMap;
+
 public class Registration extends AppCompatActivity {
 
     EditText Ename,Ephone,Email;
@@ -41,56 +44,71 @@ public class Registration extends AppCompatActivity {
         super.onStart();
 
 
-
-
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.hasChild("name")) {
-                    // run some code
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-       mGoogleInCilients = GoogleSignIn.getClient(this,gso);
+        mGoogleInCilients = GoogleSignIn.getClient(this,gso);
 
         Ename=findViewById(R.id.entername);
         Ephone=findViewById(R.id.enterphone);
-       Email=findViewById(R.id.entermail);
+        Email=findViewById(R.id.entermail);
         submit=findViewById(R.id.submit);
 
 
-
-        getdata();
-
-        if(notempty())
-        {
-
+        String number=getIntent().getExtras().getString("number");
+        String mail=getIntent().getExtras().getString("mail");
+        Ephone.setText(number);
+        Email.setText(mail);
 
 
-        }
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getdata();
+                if(notempty())
+                {
+
+                    Toast.makeText(Registration.this,"success",Toast.LENGTH_SHORT).show();
+                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+                    DatabaseReference mRef = database.getReference().child("ProfileData").child(Semail.replace(".","_"));
+
+
+                    HashMap<String,String> hashMap=new HashMap<>();
+
+                    hashMap.put("name",Sname);
+                    hashMap.put("email",Semail);
+                    hashMap.put("phone",Sphone);
+                    hashMap.put("dob","");
+                    hashMap.put("city","");
+                    hashMap.put("addr","");
+                    hashMap.put("sex","");
+                    mRef.setValue(hashMap);
+                    Intent i = new Intent(Registration.this, otp.class);
+                    i.putExtra("number",Sphone);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                }
+
+            }
+        });
 
 
     }
 
     private boolean notempty() {
 
-        if(TextUtils.isEmpty(Semail) && !Patterns.EMAIL_ADDRESS.matcher(Semail).matches())
+        Toast.makeText(Registration.this,Sname+","+Semail+","+Sphone,Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(Semail) )
             return false;
-        if(TextUtils.isEmpty(Sname) && Sname.length()<=3)
+        if(!Patterns.EMAIL_ADDRESS.matcher(Semail).matches())
             return false;
-        if(TextUtils.isEmpty(Sphone) && Sphone.length()!=10)
+
+        if(TextUtils.isEmpty(Sname) || Sname.length()<3)
+            return false;
+        if(TextUtils.isEmpty(Sphone) || Sphone.length()!=10)
             return false;
 
 
@@ -100,7 +118,7 @@ public class Registration extends AppCompatActivity {
 
     private void getdata() {
 
-    Sname=Ename.getText().toString();
+        Sname=Ename.getText().toString();
         Sphone=Ephone.getText().toString();
         Semail=Email.getText().toString();
 

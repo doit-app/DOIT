@@ -1,5 +1,6 @@
 package com.example.doitappfin;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -12,12 +13,18 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.example.doitappfin.login.GoogleLoginActivity;
+import com.example.doitappfin.login.Registration;
 import com.example.doitappfin.ui.MainWorkActivity;
 import com.example.doitappfin.utils.certModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +33,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
     ImageView imv;
-
+    private FirebaseAuth mAuth;
+    String mail="";
 
     Animation fromtop;
     @Override
@@ -36,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
+        mAuth = FirebaseAuth.getInstance();
 
 
         String data[]={"Microsoft","Oracle", "CCNA", "CCNP","CCNA Wireless", "CCNA Security","CCNP Security","CCIE", "ISTQB - BCS", "Intermidiate - BCS","BCS Certified Tester Advanced Level Test Manager (TM12)", "ISTQB - ISQI", "Agile Tester Extension Level", "ISTQB - ITB","Comptia A+","Comptia N+","Comptia S+","VMWare","Palo Alto","SAS","Pega Systems","Check Point","Juniper","EMC","Citrix", "ITIL Foundation - People Cert", "ITIL Intermediate - People Cert", "ITIL Practioner - People Cert", "Prince 2 Foundation - People Cert", "Prince 2 Practioner - People Cert", "Cobit 5 Foundation - People Cert", "Prince 2 Agile Foundation - People Cert", "Prince 2 Agile Practioner - People Cert", "Exin Agile Scrum Foundation", "Exin Agile Scrum Master", "Exin DevOps Master", "Exin DevOps Foundation", "DevOps Foundation - DevOps Institute", "Certified Scrum Master - GAQM.org", "Certified Scrum Master - Scrum Alliance", "Professional Scrum Master 1 - Scrum.org", "Google Cloud Associate Cloud Engineer", "Google Cloud Professional Cloud Architect", "AWS Associate - VUE", "AWS Professional - VUE", "Python", "Service Now", "Salesforce", "CEH V10", "ECSA V10", "TOGAF", "Blue Prism"};
@@ -65,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         HashMap<String,String> h=new HashMap<>();
 
-
+/*
         for(int i=0;i<vda.length;i++)
         {
             h.put(vda[i],"det");
@@ -95,8 +104,14 @@ for(int j=0;j<tr.length;j++)
 
     h1.put(tr[j],model);
 }
+    test.child("DATA").setValue(h1);
+    test.child("image").setValue("link");
+    test.child("desc").setValue("desc");
+    test.child("addetails").setValue("box");
+    test.child("title").setValue(vda[i]);
+//test.setValue(h1);
 
-test.setValue(h1);
+
 }
 
 
@@ -588,7 +603,7 @@ h1.clear();
     }
 
 
-}
+}*/
 
 //test.setValue(h1);
 
@@ -1181,28 +1196,48 @@ h1.clear();
 
 
 
-                String   Name=sp.getString("name",  "oo");
+                final FirebaseUser currentUser = mAuth.getCurrentUser();
+                if(currentUser!=null) {                                  //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                    if (currentUser.getEmail() != null)
+                        mail = currentUser.getEmail().replace(".", "_");
 
-                if(Name.equals("h"))
-                {
-                    finish();
-                    startActivity(new Intent(MainActivity.this, MainWorkActivity.class));
+                    System.out.println(mail);
+                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (!snapshot.hasChild(mail)) {
 
-                    System.out.println(alr);
+                                //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+
+                                Intent i = (new Intent(MainActivity.this, Registration.class));
+                                i.putExtra("mail", currentUser.getEmail());
+                                i.putExtra("number", "");
+                                startActivity(i);
+                            } else {
+                                finish();
+                                Intent i = (new Intent(MainActivity.this, MainWorkActivity.class));
+                                startActivity(i);
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
 
                 }
-                else
-                {
-                    finish();
-                    startActivity(new Intent(MainActivity.this, GoogleLoginActivity.class));
+                else{
 
-                    //  finish();
-                    //    startActivity(new Intent(GoogleLoginActivity.this, GoogleLoginActivity.class));
+                    finish();
+                    Intent i = (new Intent(MainActivity.this, GoogleLoginActivity.class));
+                    startActivity(i);
 
                 }
-
-
-            }
+                }
         }, SPLASH_TIME_OUT);
     }
 

@@ -17,9 +17,15 @@
         android:largeHeap="true"
         android:roundIcon="@drawable/logodoit"
         android:supportsRtl="true">
-        <activity android:name=".login.Registration"
+        <activity android:name=".login.otp"
             android:theme="@style/NoAct"
             ></activity>
+        <activity
+            android:name=".ui.BoxActivity"
+            android:theme="@style/AppTheme.Template.Base" />
+        <activity
+            android:name=".login.Registration"
+            android:theme="@style/NoAct" />
         <activity
             android:name=".ui.proflie"
             android:label=" "

@@ -1,17 +1,14 @@
 package com.example.doitappfin.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
+
 
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 import com.example.doitappfin.R;
-import com.example.doitappfin.utils.MyCustomPagerAdapter;
-import com.example.doitappfin.utils.RecycleViewModel;
 import com.example.doitappfin.utils.certModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,19 +37,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
-public class TrainCertActivity extends AppCompatActivity {
+public class BoxActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
-    private int imagestc[] = {R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange,R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange,R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange};
-  private  String[]  fruitstc={"apple","grapes","mango","orange","apple","grapes","mango","orange","apple","grapes","mango","orange"};
     // @BindView(R.id.recycler_view)
     // RecyclerView recyclerView;
 
     //@BindView(R.id.toolbar)
-
-
-    private Intent i;
     //Toolbar toolbar;
     private Toolbar toolbar;
 
@@ -62,95 +54,46 @@ public class TrainCertActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshRecyclerList;
     private RecyclerViewAdapterTrainCert mAdapter;
 
-private ArrayList<certModel> recycleViewModelList;
+    private ArrayList<certModel> modelList = new ArrayList<>();
 
-
+String sfromcert="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_train_cert);
-        i=getIntent();
+        setContentView(R.layout.activity_box);
+        findViews();
+
+        sfromcert=getIntent().getStringExtra("fromcert");
+
+        System.out.println("in t  "+sfromcert);
+        initToolbar("Takeoff Android");
+
+        DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification").child(sfromcert).child("DATA");
+
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                modelList.clear();
+                for(DataSnapshot d1:dataSnapshot.getChildren())
+                {
+
+                    certModel obj = d1.getValue(certModel.class);
+                    modelList.add(obj);
+                    System.out.println("in act  "+obj.getImage());
+
+                }
+                setAdapter();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // ButterKnife.bind(this);
-        findViews();
-        initToolbar(i.getStringExtra("val"));
-        recycleViewModelList=new ArrayList<certModel>();
 
-
-
-        if(i.getStringExtra("val").equals("Certification"))
-        {
-            DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification");
-            recycleViewModelList.clear();
-            db.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot d1:dataSnapshot.getChildren())
-                    {
-                        certModel obj = d1.getValue(certModel.class);
-                        recycleViewModelList.add(obj);
-                        System.out.println("in act  "+obj.getImage());
-
-                    }
-                    mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, recycleViewModelList);
-                    //   System.out.println("in act  "+recycleViewModelList.get(1).getPic());
-
-                    setAdapter();
-
-                }
-
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-        }
-        else {
-
-
-
-            DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData");
-            recycleViewModelList.clear();
-            db.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for(DataSnapshot d1:dataSnapshot.getChildren())
-                    {
-                        certModel obj = d1.getValue(certModel.class);
-
-
-                        recycleViewModelList.add(obj);
-                        System.out.println(obj.getImage());
-
-
-                    }
-                    mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, recycleViewModelList);
-                    //   System.out.println("in act  "+recycleViewModelList.get(1).getPic());
-
-                    setAdapter();
-
-                }
-
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-
-
-
-
-        }
         setAdapter();
-
-
-
 
         swipeRefreshRecyclerList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -171,8 +114,14 @@ private ArrayList<certModel> recycleViewModelList;
 
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar1);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshRecyclerList = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_recycler_list);
     }
@@ -181,7 +130,7 @@ private ArrayList<certModel> recycleViewModelList;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(title);
+        getSupportActionBar().setTitle(sfromcert);
     }
 
     @Override
@@ -237,16 +186,17 @@ private ArrayList<certModel> recycleViewModelList;
             public boolean onQueryTextChange(String s) {
                 ArrayList<certModel> filterList = new ArrayList<certModel>();
                 if (s.length() > 0) {
-                    for (int i = 0; i < recycleViewModelList.size(); i++) {
-                        if (recycleViewModelList.get(i).getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
-                            filterList.add(recycleViewModelList.get(i));
+                    for (int i = 0; i < modelList.size(); i++) {
+                        if (modelList.get(i).getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
+                            filterList.add(modelList.get(i));
                             mAdapter.updateList(filterList);
                         }
                     }
+                    mAdapter = new RecyclerViewAdapterTrainCert(BoxActivity.this, filterList);
+
 
                 } else {
-
-                    mAdapter.updateList(recycleViewModelList);
+                    mAdapter.updateList(modelList);
                 }
                 return false;
             }
@@ -260,19 +210,14 @@ private ArrayList<certModel> recycleViewModelList;
     private void setAdapter() {
 
 
-        for (int i =0;i<imagestc.length;i++)
-        {
-           // recycleViewModelList.add(new AbstractModel(fruitstc[i], "Hello " + fruitstc[i],imagestc[i]));
-
-        }
 
 
+        mAdapter = new RecyclerViewAdapterTrainCert(BoxActivity.this, modelList);
 
-        mAdapter = new RecyclerViewAdapterTrainCert(TrainCertActivity.this, recycleViewModelList);
+        recyclerView.setHasFixedSize(true);
 
 
-
-        final GridLayoutManager layoutManager = new GridLayoutManager(TrainCertActivity.this, 2);
+        final GridLayoutManager layoutManager = new GridLayoutManager(BoxActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
 
@@ -284,34 +229,7 @@ private ArrayList<certModel> recycleViewModelList;
             public void onItemClick(View view, int position, certModel model) {
 
                 //handle item click events here
-               // Intent i =new Intent(TrainCertActivity.this, MapsActivity.class);
-
-                //i.putExtra("title",model.getTitle());
-                //i.putExtra("desc",model.getDesc());
-                //startActivity(i);
-
-                if(model.getAddetails().equals("single"))
-                {
-
-                }
-                else
-                if(model.getAddetails().equals("list"))
-                {
-
-                }
-                else
-                if(model.getAddetails().equals("box"))
-                {
-
-                    final Intent intent=(new Intent(TrainCertActivity.this,BoxActivity.class));
-                    intent.putExtra("fromcert",model.getTitle());
-                    startActivity(intent);
-
-
-                }
-
-
-               Toast.makeText(TrainCertActivity.this, "Hey " + model.getAddetails(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(BoxActivity.this, "Hey " + model.getTitle(), Toast.LENGTH_SHORT).show();
 
 
             }
@@ -321,17 +239,6 @@ private ArrayList<certModel> recycleViewModelList;
     }
 
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        super.onBackPressed();
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 
 
 }
