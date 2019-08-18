@@ -235,6 +235,7 @@ private ArrayList<certModel> recycleViewModelList;
 
             @Override
             public boolean onQueryTextChange(String s) {
+
                 ArrayList<certModel> filterList = new ArrayList<certModel>();
                 if (s.length() > 0) {
                     for (int i = 0; i < recycleViewModelList.size(); i++) {
@@ -292,6 +293,11 @@ private ArrayList<certModel> recycleViewModelList;
 
                 if(model.getAddetails().equals("single"))
                 {
+                    Intent inten=(new Intent(TrainCertActivity.this,SingleActivity.class));
+                    inten.putExtra("title",model.getTitle());
+                    inten.putExtra("desc",model.getDesc());
+                    inten.putExtra("image",model.getImage());
+                    startActivity(inten);
 
                 }
                 else

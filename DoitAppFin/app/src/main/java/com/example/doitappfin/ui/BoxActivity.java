@@ -54,7 +54,7 @@ public class BoxActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshRecyclerList;
     private RecyclerViewAdapterTrainCert mAdapter;
 
-    private ArrayList<certModel> modelList = new ArrayList<>();
+    private ArrayList<certModel> modelList;
 
 String sfromcert="";
     @Override
@@ -65,6 +65,7 @@ String sfromcert="";
 
         sfromcert=getIntent().getStringExtra("fromcert");
 
+        modelList=new ArrayList<certModel>();
         System.out.println("in t  "+sfromcert);
         initToolbar("Takeoff Android");
 
@@ -184,6 +185,8 @@ String sfromcert="";
 
             @Override
             public boolean onQueryTextChange(String s) {
+                System.out.println("change "+s);
+
                 ArrayList<certModel> filterList = new ArrayList<certModel>();
                 if (s.length() > 0) {
                     for (int i = 0; i < modelList.size(); i++) {
@@ -192,10 +195,9 @@ String sfromcert="";
                             mAdapter.updateList(filterList);
                         }
                     }
-                    mAdapter = new RecyclerViewAdapterTrainCert(BoxActivity.this, filterList);
-
 
                 } else {
+
                     mAdapter.updateList(modelList);
                 }
                 return false;
@@ -206,7 +208,6 @@ String sfromcert="";
         return true;
     }
 
-
     private void setAdapter() {
 
 
@@ -214,7 +215,6 @@ String sfromcert="";
 
         mAdapter = new RecyclerViewAdapterTrainCert(BoxActivity.this, modelList);
 
-        recyclerView.setHasFixedSize(true);
 
 
         final GridLayoutManager layoutManager = new GridLayoutManager(BoxActivity.this, 2);
@@ -222,6 +222,7 @@ String sfromcert="";
 
 
         recyclerView.setAdapter(mAdapter);
+
 
 
         mAdapter.SetOnItemClickListener(new RecyclerViewAdapterTrainCert.OnItemClickListener() {
@@ -237,6 +238,14 @@ String sfromcert="";
 
 
     }
+
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
 
 
 

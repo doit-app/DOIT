@@ -17,9 +17,11 @@
         android:largeHeap="true"
         android:roundIcon="@drawable/logodoit"
         android:supportsRtl="true">
-        <activity android:name=".login.otp"
-            android:theme="@style/NoAct"
-            ></activity>
+        <activity android:name=".ui.SingleActivity"
+            android:theme="@style/NoAct" ></activity>
+        <activity
+            android:name=".login.otp"
+            android:theme="@style/NoAct" />
         <activity
             android:name=".ui.BoxActivity"
             android:theme="@style/AppTheme.Template.Base" />
