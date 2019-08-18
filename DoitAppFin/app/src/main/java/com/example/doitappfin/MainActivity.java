@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
     ImageView imv;
     private FirebaseAuth mAuth;
-    String mail="";
+    String mail="",phone="";
 
     Animation fromtop;
     @Override
@@ -620,6 +620,8 @@ h1.clear();
         db.child("desc").setValue("desc");
         //  db.child("image").setValue("url");
         db.child("title").setValue("CCNA");
+        db.child("addetails").setValue("add");
+
         if(scnna.length==pcnna.length) {
             HashMap<String,String> hashMap=new HashMap<>();
             for (int i = 0; i < scnna.length; i++) {
@@ -639,6 +641,7 @@ h1.clear();
         db.child("desc").setValue("desc");
         //db.child("image").setValue("url");
         db.child("title").setValue("CCNP");
+        db.child("addetails").setValue("add");
 
         if(CCNP.length==pCCNP.length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -661,6 +664,8 @@ h1.clear();
         db.child("desc").setValue("desc");
         //db.child("image").setValue("url");
         db.child("title").setValue("LINUX");
+        db.child("addetails").setValue("add");
+
         if(linux.length==plinux.length) {
             HashMap<String,String> hashMap=new HashMap<>();
             for (int i = 0; i < plinux.length; i++) {
@@ -684,6 +689,8 @@ h1.clear();
         db.child("desc").setValue("desc");
         //  db.child("image").setValue("url");
         db.child("title").setValue("UI PATH");
+        db.child("addetails").setValue("add");
+
         if(ui.length==pui.length) {
             HashMap<String,String> hashMap=new HashMap<>();
             for (int i = 0; i < pui.length; i++) {
@@ -706,6 +713,8 @@ h1.clear();
         db.child("desc").setValue("desc");
         //  db.child("image").setValue("url");
         db.child("title").setValue("AWS");
+        db.child("addetails").setValue("add");
+
         if(aws.length==paws.length) {
             HashMap<String,String> hashMap=new HashMap<>();
             for (int i = 0; i < aws.length; i++) {
@@ -733,6 +742,8 @@ h1.clear();
         db.child("desc").setValue("desc");
         //  db.child("image").setValue("url");
         db.child("title").setValue("MICROSOFT");
+        db.child("addetails").setValue("add");
+
         if(microsoft.length==pmicrosoft.length) {
             HashMap<String,String> hashMap=new HashMap<>();
             for (int i = 0; i < microsoft.length; i++) {
@@ -758,6 +769,7 @@ h1.clear();
         db.child("desc").setValue("desc");
         //  db.child("image").setValue("url");
         db.child("title").setValue("BLUEPRISM");
+        db.child("addetails").setValue("add");
         if(blue.length==pblue.length) {
             HashMap<String,String> hashMap=new HashMap<>();
             for (int i = 0; i < blue.length; i++) {
@@ -779,6 +791,8 @@ h1.clear();
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("VMWARE");
         db.child("desc").setValue("desc");
         //db.child("image").setValue("url");
+        db.child("addetails").setValue("add");
+
         db.child("title").setValue("VMWARE");
         if(vmware.length==pvmware.length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -801,6 +815,7 @@ h1.clear();
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("PYTHON");
         db.child("desc").setValue("desc");
         //  db.child("image").setValue("url");
+        db.child("addetails").setValue("add");
         db.child("title").setValue("PYTHON");
         if(PYTHON.length==pPYTHON.length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -826,6 +841,7 @@ h1.clear();
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("AUTOMATION ANYWHERE");
         db.child("desc").setValue("desc");
         //db.child("image").setValue("url");
+        db.child("addetails").setValue("add");
         db.child("title").setValue("AUTOMATION ANYWHERE");
         if(AUTOMATIONANYWHERE.length==pAUTOMATIONANYWHERE.length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -850,6 +866,7 @@ h1.clear();
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("ORACLE");
         db.child("desc").setValue("desc");
         // db.child("image").setValue("url");
+        db.child("addetails").setValue("add");
         db.child("title").setValue("ORACLE");
         if(ORACLE .length==pORACLE .length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -872,6 +889,7 @@ h1.clear();
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("PEGA");
         db.child("desc").setValue("desc");
+        db.child("addetails").setValue("add");
         //db.child("image").setValue("url");
         db.child("title").setValue("PEGA");
         if(PEGA .length==pPEGA .length) {
@@ -897,6 +915,7 @@ h1.clear();
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("TOGAF");
         db.child("desc").setValue("desc");
         // db.child("image").setValue("url");
+        db.child("addetails").setValue("add");
         db.child("title").setValue("TOGAF");
         if(TOGAF .length==pTOGAF .length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -919,6 +938,7 @@ h1.clear();
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("DEVOPS");
         db.child("desc").setValue("desc");
+        db.child("addetails").setValue("add");
         // db.child("image").setValue("url");
         db.child("title").setValue("DEVOPS");
         if(DEVOPS .length==pDEVOPS .length) {
@@ -943,6 +963,7 @@ h1.clear();
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("BIGDATA HADOOP");
         db.child("desc").setValue("desc");
         // db.child("image").setValue("url");
+        db.child("addetails").setValue("add");
         db.child("title").setValue("BIGDATA HADOOP");
         if(BIGDATA .length==pBIGDATA .length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -964,6 +985,7 @@ h1.clear();
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("IOT");
         db.child("desc").setValue("desc");
+        db.child("addetails").setValue("add");
         //db.child("image").setValue("url");
         db.child("title").setValue("IOT");
         if(IOT .length==pIOT .length) {
@@ -987,6 +1009,7 @@ h1.clear();
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("ISTQB");
         db.child("desc").setValue("desc");
+        db.child("addetails").setValue("add");
         //db.child("image").setValue("url");
         db.child("title").setValue("ISTQB");
         if(ISTQB .length==pISTQB .length) {
@@ -1010,6 +1033,7 @@ h1.clear();
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("COMPTIA");
         db.child("desc").setValue("desc");
+        db.child("addetails").setValue("add");
         //db.child("image").setValue("url");
         db.child("title").setValue("DEVOPS");
         if(COMPTIA .length==pCOMPTIA .length) {
@@ -1033,6 +1057,7 @@ h1.clear();
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Citrix");
         db.child("desc").setValue("desc");
         // db.child("image").setValue("url");
+        db.child("addetails").setValue("add");
         db.child("title").setValue("Citrix");
         if(Citrix .length==pCitrix .length) {
             HashMap<String,String> hashMap=new HashMap<>();
@@ -1055,6 +1080,7 @@ h1.clear();
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("ITIL Foundation");
         db.child("desc").setValue("desc");
+        db.child("addetails").setValue("add");
         //db.child("image").setValue("url");
         db.child("title").setValue("ITIL Foundation");
         if(ITIL .length==pITIL .length) {
@@ -1074,6 +1100,7 @@ h1.clear();
 
         String Prince2[]={"Sevael Technologies"};
         double  pPrince2[]={0};
+        db.child("addetails").setValue("add");
 
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Prince2 Foundation");
@@ -1101,6 +1128,7 @@ h1.clear();
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("Ethical Hacking");
         db.child("desc").setValue("desc");
+        db.child("addetails").setValue("add");
         //db.child("image").setValue("url");
         db.child("title").setValue("Ethical Hacking");
         if(ethical .length==pethical .length) {
@@ -1180,6 +1208,24 @@ h1.clear();
 */
 
 
+String m[]={"CCNA", "AWS", "MICROSOFT", "Blue Prism", "ISQI", "Oracle",};
+
+
+/*
+        DatabaseReference databaseRef =FirebaseDatabase.getInstance().getReference().child("PopularData").child("Certification");
+
+        for (int i=0;i<m.length;i++) {
+
+            HashMap<String,String> hashMap1=new HashMap<>();
+
+            hashMap1.put("title",m[i]);
+            hashMap1.put("desc",m[i]);
+            hashMap1.put("image","link");
+            hashMap1.put("price","data");
+            hashMap1.put("addetails","data");
+
+            databaseRef.child(m[i]).setValue(hashMap1);
+        }*/
 
         imv=findViewById(R.id.spl1);
         fromtop= AnimationUtils.loadAnimation(this,R.anim.fromtop);
@@ -1192,8 +1238,9 @@ h1.clear();
             @Override
             public void run() {
                 GoogleSignInAccount alr= GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-                SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitApp.PRIVATEDATA", Context.MODE_PRIVATE);
+                SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
 
+                phone=sp.getString("number","");
 
 
                 final FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -1206,7 +1253,9 @@ h1.clear();
                     rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot snapshot) {
-                            if (!snapshot.hasChild(mail)) {
+
+                            System.out.println("in splash"+snapshot);
+                            if (!snapshot.hasChild(mail)  && !snapshot.getValue().toString().contains(phone)) {
 
                                 //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
 
@@ -1231,10 +1280,38 @@ h1.clear();
 
                 }
                 else{
+                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
 
-                    finish();
-                    Intent i = (new Intent(MainActivity.this, GoogleLoginActivity.class));
-                    startActivity(i);
+                            System.out.println("in splash"+snapshot);
+                            if (!snapshot.hasChild(mail)  || (!snapshot.getValue().toString().contains(phone) && (phone.length()<9))) {
+
+                                //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+
+                                finish();
+                                Intent i = (new Intent(MainActivity.this, GoogleLoginActivity.class));
+                                startActivity(i);
+                                startActivity(i);
+                            } else {
+                                finish();
+                                Intent i = (new Intent(MainActivity.this, MainWorkActivity.class));
+                                startActivity(i);
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+
+
+
 
                 }
                 }

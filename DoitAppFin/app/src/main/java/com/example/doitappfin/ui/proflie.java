@@ -216,6 +216,10 @@ public class proflie extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("number","___");
+            editor.apply();
             if(mAuth!=null){
                 mAuth.signOut();
                 mGoogleSignInClient.signOut()

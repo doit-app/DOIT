@@ -1,14 +1,30 @@
 package com.example.doitappfin.ui;
 
+import android.app.SearchManager;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-
-
+import android.os.Handler;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.view.Menu;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-
+import com.bumptech.glide.Glide;
 import com.example.doitappfin.R;
 import com.example.doitappfin.utils.certModel;
 import com.google.firebase.database.DataSnapshot;
@@ -17,31 +33,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import android.widget.Toast;
-import android.os.Handler;
-
-import android.view.Menu;
-
-import android.app.SearchManager;
-import android.widget.EditText;
-import android.graphics.Color;
-import android.text.InputFilter;
-import android.text.Spanned;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import java.util.ArrayList;
 
 
-public class BoxActivity extends AppCompatActivity {
+public class ListDispActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
+    ImageView imviewlist;
     // @BindView(R.id.recycler_view)
     // RecyclerView recyclerView;
 
@@ -53,49 +52,25 @@ public class BoxActivity extends AppCompatActivity {
     // SwipeRefreshLayout swipeRefreshRecyclerList;
 
     private SwipeRefreshLayout swipeRefreshRecyclerList;
-    private RecyclerViewAdapterTrainCert mAdapter;
+    private RecListDispAdapter mAdapter;
 
-    private ArrayList<certModel> modelList;
+    private ArrayList<certModel> modelList = new ArrayList<>();
 
-String sfromcert="";
+String stitle="",simage="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_box);
-        findViews();
-
-        sfromcert=getIntent().getStringExtra("fromcert");
-
-        modelList=new ArrayList<certModel>();
-        System.out.println("in t  "+sfromcert);
-        initToolbar("Takeoff Android");
-
-        DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification").child(sfromcert).child("DATA");
-
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                modelList.clear();
-                for(DataSnapshot d1:dataSnapshot.getChildren())
-                {
-
-                    certModel obj = d1.getValue(certModel.class);
-                    modelList.add(obj);
-                    System.out.println("in act  "+obj.getImage());
-
-                }
-                setAdapter();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        setContentView(R.layout.activity_list_disp);
 
         // ButterKnife.bind(this);
-
+        findViews();
         setAdapter();
+
+
+        Intent i=getIntent();
+        stitle= i.getStringExtra("title");
+        simage= i.getStringExtra("image");
+        initToolbar(stitle);
 
         swipeRefreshRecyclerList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -113,26 +88,49 @@ String sfromcert="";
 
             }
         });
+        System.out.println("in act  "+stitle);
+        Glide.with(this)
+                .load(simage).fitCenter().override(1000,1000)
+                .into(imviewlist);
+        DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification").child(stitle).child("DATA");
 
-    }
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                modelList.clear();
+                for(DataSnapshot d1:dataSnapshot.getChildren())
+                {
 
-    @Override
-    public void onBackPressed() {
-        finish();
-        super.onBackPressed();
+                    certModel obj = d1.getValue(certModel.class);
+                    modelList.add(obj);
+                    System.out.println("in act  "+obj.getTitle());
+
+                }
+                setAdapter();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mAdapter = new RecListDispAdapter(ListDispActivity.this, modelList);
+
     }
 
     private void findViews() {
-        toolbar = (Toolbar) findViewById(R.id.toolbar1);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshRecyclerList = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_recycler_list);
+        imviewlist=findViewById(R.id.imvlist);
     }
 
     public void initToolbar(String title) {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(sfromcert);
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -186,8 +184,6 @@ String sfromcert="";
 
             @Override
             public boolean onQueryTextChange(String s) {
-                System.out.println("change "+s);
-
                 ArrayList<certModel> filterList = new ArrayList<certModel>();
                 if (s.length() > 0) {
                     for (int i = 0; i < modelList.size(); i++) {
@@ -198,7 +194,6 @@ String sfromcert="";
                     }
 
                 } else {
-
                     mAdapter.updateList(modelList);
                 }
                 return false;
@@ -209,36 +204,41 @@ String sfromcert="";
         return true;
     }
 
+
     private void setAdapter() {
 
 
+        mAdapter = new RecListDispAdapter(ListDispActivity.this, modelList);
 
+        recyclerView.setHasFixedSize(true);
 
-        mAdapter = new RecyclerViewAdapterTrainCert(BoxActivity.this, modelList);
+        // use a linear layout manager
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
-
-        final GridLayoutManager layoutManager = new GridLayoutManager(BoxActivity.this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), layoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(ListDispActivity.this, R.drawable.divider_recyclerview));
+        recyclerView.addItemDecoration(dividerItemDecoration);
 
         recyclerView.setAdapter(mAdapter);
 
 
-
-        mAdapter.SetOnItemClickListener(new RecyclerViewAdapterTrainCert.OnItemClickListener() {
+        mAdapter.SetOnItemClickListener(new RecListDispAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, certModel model) {
-
-                //handle item click events here
-
-                Intent inten=(new Intent(BoxActivity.this,SingleActivity.class));
+                Intent inten=(new Intent(ListDispActivity.this,SingleActivity.class));
                 String  s=model.getTitle().replace("_p","+");
+                  s=s.replace("_b","/");
+
                 inten.putExtra("title",s);
                 inten.putExtra("desc",model.getDesc());
-                inten.putExtra("image",model.getImage());
+                inten.putExtra("image",simage);
                 startActivity(inten);
-                Toast.makeText(BoxActivity.this, "Hey " + model.getTitle(), Toast.LENGTH_SHORT).show();
+
+                //handle item click events here
 
 
             }
@@ -249,12 +249,16 @@ String sfromcert="";
 
 
     @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
-
-
 
 
 }

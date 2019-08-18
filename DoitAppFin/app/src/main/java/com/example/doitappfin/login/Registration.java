@@ -3,7 +3,9 @@ package com.example.doitappfin.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
@@ -86,6 +88,13 @@ public class Registration extends AppCompatActivity {
                     hashMap.put("addr","");
                     hashMap.put("sex","");
                     mRef.setValue(hashMap);
+
+                    SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("number", Sphone);
+                    editor.apply();
+
+                    FirebaseDatabase.getInstance().getReference().child("LoginData").child(Semail.replace(".","_")).setValue(Sphone);
                     Intent i = new Intent(Registration.this, otp.class);
                     i.putExtra("number",Sphone);
                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

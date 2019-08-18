@@ -1,38 +1,34 @@
-package com.example.doitappfin.utils;
+package com.example.doitappfin.ui;
 
 import android.content.Context;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.example.doitappfin.R;
+import com.example.doitappfin.utils.certModel;
 
 import java.util.ArrayList;
 
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+/**
+ * A custom adapter to use with the RecyclerView widget.
+ */
+public class RecListDispAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
     private ArrayList<certModel> modelList;
 
-    private RecyclerViewAdapter.OnItemClickListener mItemClickListener;
+    private OnItemClickListener mItemClickListener;
 
 
-    public RecyclerViewAdapter(Context context, ArrayList<certModel> modelList) {
+    public RecListDispAdapter(Context context, ArrayList<certModel> modelList) {
         this.mContext = context;
         this.modelList = modelList;
-
-        System.out.println(modelList);
     }
 
     public void updateList(ArrayList<certModel> modelList) {
@@ -42,48 +38,35 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public RecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerview_items, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_recycler_list_disp, viewGroup, false);
 
-        return new RecyclerViewAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         //Here you can fill your row view
-        if (holder instanceof RecyclerViewAdapter.ViewHolder) {
+        if (holder instanceof ViewHolder) {
             final certModel model = getItem(position);
-            RecyclerViewAdapter.ViewHolder genericViewHolder = (RecyclerViewAdapter.ViewHolder) holder;
+            ViewHolder genericViewHolder = (ViewHolder) holder;
+
+            genericViewHolder.itemTxtTitle.setText(model.getTitle());
 
 
-            //    System.out.println(model.getTitle()+" "+model.getPic()+" "+model.getPrice());
-
-
-            // Picasso.get().load(model.getImage()).networkPolicy(NetworkPolicy.OFFLINE).centerCrop().into( genericViewHolder.imgUser);
-
-
-
-            RequestOptions myOptions = new RequestOptions()
-                    .override(100, 100);
-
-            Glide.with(mContext)
-                    .load(model.getImage()).fitCenter().override(1000,1000)
-                    .into(genericViewHolder.imgUser);
         }
-
-
     }
 
 
     @Override
     public int getItemCount() {
 
-        return  modelList.size();
+        return modelList.size();
     }
 
-    public void SetOnItemClickListener(final RecyclerViewAdapter.OnItemClickListener mItemClickListener) {
+    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mItemClickListener = mItemClickListener;
     }
 
@@ -98,8 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView imgUser;
-
+        private TextView itemTxtTitle;
 
 
         // @BindView(R.id.img_user)
@@ -117,8 +99,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             // ButterKnife.bind(this, itemView);
 
-           this.imgUser = (ImageView) itemView.findViewById(R.id.subject_textview);
-
+            this.itemTxtTitle = (TextView) itemView.findViewById(R.id.item_txt_title);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,3 +114,4 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 }
+

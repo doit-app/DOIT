@@ -3,7 +3,9 @@ package com.example.doitappfin.login;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -58,10 +60,42 @@ public class GoogleLoginActivity extends AppCompatActivity {
                 if(Enum.getText().toString().length()!=10 || TextUtils.isEmpty(Enum.getText().toString()))
                     Enum.setError("Invalid Number");
                 else {
-                    Intent intent = new Intent(GoogleLoginActivity.this, Registration.class);
-                    intent.putExtra("number", Enum.getText().toString());
-                    intent.putExtra("mail", "");
-                    startActivity(intent);
+
+                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (!snapshot.getValue().toString().contains(Enum.getText().toString()) ) {
+
+                                //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+
+
+                                Intent intent = new Intent(GoogleLoginActivity.this, Registration.class);
+                                intent.putExtra("number", Enum.getText().toString());
+                                intent.putExtra("mail", "");
+                                startActivity(intent);
+                            }
+                            else
+                            {
+                                SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("number", Enum.getText().toString());
+                                editor.apply();
+                                finish();
+
+                                Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                                startActivity(i);
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
                 }
 
 
@@ -111,7 +145,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
             rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    if (!snapshot.hasChild(mail)) {
+                    if (!snapshot.hasChild(mail) ) {
 
                         //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
 

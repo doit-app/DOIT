@@ -6,12 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 import com.example.doitappfin.R;
-import com.example.doitappfin.utils.MyCustomPagerAdapter;
-import com.example.doitappfin.utils.RecycleViewModel;
 import com.example.doitappfin.utils.certModel;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -263,7 +260,6 @@ private ArrayList<certModel> recycleViewModelList;
 
         for (int i =0;i<imagestc.length;i++)
         {
-           // recycleViewModelList.add(new AbstractModel(fruitstc[i], "Hello " + fruitstc[i],imagestc[i]));
 
         }
 
@@ -303,6 +299,11 @@ private ArrayList<certModel> recycleViewModelList;
                 else
                 if(model.getAddetails().equals("list"))
                 {
+                    Intent inten=(new Intent(TrainCertActivity.this,ListDispActivity.class));
+                    inten.putExtra("title",model.getTitle());
+                    inten.putExtra("desc",model.getDesc());
+                    inten.putExtra("image",model.getImage());
+                    startActivity(inten);
 
                 }
                 else
@@ -313,6 +314,15 @@ private ArrayList<certModel> recycleViewModelList;
                     intent.putExtra("fromcert",model.getTitle());
                     startActivity(intent);
 
+
+                }
+                else
+                {
+                    Intent inten=(new Intent(TrainCertActivity.this,MapsActivity.class));
+                    inten.putExtra("title",model.getTitle());
+                    inten.putExtra("desc",model.getDesc());
+                    inten.putExtra("image",model.getImage());
+                    startActivity(inten);
 
                 }
 

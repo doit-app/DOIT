@@ -1,6 +1,8 @@
 package com.example.doitappfin.ui;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -9,6 +11,7 @@ import com.example.doitappfin.login.GoogleLoginActivity;
 import com.example.doitappfin.utils.MyCustomPagerAdapter;
 import com.example.doitappfin.utils.RecyclerViewAdapter;
 import com.example.doitappfin.utils.UserDetails;
+import com.example.doitappfin.utils.certModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -29,6 +32,10 @@ import android.view.MenuItem;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -44,6 +51,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -59,9 +67,9 @@ public class MainWorkActivity extends AppCompatActivity
     RecyclerView recyclerView,recyclerView1;
     RelativeLayout relativeLayout;
     GoogleSignInAccount acct;
-    RecyclerView.Adapter recyclerViewAdapter;
+    RecyclerViewAdapter recyclerViewAdapterTrain,recyclerViewAdapterCert;
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-
+private ArrayList<certModel> cert,train;
 
     RecyclerView.LayoutManager recylerViewLayoutManager;
     int images[] = {R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange};
@@ -101,7 +109,13 @@ public class MainWorkActivity extends AppCompatActivity
         heademail = header.findViewById(R.id.textView123);
 
 
-        acct = GoogleSignIn.getLastSignedInAccount(this);
+
+                cert=new ArrayList<certModel>();
+                train=new ArrayList<certModel>();
+
+
+
+                acct = GoogleSignIn.getLastSignedInAccount(this);
         if(acct!= null) {
             UserDetails.ProfilePhoto = acct.getPhotoUrl();
             UserDetails.name = acct.getDisplayName();
@@ -132,6 +146,7 @@ public class MainWorkActivity extends AppCompatActivity
         });
 
 
+
         indicator = (TabLayout) findViewById(R.id.indicator);
         viewPager = (ViewPager)findViewById(R.id.viewPager);
         myCustomPagerAdapter = new MyCustomPagerAdapter(this, images);
@@ -141,43 +156,53 @@ public class MainWorkActivity extends AppCompatActivity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView1 = (RecyclerView) findViewById(R.id.recyclerView1);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
-        recyclerView1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
 
-        recyclerViewAdapter = new RecyclerViewAdapter(this, images);
-
-        recyclerView.setAdapter(recyclerViewAdapter);
-        recyclerView1.setAdapter(recyclerViewAdapter);
-        recyclerView.addOnItemTouchListener(new RecyclerViewAdapter(MainWorkActivity.this, recyclerView, new RecyclerViewAdapter.OnItemClickListener() {
+        FirebaseDatabase.getInstance().getReference().child("PopularData").child("Training").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(MainWorkActivity.this, ""+fruits[position], Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(MainWorkActivity.this, MapsActivity.class));
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                train.clear();
+
+                for(DataSnapshot d1:dataSnapshot.getChildren())
+                {
+                    certModel obj=d1.getValue(certModel.class);
+                    train.add(obj);
+                }
+                recyclerViewAdapterTrain = new RecyclerViewAdapter(MainWorkActivity.this, train);
 
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        }));
+        });
 
-        recyclerView1.addOnItemTouchListener(new RecyclerViewAdapter(MainWorkActivity.this, recyclerView1, new RecyclerViewAdapter.OnItemClickListener() {
+        FirebaseDatabase.getInstance().getReference().child("PopularData").child("Certification").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                Toast.makeText(MainWorkActivity.this, ""+fruits[position], Toast.LENGTH_SHORT).show();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                startActivity(new Intent(MainWorkActivity.this,MapsActivity.class));
+                cert.clear();
 
+                for(DataSnapshot d1:dataSnapshot.getChildren())
+                {
+                    certModel obj=d1.getValue(certModel.class);
+                    cert.add(obj);
 
+                    System.out.println(obj);
+                }
+                recyclerViewAdapterCert = new RecyclerViewAdapter(MainWorkActivity.this, cert);
+                setAdapter();
 
             }
 
             @Override
-            public void onItemLongClick(View view, int position) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        }));
+        });
+
+
 
 
         Timer timer = new Timer();
@@ -237,6 +262,10 @@ public class MainWorkActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("number","___");
+            editor.apply();
 
             if(mAuth!=null){
 
@@ -282,4 +311,33 @@ public class MainWorkActivity extends AppCompatActivity
             });
         }
     }
+
+    private void setAdapter() {
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+        recyclerView1.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false));
+
+        recyclerView1.setAdapter(recyclerViewAdapterCert);
+
+        recyclerView.setAdapter(recyclerViewAdapterTrain);
+
+
+        recyclerViewAdapterCert.SetOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, certModel model) {
+
+            }
+        });
+
+        recyclerViewAdapterTrain.SetOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, certModel model) {
+
+            }
+        });
+
+
+    }
+
 }
