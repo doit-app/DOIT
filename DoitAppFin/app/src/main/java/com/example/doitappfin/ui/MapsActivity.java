@@ -1,8 +1,8 @@
 package com.example.doitappfin.ui;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
@@ -24,15 +23,23 @@ import android.widget.Toast;
 
 import com.example.doitappfin.R;
 import com.example.doitappfin.utils.MyRecyclerViewAdapter;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,49 +50,135 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, MyRecyclerViewAdapter.ItemClickListener {
     private GoogleMap mMap;
-    double[] latarr={13.131102,13.132951, 13.124145, 13.114964, 13.083284,  13.083458,13.0909973 };
-    double[] lonarr={ 80.151254,80.147683, 80.140874, 80.157521,80.140780 ,80.106270, 80.20895 };
+
     private MyRecyclerViewAdapter adapter1;
-    List<String> addr;
-    List<String> dist;
+  
+    ArrayList<Float> dist;
 
-    private TextView ttitle,tdesc;
+    ArrayList<String> allar, allat;
 
+    int a = 0;
+    private TextView ttitle, tdesc;
+    ArrayList<String> centers;
     private RecyclerView recyclerView;
     Geocoder geocoder;
     List<Address> addresses;
-    private double lat = 0.00, lon = 0.00;
-    private final int REQUEST_LOCATION_PERMISSION = 1;
+    private double lat = 0.00;
+    private FusedLocationProviderClient fusedLocationClient;
 
-    private String stitle="",sdec="";
+    private double lon = 0.00;
+    private final int REQUEST_LOCATION_PERMISSION = 1;
+HashMap<Integer, Marker> haMap;
+    String allarea = "", alllatlong = "";
+
+    private String stitle = "", sdec = "";
     LocationManager locationManager;
+Location locat;
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         requestLocationPermission();
-        Intent i=getIntent();
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        ttitle=findViewById(R.id.titl);
-        tdesc=findViewById(R.id.decs);
+        Intent i = getIntent();
+haMap=new HashMap<>();
 
-        stitle=i.getStringExtra("title");
-        sdec=i.getStringExtra("desc");
+        allar = new ArrayList<>();
+        allat = new ArrayList<>();
+        ttitle = findViewById(R.id.titl);
+        tdesc = findViewById(R.id.decs);
+
+        stitle = i.getStringExtra("title");
+        sdec = i.getStringExtra("desc");
         Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-System.out.println(stitle+" "+sdec);
+//System.out.println(stitle+" "+sdec);
         ttitle.setText(stitle);
         tdesc.setText(sdec);
-        addr=new ArrayList<String>();
-        dist=new ArrayList<String>();
-        recyclerView=findViewById(R.id.rec);
+        dist = new ArrayList<Float>();
+        recyclerView = findViewById(R.id.rec);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        centers = new ArrayList<>();
+
+        FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                centers.clear();
+                for (DataSnapshot d1 : dataSnapshot.getChildren()) {
+                    //     System.out.println(d1.getKey());
+                    String s = d1.getKey();
+                    s = s.replace("_a", "&");
+                    s = s.replace("_m", "-");
+                    centers.add(s);
+
+                }
+
+                for (int j = 0; j < centers.size(); j++) {
+
+                    FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String s = dataSnapshot.getValue() + "";
+                            String bal[] = s.split("-");
+                            for (int m = 0; m < bal.length; m++)
+                                allat.add(bal[m].trim());
+                            //    System.out.println(allat);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    final int finalJ = j;
+                    FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String s = dataSnapshot.getValue() + "";
+                            String bal[] = s.split("-");
+                            for (int m = 0; m < bal.length; m++)
+                                allar.add(bal[m].trim());
+                            //   System.out.println(allar);
+
+
+                            if (finalJ == centers.size() - 1)
+                                datafetched();
+
+                        }
+
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -98,6 +191,94 @@ System.out.println(stitle+" "+sdec);
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void datafetched() {
+
+        System.out.println("\n-\n-\n");
+        System.out.println("blaaaaaaa " + allar.size());
+        System.out.println(allat);
+
+
+
+        for (int j = 0; j < allat.size(); j++) {
+
+            String bro[] = allat.get(j).split("_");
+            double at = 0, on = 0;
+            bro[0] = bro[0].replace("\"", "");
+            bro[1] = bro[1].replace("\"", "");
+            at = Double.parseDouble(bro[0].replace("\"", ""));
+            on = Double.parseDouble(bro[1].replace("\"", ""));
+
+                Location la=new Location("t"+j);
+                
+                la.setLatitude(at);
+                la.setLongitude(on);
+            
+            float B=locat.distanceTo(la)/1000;
+            String aa=B+"";
+            aa=aa.substring(0,4);
+            dist.add(B);
+
+
+            System.out.println(String.join(",", bro) + " " + allar.get(j));
+
+            Marker m =mMap.addMarker((new MarkerOptions().position(new LatLng(at, on))).title(allar.get(j))
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+
+            if(m!=null)
+            haMap.put(j,m);
+
+
+        }
+
+        for (int i = 0; i < dist.size(); i++) {
+            for (int j = 0; j < dist.size() - i - 1; j++) {
+                if (dist.get(j)>(dist.get(j + 1))) {
+                    Float temp = dist.get(j);
+                    dist.set(j, dist.get(j + 1));
+                    dist.set(j + 1, temp);
+
+
+                    String temp1 = allar.get(j);
+                    allar.set(j, allar.get(j + 1));
+                    allar.set(j + 1, temp1);
+
+                    Marker m = haMap.get(j);
+                    haMap.put(j, haMap.get(j + 1));
+                    haMap.put(j + 1, m);
+
+
+                }
+            }
+
+            if(i==dist.size()-1)
+            {
+                adapter1.UpdateItemsList(allar, dist);
+            }
+        }
+
+
+        adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, allar, dist);
+        adapter1.setClickListener(MapsActivity.this);
+
+        recyclerView.setAdapter(adapter1);
+        //adapter1.UpdateItemsList(addr, dist);
+        //recyclerView.setAdapter(adapter1);
+        adapter1.UpdateItemsList(allar, dist);
+        LatLng syd = new LatLng(locat.getLatitude(), locat.getLongitude());
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(syd)      // Sets the center of the map to Mountain View
+                .zoom(13f)                   // Sets the zoom
+                .build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        /*
+         */
+
     }
 
     @Override
@@ -143,7 +324,80 @@ System.out.println(stitle+" "+sdec);
             return;
         }
 
-        Criteria criteria = new Criteria();
+
+        geocoder = new Geocoder(this, Locale.getDefault());
+       adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, allar, dist);
+        adapter1.setClickListener(MapsActivity.this);
+        recyclerView.setNestedScrollingEnabled(true
+        );
+        recyclerView.setAdapter(adapter1);
+        adapter1.UpdateItemsList(allar, dist);
+        //    System.out.println(addr.size()+" "+addr);
+        //  System.out.println(dist.size()+" "+dist);
+
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            LatLng syd = new LatLng(location.getLatitude(), location.getLongitude());
+                            locat=location;
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(syd)      // Sets the center of the map to Mountain View
+                                    .zoom(13f)                   // Sets the zoom
+                                    .build();
+                            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+                            float f = 8;
+
+                         //   mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(syd, f));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(syd));
+                            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    Activity#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for Activity#requestPermissions for more details.
+                                return;
+                            }
+                            mMap.setMyLocationEnabled(true);
+                  // Creates a CameraPosition from the builder
+
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
+
+
+
+
+
+
+                        }
+                    }
+
+
+
+
+
+                });
+
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
+
+
+    }
+
+
+    @SuppressWarnings("deprecation")
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onLocationChanged(Location location) {
+
+
+//        System.out.println(location+" " +lat+" "+lon+" ");
+
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
@@ -153,79 +407,10 @@ System.out.println(stitle+" "+sdec);
             // to handle the case where the user grants the permission. See the documentation
             // for Activity#requestPermissions for more details.
             return;
-        }Location location1;
-        //        lat=location.getLatitude();
-        //      lon=location.getLongitude();
-
-        // System.out.println(location+"-" +lat+" "+lon+" ");
-
-        //LatLng syd = new LatLng(location.getLatitude(), location.getLongitude());
-        float f=8;
-        /*
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(syd,f));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(syd));
-        mMap.setMyLocationEnabled(true);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(syd)      // Sets the center of the map to Mountain View
-                .zoom(15)                   // Sets the zoom
-                // Sets the orientation of the camera to east
-                                  // SstartPoint.distanceTo(endPoint);ets the tilt of the camera to  30 degrees
-                .build();                   // Creates a CameraPosition from the builder
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        String s="";*/
-
-
-
-        geocoder = new Geocoder(this, Locale.getDefault());
-        adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, addr,dist);
-        adapter1.setClickListener(MapsActivity.this);
-        recyclerView.setNestedScrollingEnabled(true
-        );
-        recyclerView.setAdapter(adapter1);
-        adapter1.UpdateItemsList(addr,dist);
-        System.out.println(addr.size()+" "+addr);
-        System.out.println(dist.size()+" "+dist);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-
-        for (int i=0;i<latarr.length;i++)
-        {
-            Location loccheck=new Location("t"+i);
-            loccheck.setLatitude(latarr[i]);
-            loccheck.setLongitude(lonarr[i]);
-            /*
-
-
-             */
-
-            if(location.distanceTo(loccheck)<5000)
-            {
-                try {
-                    addresses = geocoder.getFromLocation(loccheck.getLatitude(), loccheck.getLongitude(), 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String address = addresses.get(0).getAddressLine(0);
-                //     s=s+(int)location.distanceTo(loccheck)+" Meter  \n"+address+"\n \n";
-                mMap.addMarker(new MarkerOptions().position(new LatLng(loccheck.getLatitude(),loccheck.getLongitude())));
-
-                addr.add(address);
-                dist.add((int)location.distanceTo(loccheck)+" Meters");
-
-            }
         }
+        mMap.setMyLocationEnabled(true);
 
 
-
-
-        System.out.println(location+" " +lat+" "+lon+" ");
-        lat=location.getLatitude();
-        lon=location.getLongitude();
-        LatLng sydney = new LatLng(lat, lon);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     @Override
@@ -243,9 +428,24 @@ System.out.println(stitle+" "+sdec);
 
     }
 
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finish();
+    }
+
     @Override
     public void onItemClick(View view, int position) {
-        Toast.makeText(this, ""+addr.get(position), Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(MapsActivity.this,PaymentActivity.class));
+        Marker m= haMap.get(position);
+m.showInfoWindow();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
+        Toast.makeText(MapsActivity.this, "hello"+position, Toast.LENGTH_SHORT).show();
+
+
     }
+
+
 }

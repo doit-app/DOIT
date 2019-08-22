@@ -613,7 +613,7 @@ h1.clear();
 
 
 
-        String scnna[]={"Alltechz solutions Pvt Ltd", "Trichrome Technologies", "Infycle Technologies", "Sevael Technologies", "Msquare Networks", "Geo Insys", "V Tech Soft IT Service", " Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Network Geek", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Greens Technologies"};
+        String scnna[]={"Alltechz Solutions Pvt Ltd", "Trichrome Technologies", "Infycle Technologies", "Sevael Technologies", "Msquare Networks", "Geo Insys", "V Tech Soft IT Service", " Fita Training & Placement", "JPA Solutions", "Hope Tutors", "Network Geek", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tech", "Greens Technologies"};
         double pcnna[]={12000, 0, 0, 0, 7500, 0, 0, 0, 0, 10000, 10000, 13000, 15999, 20000, 0, 0, 0, 0, 0, 0};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("CCNA");
@@ -635,7 +635,7 @@ h1.clear();
         }
 
 
-        String  CCNP [] ={"Alltechz solutions Pvt Ltd","Msquare Networks","Network Geek","IICT Training Institute" ,"G-Tec"};
+        String  CCNP [] ={"Alltechz Solutions Pvt Ltd","Msquare Networks","Network Geek","IICT Training Institute" ,"G-Tech"};
         double pCCNP[]={14000, 12000, 10000, 0, 0};
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("CCNP");
         db.child("desc").setValue("desc");
@@ -657,7 +657,7 @@ h1.clear();
 
 
 
-        String linux []= {"Alltechz solutions Pvt Ltd", "JPA Solutions", "IICT Training Institute", "Greens Technologies"};
+        String linux []= {"Alltechz Solutions Pvt Ltd", "JPA Solutions", "IICT Training Institute", "Greens Technologies"};
         double  plinux[]={13000, 0, 0, 0};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("LINUX");
@@ -706,7 +706,7 @@ h1.clear();
 
 
 
-        String aws []={"Fita Training & Placement", "Infycle Technologies" , "JPA Solutions", "Hope Tutors", "SA Techno Solutions" , "G-Tec", "Greens Technologies" , "Alltechz solutions Pvt Ltd"};
+        String aws []={"Fita Training & Placement", "Infycle Technologies" , "JPA Solutions", "Hope Tutors", "SA Techno Solutions" , "G-Tech", "Greens Technologies" , "Alltechz Solutions Pvt Ltd"};
         double  paws[]={0, 0, 20000, 13000, 0, 0, 15000, 13000};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("AWS");
@@ -733,7 +733,7 @@ h1.clear();
 
 
 
-        String microsoft [] = {"Sevael Technologies", "Alltechz solutions Pvt Ltd", "JPA Solutions", "Hope Tutors", "EYE Open", "G-Tec", "Greens Technologies"};
+        String microsoft [] = {"Sevael Technologies", "Alltechz Solutions Pvt Ltd", "JPA Solutions", "Hope Tutors", "EYE Open", "G-Tech", "Greens Technologies"};
         double  pmicrosoft[]={0, 13000, 20000, 18000, 0, 0, 15000};
 
 
@@ -809,7 +809,7 @@ h1.clear();
 
 
 
-        String PYTHON [] ={"Infycle Technologies", "Geo Insys", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tec", "Alltechz Solutions Pvt Ltd"};
+        String PYTHON [] ={"Infycle Technologies", "Geo Insys", "JPA Solutions", "Hope Tutors", "Credo Systemz", "Zuan Education", "Accord", "IICT Training Institute", "Ampersand Academy", "SA Techno Solutions", "EYE Open", "G-Tech", "Alltechz Solutions Pvt Ltd"};
         double  pPYTHON[]={0, 20000, 16000, 24000, 15000, 14999, 15000, 15000, 18000, 0, 16000, 0, 7000};
 
         db=FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child("PYTHON");
@@ -1003,7 +1003,7 @@ h1.clear();
 
 
 
-        String ISTQB[]={"Alltechz solutions Pvt Ltd", "Sevael Technologies", "Credo Systemz"};
+        String ISTQB[]={"Alltechz Solutions Pvt Ltd", "Sevael Technologies", "Credo Systemz"};
         double  pISTQB[]={0, 0, 0};
 
 
@@ -1027,7 +1027,7 @@ h1.clear();
 
 
 
-        String COMPTIA[]={"Msquare Networks", "Alltechz solutions Pvt Ltd", "Credo Systemz"};
+        String COMPTIA[]={"Msquare Networks", "Alltechz Solutions Pvt Ltd", "Credo Systemz"};
         double  pCOMPTIA[]={0, 0, 0};
 
 
@@ -1074,7 +1074,7 @@ h1.clear();
 
 
 
-        String ITIL[]={"Alltechz solutions Pvt Ltd","Sevael Technologies"};
+        String ITIL[]={"Alltechz Solutions Pvt Ltd","Sevael Technologies"};
         double  pITIL[]={0, 0};
 
 

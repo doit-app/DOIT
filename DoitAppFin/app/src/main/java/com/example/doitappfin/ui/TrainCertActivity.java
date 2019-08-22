@@ -287,34 +287,30 @@ private ArrayList<certModel> recycleViewModelList;
                 //i.putExtra("desc",model.getDesc());
                 //startActivity(i);
 
-                if(model.getAddetails().equals("single"))
+                if(i.getStringExtra("val").equals("Certification"))
                 {
-                    Intent inten=(new Intent(TrainCertActivity.this,SingleActivity.class));
-                    inten.putExtra("title",model.getTitle());
-                    inten.putExtra("desc",model.getDesc());
-                    inten.putExtra("image",model.getImage());
-                    startActivity(inten);
+                    if (model.getAddetails().equals("single")) {
+                        Intent inten = (new Intent(TrainCertActivity.this, SingleActivity.class));
+                        inten.putExtra("title", model.getTitle());
+                        inten.putExtra("desc", model.getDesc());
+                        inten.putExtra("image", model.getImage());
+                        startActivity(inten);
 
-                }
-                else
-                if(model.getAddetails().equals("list"))
-                {
-                    Intent inten=(new Intent(TrainCertActivity.this,ListDispActivity.class));
-                    inten.putExtra("title",model.getTitle());
-                    inten.putExtra("desc",model.getDesc());
-                    inten.putExtra("image",model.getImage());
-                    startActivity(inten);
+                    } else if (model.getAddetails().equals("list")) {
+                        Intent inten = (new Intent(TrainCertActivity.this, ListDispActivity.class));
+                        inten.putExtra("title", model.getTitle());
+                        inten.putExtra("desc", model.getDesc());
+                        inten.putExtra("image", model.getImage());
+                        startActivity(inten);
 
-                }
-                else
-                if(model.getAddetails().equals("box"))
-                {
+                    } else if (model.getAddetails().equals("box")) {
 
-                    final Intent intent=(new Intent(TrainCertActivity.this,BoxActivity.class));
-                    intent.putExtra("fromcert",model.getTitle());
-                    startActivity(intent);
+                        final Intent intent = (new Intent(TrainCertActivity.this, BoxActivity.class));
+                        intent.putExtra("fromcert", model.getTitle());
+                        startActivity(intent);
 
 
+                    }
                 }
                 else
                 {

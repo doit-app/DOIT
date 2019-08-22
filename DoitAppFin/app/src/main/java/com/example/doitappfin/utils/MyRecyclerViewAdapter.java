@@ -15,13 +15,14 @@ import java.util.List;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder>  {
 
-    private List<String> Address,Distance;
+    private List<String> Address;
+    private ArrayList<Float> Distance;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private ArrayList examheading,clientheading;
 
     // data is passed into the constructor
-    public MyRecyclerViewAdapter(Context context, List<String> data, List<String> data1) {
+    public MyRecyclerViewAdapter(Context context, ArrayList<String> data, ArrayList<Float> data1) {
         this.mInflater = LayoutInflater.from(context);
         this.Address = data;
         this.Distance = data1;
@@ -39,9 +40,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String addr = Address.get(position);
-        String dist = Distance.get(position);
+        Float dist = Distance.get(position);
         holder.myTextViewaddr.setText(addr);
-        holder.myTextViewdist.setText(dist);
+        String c=dist+"";
+        c=c.substring(0,4);
+        holder.myTextViewdist.setText(c+" km");
+
+        System.out.println(Address);
 
     }
 
@@ -84,7 +89,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         void onItemClick(View view, int position);
     }
 
-    public void UpdateItemsList(List<String> addr,List<String> dist)
+    public void UpdateItemsList(List<String> addr, List<Float> dist)
     {
         Address=new ArrayList();
         Address.addAll(addr);

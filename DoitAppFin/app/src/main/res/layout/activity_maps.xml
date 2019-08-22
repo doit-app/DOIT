@@ -10,7 +10,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintTop_toTopOf="parent">
 
@@ -71,13 +70,19 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rec"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_margin="10dp"
                     android:overScrollMode="always"
                     android:scrollbars="vertical"
                     ></androidx.recyclerview.widget.RecyclerView>
 
-
+<Button
+    android:layout_width="match_parent"
+    android:layout_margin="20dp"
+    android:textColor="#fff"
+    android:text="Proceed"
+    android:background="@drawable/yellowbadge"
+    android:layout_height="wrap_content" />
 
 
             </LinearLayout>

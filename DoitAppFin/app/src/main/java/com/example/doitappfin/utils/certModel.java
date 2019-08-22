@@ -3,18 +3,36 @@ package com.example.doitappfin.utils;
 public class certModel {
 
 
-    String title,price,desc,image,addetails;
+    String title,price,desc,image,addetails,area,latlong;
 
 
     public certModel() {
     }
 
-    public certModel(String title, String price, String desc, String image, String addetails) {
+    public certModel(String title, String price, String desc, String image, String addetails,String area,String latlong) {
         this.title = title;
         this.price = price;
         this.desc = desc;
         this.image = image;
         this.addetails = addetails;
+        this.area=area;
+        this.latlong=latlong;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
+    public String getLatlong() {
+        return latlong;
+    }
+
+    public void setLatlong(String latlong) {
+        this.latlong = latlong;
     }
 
     public String getTitle() {
