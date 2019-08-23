@@ -327,12 +327,49 @@ private ArrayList<certModel> cert,train;
             @Override
             public void onItemClick(View view, int position, certModel model) {
 
+
+                if (model.getAddetails().equals("single")) {
+                    Intent inten = (new Intent(MainWorkActivity.this, SingleActivity.class));
+                    inten.putExtra("title", model.getTitle());
+                    inten.putExtra("desc", model.getDesc());
+                    inten.putExtra("image", model.getImage());
+                    inten.putExtra("price", model.getPrice());
+
+                    startActivity(inten);
+
+                } else if (model.getAddetails().equals("list")) {
+                    Intent inten = (new Intent(MainWorkActivity.this, ListDispActivity.class));
+                    inten.putExtra("title", model.getTitle());
+                    inten.putExtra("desc", model.getDesc());
+                    inten.putExtra("price", model.getPrice());
+
+                    inten.putExtra("image", model.getImage());
+                    startActivity(inten);
+
+                } else if (model.getAddetails().equals("box")) {
+                    final Intent intent = (new Intent(MainWorkActivity.this, BoxActivity.class));
+                    intent.putExtra("fromcert", model.getTitle());
+                    intent.putExtra("price", model.getPrice());
+
+                    startActivity(intent);
+
+
+                }
+
             }
         });
 
         recyclerViewAdapterTrain.SetOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position, certModel model) {
+
+
+                Intent inten=(new Intent(MainWorkActivity.this,MapsActivity.class));
+                inten.putExtra("title",model.getTitle());
+                inten.putExtra("desc",model.getDesc());
+                inten.putExtra("from","main");
+                inten.putExtra("image",model.getImage());
+                startActivity(inten);
 
             }
         });

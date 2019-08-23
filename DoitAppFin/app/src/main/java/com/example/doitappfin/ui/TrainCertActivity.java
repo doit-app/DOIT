@@ -294,6 +294,8 @@ private ArrayList<certModel> recycleViewModelList;
                         inten.putExtra("title", model.getTitle());
                         inten.putExtra("desc", model.getDesc());
                         inten.putExtra("image", model.getImage());
+                        inten.putExtra("price", model.getPrice());
+
                         startActivity(inten);
 
                     } else if (model.getAddetails().equals("list")) {
@@ -301,12 +303,16 @@ private ArrayList<certModel> recycleViewModelList;
                         inten.putExtra("title", model.getTitle());
                         inten.putExtra("desc", model.getDesc());
                         inten.putExtra("image", model.getImage());
+                        inten.putExtra("price", model.getPrice());
+
                         startActivity(inten);
 
                     } else if (model.getAddetails().equals("box")) {
 
                         final Intent intent = (new Intent(TrainCertActivity.this, BoxActivity.class));
                         intent.putExtra("fromcert", model.getTitle());
+                        intent.putExtra("price", model.getPrice());
+
                         startActivity(intent);
 
 
@@ -317,6 +323,7 @@ private ArrayList<certModel> recycleViewModelList;
                     Intent inten=(new Intent(TrainCertActivity.this,MapsActivity.class));
                     inten.putExtra("title",model.getTitle());
                     inten.putExtra("desc",model.getDesc());
+                    inten.putExtra("from","train");
                     inten.putExtra("image",model.getImage());
                     startActivity(inten);
 

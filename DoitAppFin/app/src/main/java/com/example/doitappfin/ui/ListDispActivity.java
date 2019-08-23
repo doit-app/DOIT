@@ -236,6 +236,8 @@ String stitle="",simage="";
                 inten.putExtra("title",s);
                 inten.putExtra("desc",model.getDesc());
                 inten.putExtra("image",simage);
+                inten.putExtra("price", model.getPrice());
+
                 startActivity(inten);
 
                 //handle item click events here

@@ -36,6 +36,18 @@ public class SingleActivity extends AppCompatActivity {
         shead=i.getStringExtra("title");
         sdesc=i.getStringExtra("desc");
         simage=i.getStringExtra("image");
+    String tot[]=i.getStringExtra("price").split("-");
+
+
+    if(tot.length==2) {
+        swithot = tot[0];
+        swith = tot[1];
+        twithou.setText(swithot);
+        twith.setText(swith);
+    }
+
+
+    System.out.println(swith+" "+i.getStringExtra("price")+"  "+swithot);
 
     theading.setText(shead);
     tdesc.setText(sdesc);

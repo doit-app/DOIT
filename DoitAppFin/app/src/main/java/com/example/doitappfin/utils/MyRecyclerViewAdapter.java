@@ -39,15 +39,18 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String addr = Address.get(position);
-        Float dist = Distance.get(position);
-        holder.myTextViewaddr.setText(addr);
-        String c=dist+"";
-        c=c.substring(0,4);
-        holder.myTextViewdist.setText(c+" km");
+        if(Distance.size()>0) {
+            if (Address.get(position) != null) {
+                String addr = Address.get(position);
+                Float dist = Distance.get(position);
+                holder.myTextViewaddr.setText("Doit center " + addr);
+                String c = dist + "";
+                c = c.substring(0, 4);
+                holder.myTextViewdist.setText(c + " km");
 
-        System.out.println(Address);
-
+               // System.out.println(Address);
+            }
+        }
     }
 
     // total number of rows

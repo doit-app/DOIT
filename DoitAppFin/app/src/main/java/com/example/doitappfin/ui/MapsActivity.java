@@ -102,75 +102,151 @@ haMap=new HashMap<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         centers = new ArrayList<>();
+        if(i.getStringExtra("from").equals("main"))
+        {
+            FirebaseDatabase.getInstance().getReference().child("PopularData").child("Training").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-        FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    centers.clear();
+                    for (DataSnapshot d1 : dataSnapshot.getChildren()) {
+                        //     System.out.println(d1.getKey());
+                        String s = d1.getKey();
+                        s = s.replace("_a", "&");
+                        s = s.replace("_m", "-");
+                        centers.add(s);
 
-                centers.clear();
-                for (DataSnapshot d1 : dataSnapshot.getChildren()) {
-                    //     System.out.println(d1.getKey());
-                    String s = d1.getKey();
-                    s = s.replace("_a", "&");
-                    s = s.replace("_m", "-");
-                    centers.add(s);
+                    }
+
+                    for (int j = 0; j < centers.size(); j++) {
+
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allat.add(bal[m].trim());
+                                //    System.out.println(allat);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        final int finalJ = j;
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allar.add(bal[m].trim());
+                                //   System.out.println(allar);
+
+
+                                if (finalJ == centers.size() - 1)
+                                    datafetched();
+
+                            }
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                    }
+
 
                 }
 
-                for (int j = 0; j < centers.size(); j++) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                    FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String s = dataSnapshot.getValue() + "";
-                            String bal[] = s.split("-");
-                            for (int m = 0; m < bal.length; m++)
-                                allat.add(bal[m].trim());
-                            //    System.out.println(allat);
+                }
+            });
+        }
+        if(i.getStringExtra("from").equals("train"))
+        {
 
-                        }
+            FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                    centers.clear();
+                    for (DataSnapshot d1 : dataSnapshot.getChildren()) {
+                        //     System.out.println(d1.getKey());
+                        String s = d1.getKey();
+                        s = s.replace("_a", "&");
+                        s = s.replace("_m", "-");
+                        centers.add(s);
 
-                        }
-                    });
+                    }
 
-                    final int finalJ = j;
-                    FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.O)
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            String s = dataSnapshot.getValue() + "";
-                            String bal[] = s.split("-");
-                            for (int m = 0; m < bal.length; m++)
-                                allar.add(bal[m].trim());
-                            //   System.out.println(allar);
+                    for (int j = 0; j < centers.size(); j++) {
+
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allat.add(bal[m].trim());
+                                //    System.out.println(allat);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        final int finalJ = j;
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allar.add(bal[m].trim());
+                                //   System.out.println(allar);
 
 
-                            if (finalJ == centers.size() - 1)
-                                datafetched();
+                                if (finalJ == centers.size() - 1)
+                                    datafetched();
 
-                        }
+                            }
 
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
+                            }
+                        });
+
+
+                    }
 
 
                 }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
+                }
+            });
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -208,21 +284,27 @@ haMap=new HashMap<>();
 
             String bro[] = allat.get(j).split("_");
             double at = 0, on = 0;
-            bro[0] = bro[0].replace("\"", "");
-            bro[1] = bro[1].replace("\"", "");
-            at = Double.parseDouble(bro[0].replace("\"", ""));
-            on = Double.parseDouble(bro[1].replace("\"", ""));
+            if(bro.length == 2) {
+                if(bro[0]!=null)
+                bro[0] = bro[0].replace("\"", "");
+                if(bro[1]!=null)
+                bro[1] = bro[1].replace("\"", "");
 
-                Location la=new Location("t"+j);
+                at = Double.parseDouble(bro[0].replace("\"", ""));
+                on = Double.parseDouble(bro[1].replace("\"", ""));
+            }        adapter1.UpdateItemsList(allar, dist);
+
+
+            Location la=new Location("t"+j);
                 
                 la.setLatitude(at);
                 la.setLongitude(on);
-            
-            float B=locat.distanceTo(la)/1000;
-            String aa=B+"";
-            aa=aa.substring(0,4);
-            dist.add(B);
-
+            if(locat!=null) {
+                float B = locat.distanceTo(la) / 1000;
+                String aa = B + "";
+                aa = aa.substring(0, 4);
+                dist.add(B);
+            }
 
             System.out.println(String.join(",", bro) + " " + allar.get(j));
 
@@ -255,10 +337,10 @@ haMap=new HashMap<>();
                 }
             }
 
-            if(i==dist.size()-1)
-            {
+            adapter1.UpdateItemsList(allar, dist);
+
                 adapter1.UpdateItemsList(allar, dist);
-            }
+
         }
 
 
@@ -269,16 +351,17 @@ haMap=new HashMap<>();
         //adapter1.UpdateItemsList(addr, dist);
         //recyclerView.setAdapter(adapter1);
         adapter1.UpdateItemsList(allar, dist);
-        LatLng syd = new LatLng(locat.getLatitude(), locat.getLongitude());
+        if(locat!=null) {
+            LatLng syd = new LatLng(locat.getLatitude(), locat.getLongitude());
 
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(syd)      // Sets the center of the map to Mountain View
-                .zoom(13f)                   // Sets the zoom
-                .build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        /*
-         */
-
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(syd)      // Sets the center of the map to Mountain View
+                    .zoom(13f)                   // Sets the zoom
+                    .build();
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            /*
+             */
+        }
     }
 
     @Override
@@ -434,7 +517,13 @@ haMap=new HashMap<>();
     public void onBackPressed() {
         super.onBackPressed();
 
-        finish();
+     //   finish();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
     }
 
     @Override
