@@ -82,11 +82,13 @@ public class Registration extends AppCompatActivity {
 
                     hashMap.put("name",Sname);
                     hashMap.put("email",Semail);
-                    hashMap.put("phone",Sphone);
-                    hashMap.put("dob","");
-                    hashMap.put("city","");
-                    hashMap.put("addr","");
-                    hashMap.put("sex","");
+                    hashMap.put("number",Sphone);
+                    hashMap.put("date","NO");
+                    hashMap.put("city","NO");
+                    hashMap.put("addr","NO");
+                    hashMap.put("sex","NO");
+                    hashMap.put("image","NO");
+                    hashMap.put("iscomplete","NO");
                     mRef.setValue(hashMap);
 
                     SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);

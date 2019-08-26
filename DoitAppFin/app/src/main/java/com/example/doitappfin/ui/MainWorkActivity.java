@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide;
 import com.example.doitappfin.R;
 import com.example.doitappfin.login.GoogleLoginActivity;
 import com.example.doitappfin.utils.MyCustomPagerAdapter;
+import com.example.doitappfin.utils.ProfileData;
 import com.example.doitappfin.utils.RecyclerViewAdapter;
 import com.example.doitappfin.utils.UserDetails;
 import com.example.doitappfin.utils.certModel;
@@ -70,7 +71,7 @@ public class MainWorkActivity extends AppCompatActivity
     RecyclerViewAdapter recyclerViewAdapterTrain,recyclerViewAdapterCert;
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 private ArrayList<certModel> cert,train;
-
+   private String omail="",oname="",odate="",onum="",ocity="",oaddr="",osex="",oiscomp="",ophoto="";
     RecyclerView.LayoutManager recylerViewLayoutManager;
     int images[] = {R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange};
     MyCustomPagerAdapter myCustomPagerAdapter;
@@ -120,8 +121,72 @@ private ArrayList<certModel> cert,train;
             UserDetails.ProfilePhoto = acct.getPhotoUrl();
             UserDetails.name = acct.getDisplayName();
             Glide.with(this).load(acct.getPhotoUrl()).into(photoTV);
+            FirebaseDatabase.getInstance().getReference().child("ProfileData").child(acct.getEmail().replace(".","_")).child("image").setValue(acct.getPhotoUrl().toString());
             heademail.setText(acct.getDisplayName());
         }
+        else {
+
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+
+            onum=sp.getString("number","");
+            // System.out.println(omail+" "+onum);
+
+            if(onum.length()==10)
+            {
+
+
+                FirebaseDatabase.getInstance().getReference().child("LoginData").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot d1:dataSnapshot.getChildren())
+                        {
+                            if((d1.getValue().toString()).equals(onum))
+                            {
+                                // System.out.println(d1.getValue().toString()+" "+onum);
+                                omail=d1.getKey().toString().trim();
+
+                                FirebaseDatabase.getInstance().getReference().child("ProfileData").child(omail).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                        ProfileData obj=dataSnapshot.getValue(ProfileData.class);
+                                        oname=obj.getName();
+                                        oaddr=(obj.getAddr());
+                                        osex=(obj.getSex());
+                                        ocity=(obj.getCity());
+                                        odate=(obj.getDate());
+                                        omail=(obj.getEmail());
+                                        onum=obj.getNumber();
+                                        oiscomp=(obj.getIscomplete());
+                                        ophoto=(obj.getImage());
+
+                                        Glide.with(getApplicationContext()).load(ophoto).into(photoTV);
+                                        heademail.setText(oname);
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });}
+
+        }
+
+
+
+
+
         tv1=findViewById(R.id.t1);
         tv2=findViewById(R.id.t2);
 
@@ -257,11 +322,11 @@ private ArrayList<certModel> cert,train;
 
         } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_tools) {
+        } else if (id == R.id.nav_combos) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_call) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_signout) {
             SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("number","___");

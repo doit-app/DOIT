@@ -28,6 +28,23 @@
         <activity
             android:name=".login.otp"
             android:theme="@style/NoAct" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/logodoit" />
+        <meta-data
+            android:name="com.google.firebase.messaging.notification_channel"
+            android:value="@string/notification_channel"
+            />
+        <service
+            android:name=".utils.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
         <activity
             android:name=".ui.BoxActivity"
             android:theme="@style/AppTheme.Template.Base" />
@@ -40,7 +57,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.MainWorkActivity"
-            android:label="@string/title_activity_main_work"
+            android:label=" "
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".login.GoogleLoginActivity"

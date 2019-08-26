@@ -15,7 +15,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "927631928365-sc45apblsmuoo1ss0l2kdice7soevfsu.apps.googleusercontent.com",
+          "client_id": "927631928365-ctdrkoqj97ha5uj57b8igdbgp4rjbc77.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.doitappfin",
+            "certificate_hash": "f4e243ceb6ce94d58b15f53d8b55274b35ec69b0"
+          }
+        },
+        {
+          "client_id": "927631928365-96igtbv2eus9gbvpaop426p32m4487uo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.doitappfin",
+            "certificate_hash": "7b1d69601fb2e0a5e99aa96e85631fcd2b87dbd2"
+          }
+        },
+        {
+          "client_id": "927631928365-j8kh6bpb88o1lsm945mvog3an0iui6ol.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.doitappfin",
@@ -28,6 +44,43 @@
           "android_info": {
             "package_name": "com.example.doitappfin",
             "certificate_hash": "4661ce21228d7b3b4b0164e7acd22080797cb455"
+          }
+        },
+        {
+          "client_id": "927631928365-mno25edufvrbhauqjgrehd1efhocr811.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnVA2iXW3ksyHpvAQxDOjHaOaeM_cA6Xs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "927631928365-mno25edufvrbhauqjgrehd1efhocr811.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927631928365:android:6e7b5afdff6f7357",
+        "android_client_info": {
+          "package_name": "srinikeerthi.value.com.doitadmin2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "927631928365-ocssg0jdgg8gdsu2qus5ia0uac3jbi9k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "srinikeerthi.value.com.doitadmin2",
+            "certificate_hash": "ee3d27e8fee8a08deef6c1b77e636d60b3ed1aeb"
           }
         },
         {

@@ -335,11 +335,14 @@ haMap=new HashMap<>();
 
 
                 }
+
+                adapter1.UpdateItemsList(allar, dist);
+
             }
 
             adapter1.UpdateItemsList(allar, dist);
 
-                adapter1.UpdateItemsList(allar, dist);
+            //    adapter1.UpdateItemsList(allar, dist);
 
         }
 
@@ -350,7 +353,6 @@ haMap=new HashMap<>();
         recyclerView.setAdapter(adapter1);
         //adapter1.UpdateItemsList(addr, dist);
         //recyclerView.setAdapter(adapter1);
-        adapter1.UpdateItemsList(allar, dist);
         if(locat!=null) {
             LatLng syd = new LatLng(locat.getLatitude(), locat.getLongitude());
 
@@ -399,11 +401,7 @@ haMap=new HashMap<>();
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
+
             return;
         }
 
@@ -516,8 +514,7 @@ haMap=new HashMap<>();
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-     //   finish();
+        //finish();
     }
 
     @Override

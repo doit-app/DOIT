@@ -5,9 +5,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="15dp"
-    android:layout_marginRight="15dp"
-    android:layout_marginLeft="15dp"
+    android:layout_margin="10dp"
     tools:context=".ui.proflie"
     tools:showIn="@layout/app_bar_proflie">
 
@@ -16,7 +14,6 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_marginBottom="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -24,39 +21,38 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="Personal details"
                 android:textColor="@color/colorAccent" />
 
             <TextView
-                android:layout_marginTop="12dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Name" />
 
             <EditText
                 android:id="@+id/editTextName"
-                android:textColor="#000"
+                android:hint="Enter Your Name"
                 android:layout_width="match_parent"
+                android:layout_marginBottom="8dp"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DOB" />
 
             <EditText
-                android:id="@+id/editDOB"
+                android:id="@+id/date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:textColor="#000"
+                android:hint="Pick Date..."
 
-                android:inputType="date" />
+                android:layout_marginBottom="8dp"
+                android:textSize="18sp"
+                />
 
             <TextView
-                android:layout_marginTop="10dp"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Phone" />
@@ -65,70 +61,66 @@
                 android:id="@+id/editphone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Provide us Your phone"
                 android:ems="10"
-                android:inputType="phone"
 
-                android:textColor="#000" />
+                android:layout_marginBottom="8dp"
+
+                android:inputType="phone" />
 
             <TextView
-                android:layout_marginTop="10dp"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="City" />
 
             <EditText
                 android:id="@+id/editcity"
-                android:textColor="#000"
+                android:hint="Enter your city"
+                android:layout_marginBottom="8dp"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:layout_marginTop="10dp"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Address" />
 
             <EditText
                 android:id="@+id/editaddress"
-                android:textColor="#000"
-
+                android:hint="enter your address"
                 android:layout_width="match_parent"
+                android:layout_marginBottom="8dp"
+
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:layout_marginTop="10dp"
-android:layout_marginBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sex" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="8dp"
                 android:orientation="horizontal">
                 <RadioGroup
-                    android:weightSum="3"
                     android:layout_width="match_parent"
                     android:orientation="horizontal"
+                    android:id="@+id/myRadioGroup"
                     android:layout_height="match_parent">
                     <RadioButton
-                        android:layout_weight="1"
                         android:id="@+id/radioButtonMale"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Male" />
                     <RadioButton
-                        android:layout_weight="1"
                         android:id="@+id/radioButtonFemale"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Female" />
                     <RadioButton
-                        android:layout_weight="1"
                         android:id="@+id/radioButtonOthers"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Others" />
                 </RadioGroup>
@@ -136,39 +128,30 @@ android:layout_marginBottom="5dp"
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="0.9sp"
+                android:layout_height="1dp"
                 android:background="#000"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="8dp"/>
             <TextView
-                android:layout_marginTop="10dp"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Email id" />
 
             <EditText
                 android:id="@+id/editemail"
-                android:textColor="#000"
-
+                android:layout_marginBottom="8dp"
+                android:hint="Enter your gmail id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
 
             <Button
-                android:layout_marginTop="10dp"
-
-                android:layout_gravity="center"
-                android:gravity="center"
                 android:id="@+id/buttonUpdate"
-                android:layout_width="120dp"
-                android:layout_marginBottom="30dp"
-                android:textColor="#fff"
                 android:background="@drawable/yellowbadge"
+                android:layout_width="match_parent"
+                android:layout_margin="10dp"
+                android:textColor="#fff"
                 android:layout_height="wrap_content"
                 android:text="Update" />
-
-
 
         </LinearLayout>
 
