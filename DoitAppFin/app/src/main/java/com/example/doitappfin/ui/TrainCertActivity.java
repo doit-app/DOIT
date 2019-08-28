@@ -1,8 +1,14 @@
 package com.example.doitappfin.ui;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import android.provider.Settings;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -28,6 +34,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -50,6 +57,7 @@ public class TrainCertActivity extends AppCompatActivity {
 
 
     private Intent i;
+    int flag=0;
     //Toolbar toolbar;
     private Toolbar toolbar;
 
@@ -66,10 +74,39 @@ private ArrayList<certModel> recycleViewModelList;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train_cert);
-        i=getIntent();
-
-        // ButterKnife.bind(this);
         findViews();
+
+
+        i=getIntent();
+        initToolbar(i.getStringExtra("val"));
+        // ButterKnife.bind(this);
+
+
+
+
+        swipeRefreshRecyclerList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                // Do your stuff on refresh
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if (swipeRefreshRecyclerList.isRefreshing())
+                            swipeRefreshRecyclerList.setRefreshing(false);
+                    }
+                }, 5000);
+
+            }
+        });
+        if(connectedToNetwork()){
+            volley();
+        }else{ NoInternetAlertDialog(); }
+    }
+
+    private void volley() {
+        i=getIntent();
         initToolbar(i.getStringExtra("val"));
         recycleViewModelList=new ArrayList<certModel>();
 
@@ -148,24 +185,6 @@ private ArrayList<certModel> recycleViewModelList;
 
 
 
-
-        swipeRefreshRecyclerList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-
-                // Do your stuff on refresh
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if (swipeRefreshRecyclerList.isRefreshing())
-                            swipeRefreshRecyclerList.setRefreshing(false);
-                    }
-                }, 5000);
-
-            }
-        });
-
     }
 
     private void findViews() {
@@ -234,11 +253,17 @@ private ArrayList<certModel> recycleViewModelList;
             public boolean onQueryTextChange(String s) {
 
                 ArrayList<certModel> filterList = new ArrayList<certModel>();
-                if (s.length() > 0) {
+                if (s.length() > 0 ) {
                     for (int i = 0; i < recycleViewModelList.size(); i++) {
                         if (recycleViewModelList.get(i).getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
                             filterList.add(recycleViewModelList.get(i));
                             mAdapter.updateList(filterList);
+                        }
+                        else {
+                            if(s.length()>5 && flag==0 ) {
+                                showdial();
+                                flag=1;
+                            }
                         }
                     }
 
@@ -252,6 +277,36 @@ private ArrayList<certModel> recycleViewModelList;
 
 
         return true;
+    }
+
+    private void showdial() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("We couldn't find your query");
+        builder.setPositiveButton("Inquire", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(TrainCertActivity.this, "call proceed", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        builder.setNegativeButton("Submit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(TrainCertActivity.this, "submit", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNeutralButton("cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(TrainCertActivity.this, "cancel", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+
     }
 
 
@@ -296,7 +351,11 @@ private ArrayList<certModel> recycleViewModelList;
                         inten.putExtra("image", model.getImage());
                         inten.putExtra("price", model.getPrice());
 
-                        startActivity(inten);
+
+                        if(connectedToNetwork()){
+                            startActivity(inten);
+                        }
+                        else{ NoInternetAlertDialog(); }
 
                     } else if (model.getAddetails().equals("list")) {
                         Intent inten = (new Intent(TrainCertActivity.this, ListDispActivity.class));
@@ -305,15 +364,20 @@ private ArrayList<certModel> recycleViewModelList;
                         inten.putExtra("image", model.getImage());
                         inten.putExtra("price", model.getPrice());
 
-                        startActivity(inten);
-
+                        if(connectedToNetwork()){
+                            startActivity(inten);
+                        }
+                        else{ NoInternetAlertDialog(); }
                     } else if (model.getAddetails().equals("box")) {
 
                         final Intent intent = (new Intent(TrainCertActivity.this, BoxActivity.class));
                         intent.putExtra("fromcert", model.getTitle());
                         intent.putExtra("price", model.getPrice());
 
-                        startActivity(intent);
+                        if(connectedToNetwork()){
+                            startActivity(intent);
+                        }
+                        else{ NoInternetAlertDialog(); }
 
 
                     }
@@ -325,7 +389,11 @@ private ArrayList<certModel> recycleViewModelList;
                     inten.putExtra("desc",model.getDesc());
                     inten.putExtra("from","train");
                     inten.putExtra("image",model.getImage());
-                    startActivity(inten);
+                    if(connectedToNetwork()){
+                        startActivity(inten);
+
+                    }
+                    else{ NoInternetAlertDialog(); }
 
                 }
 
@@ -351,6 +419,45 @@ private ArrayList<certModel> recycleViewModelList;
         onBackPressed();
         return true;
     }
+
+    public void NoInternetAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You are not connected to the internet. ");
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
+            }
+        });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    public boolean connectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            return activeNetworkInfo.isConnected();
+        }
+
+        return false;
+
+    }
+
+
 
 
 }

@@ -1,12 +1,18 @@
 package com.example.doitappfin.ui;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 
@@ -54,5 +60,43 @@ public class PaymentActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    public boolean connectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            return activeNetworkInfo.isConnected();
+        }
+
+        return false;
+
+    }
+
+
+    public void NoInternetAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You are not connected to the internet. ");
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(connectedToNetwork()){
+                    //volley();
+                }else{ NoInternetAlertDialog(); }
+            }
+        });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 }

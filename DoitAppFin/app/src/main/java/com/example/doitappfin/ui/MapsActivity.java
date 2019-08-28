@@ -2,12 +2,15 @@ package com.example.doitappfin.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -15,8 +18,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,172 +88,9 @@ Location locat;
         requestLocationPermission();
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        Intent i = getIntent();
-haMap=new HashMap<>();
-
-        allar = new ArrayList<>();
-        allat = new ArrayList<>();
-        ttitle = findViewById(R.id.titl);
-        tdesc = findViewById(R.id.decs);
-
-        stitle = i.getStringExtra("title");
-        sdec = i.getStringExtra("desc");
-        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
-//System.out.println(stitle+" "+sdec);
-        ttitle.setText(stitle);
-        tdesc.setText(sdec);
-        dist = new ArrayList<Float>();
-        recyclerView = findViewById(R.id.rec);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        centers = new ArrayList<>();
-        if(i.getStringExtra("from").equals("main"))
-        {
-            FirebaseDatabase.getInstance().getReference().child("PopularData").child("Training").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    centers.clear();
-                    for (DataSnapshot d1 : dataSnapshot.getChildren()) {
-                        //     System.out.println(d1.getKey());
-                        String s = d1.getKey();
-                        s = s.replace("_a", "&");
-                        s = s.replace("_m", "-");
-                        centers.add(s);
-
-                    }
-
-                    for (int j = 0; j < centers.size(); j++) {
-
-                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String s = dataSnapshot.getValue() + "";
-                                String bal[] = s.split("-");
-                                for (int m = 0; m < bal.length; m++)
-                                    allat.add(bal[m].trim());
-                                //    System.out.println(allat);
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                        final int finalJ = j;
-                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.O)
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String s = dataSnapshot.getValue() + "";
-                                String bal[] = s.split("-");
-                                for (int m = 0; m < bal.length; m++)
-                                    allar.add(bal[m].trim());
-                                //   System.out.println(allar);
-
-
-                                if (finalJ == centers.size() - 1)
-                                    datafetched();
-
-                            }
-
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-        if(i.getStringExtra("from").equals("train"))
-        {
-
-            FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    centers.clear();
-                    for (DataSnapshot d1 : dataSnapshot.getChildren()) {
-                        //     System.out.println(d1.getKey());
-                        String s = d1.getKey();
-                        s = s.replace("_a", "&");
-                        s = s.replace("_m", "-");
-                        centers.add(s);
-
-                    }
-
-                    for (int j = 0; j < centers.size(); j++) {
-
-                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String s = dataSnapshot.getValue() + "";
-                                String bal[] = s.split("-");
-                                for (int m = 0; m < bal.length; m++)
-                                    allat.add(bal[m].trim());
-                                //    System.out.println(allat);
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-                        final int finalJ = j;
-                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
-                            @RequiresApi(api = Build.VERSION_CODES.O)
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String s = dataSnapshot.getValue() + "";
-                                String bal[] = s.split("-");
-                                for (int m = 0; m < bal.length; m++)
-                                    allar.add(bal[m].trim());
-                                //   System.out.println(allar);
-
-
-                                if (finalJ == centers.size() - 1)
-                                    datafetched();
-
-                            }
-
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
-
-
-                    }
-
-
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-
-
-
+        if(connectedToNetwork()){
+            volley();
+        }else{ NoInternetAlertDialog(); }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -533,5 +376,213 @@ m.showInfoWindow();
 
     }
 
+    public boolean connectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            return activeNetworkInfo.isConnected();
+        }
+
+        return false;
+
+    }
+
+
+    public void NoInternetAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You are not connected to the internet. ");
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
+            }
+        });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void volley() {
+
+        Intent i = getIntent();
+        haMap=new HashMap<>();
+
+        allar = new ArrayList<>();
+        allat = new ArrayList<>();
+        ttitle = findViewById(R.id.titl);
+        tdesc = findViewById(R.id.decs);
+
+        stitle = i.getStringExtra("title");
+        sdec = i.getStringExtra("desc");
+        Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
+//System.out.println(stitle+" "+sdec);
+        ttitle.setText(stitle);
+        tdesc.setText(sdec);
+        dist = new ArrayList<Float>();
+        recyclerView = findViewById(R.id.rec);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        centers = new ArrayList<>();
+
+
+
+        if(i.getStringExtra("from").equals("main"))
+        {
+            FirebaseDatabase.getInstance().getReference().child("PopularData").child("Training").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    centers.clear();
+                    for (DataSnapshot d1 : dataSnapshot.getChildren()) {
+                        //     System.out.println(d1.getKey());
+                        String s = d1.getKey();
+                        s = s.replace("_a", "&");
+                        s = s.replace("_m", "-");
+                        centers.add(s);
+
+                    }
+
+                    for (int j = 0; j < centers.size(); j++) {
+
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allat.add(bal[m].trim());
+                                //    System.out.println(allat);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        final int finalJ = j;
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allar.add(bal[m].trim());
+                                //   System.out.println(allar);
+
+
+                                if (finalJ == centers.size() - 1)
+                                    datafetched();
+
+                            }
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        if(i.getStringExtra("from").equals("train"))
+        {
+
+            FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    centers.clear();
+                    for (DataSnapshot d1 : dataSnapshot.getChildren()) {
+                        //     System.out.println(d1.getKey());
+                        String s = d1.getKey();
+                        s = s.replace("_a", "&");
+                        s = s.replace("_m", "-");
+                        centers.add(s);
+
+                    }
+
+                    for (int j = 0; j < centers.size(); j++) {
+
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allat.add(bal[m].trim());
+                                //    System.out.println(allat);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+                        final int finalJ = j;
+                        FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("area").addValueEventListener(new ValueEventListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                String s = dataSnapshot.getValue() + "";
+                                String bal[] = s.split("-");
+                                for (int m = 0; m < bal.length; m++)
+                                    allar.add(bal[m].trim());
+                                //   System.out.println(allar);
+
+
+                                if (finalJ == centers.size() - 1)
+                                    datafetched();
+
+                            }
+
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
+    }
 
 }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,11 +13,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.example.doitappfin.login.GoogleLoginActivity;
 import com.example.doitappfin.login.Registration;
 import com.example.doitappfin.ui.MainWorkActivity;
@@ -48,11 +52,18 @@ public class MainActivity extends AppCompatActivity {
     Animation fromtop;
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if(connectedToNetwork()){ }
+        else{ NoInternetAlertDialog(); }
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -1190,8 +1201,6 @@ h1.clear();
             databaseRef.child(m[i]).setValue(hashMap1);
         }*/
 
-        if(connectedToNetwork()){ }
-        else{ NoInternetAlertDialog(); }
 
         imv = findViewById(R.id.spl1);
         fromtop = AnimationUtils.loadAnimation(this, R.anim.fromtop);
@@ -1202,78 +1211,10 @@ h1.clear();
 
             @Override
             public void run() {
-                GoogleSignInAccount alr = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
-                SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
 
-                phone = sp.getString("number", "");
-
-
-                final FirebaseUser currentUser = mAuth.getCurrentUser();
-                if (currentUser != null) {                                  //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
-                    if (currentUser.getEmail() != null)
-                        mail = currentUser.getEmail().replace(".", "_");
-
-                    System.out.println(mail);
-                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
-                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-
-                            System.out.println("in splash" + snapshot);
-                            if (!snapshot.hasChild(mail) && !snapshot.getValue().toString().contains(phone)) {
-
-                                //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
-
-                                Intent i = (new Intent(MainActivity.this, Registration.class));
-                                i.putExtra("mail", currentUser.getEmail());
-                                i.putExtra("number", "");
-                                startActivity(i);
-                            } else {
-                                finish();
-                                Intent i = (new Intent(MainActivity.this, MainWorkActivity.class));
-                                startActivity(i);
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                } else {
-                    DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
-                    rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-
-                            System.out.println("in splash" + snapshot);
-                            if (!snapshot.hasChild(mail) || (!snapshot.getValue().toString().contains(phone) && (phone.length() < 9))) {
-
-                                //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
-
-                                finish();
-                                Intent i = (new Intent(MainActivity.this, GoogleLoginActivity.class));
-                                startActivity(i);
-                                startActivity(i);
-                            } else {
-                                finish();
-                                Intent i = (new Intent(MainActivity.this, MainWorkActivity.class));
-                                startActivity(i);
-
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-
-                }
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
             }
         }, SPLASH_TIME_OUT);
     }
@@ -1292,23 +1233,122 @@ h1.clear();
 
     }
 
-    public void NoInternetAlertDialog() {
+
+    public void NoInternetAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("You are not connected to the internet. ");
-
         builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (connectedToNetwork()) {
-                    //         progressBar.setVisibility(View.VISIBLE);
-                    System.out.println("network status" + connectedToNetwork());
-                    //       volley();
-                } else {
-                    NoInternetAlertDialog();
-                }
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
             }
         });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
 
+    private void volley() {
+
+        GoogleSignInAccount alr = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+
+        phone = sp.getString("number", "kjhgg");
+
+
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {                                  //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+            if (currentUser.getEmail() != null)
+                mail = currentUser.getEmail().replace(".", "_");
+
+            System.out.println(mail);
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+
+                    System.out.println("in splash" + snapshot);
+                    if (!snapshot.hasChild(mail) && !snapshot.getValue().toString().contains(phone)) {
+
+                        //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+
+                        Intent i = (new Intent(MainActivity.this, Registration.class));
+                        i.putExtra("mail", currentUser.getEmail());
+                        i.putExtra("number", "");
+
+                        if(connectedToNetwork()){
+                            startActivity(i);
+                        }
+                        else{ NoInternetAlertDialog(); }
+
+                    } else {
+
+                        Intent i = (new Intent(MainActivity.this, MainWorkActivity.class));
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                        if(connectedToNetwork()){
+                            startActivity(i);
+                        }
+                        else{ NoInternetAlertDialog(); }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+        } else {
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
+            rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+
+                    System.out.println("in splash" + snapshot);
+                    if (!snapshot.hasChild(mail) || (!snapshot.getValue().toString().contains(phone) && (phone.length() < 9))) {
+
+                        //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+
+                        Intent i = (new Intent(MainActivity.this, GoogleLoginActivity.class));
+                        if(connectedToNetwork()){
+                            finish();
+                            startActivity(i);
+                        }
+                        else{ NoInternetAlertDialog(); }
+                    } else {
+
+                        Intent i = (new Intent(MainActivity.this, MainWorkActivity.class));
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        if(connectedToNetwork()){
+                            startActivity(i);
+                        }
+                        else{ NoInternetAlertDialog(); }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
 
     }
 }

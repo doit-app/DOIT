@@ -16,6 +16,7 @@
         app:theme="@style/ToolbarStyle"
         app:titleTextColor="@android:color/white" />
 
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_recycler_list"
         android:layout_width="match_parent"

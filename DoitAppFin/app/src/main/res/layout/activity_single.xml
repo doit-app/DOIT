@@ -118,7 +118,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
 
-                    android:text="160 $"
+                    android:text="0 $"
                     android:textColor="#000"
                     android:textSize="22sp" />
             </LinearLayout>
@@ -197,7 +197,7 @@
                     android:layout_margin="10dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="200 $"
+                    android:text="0 $"
 
                     android:textColor="#000"
                     android:textSize="22sp" />
@@ -238,7 +238,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="500 Rs"
+                android:text=""
                 android:textColor="#064dff"
                 android:textSize="25sp" />
 

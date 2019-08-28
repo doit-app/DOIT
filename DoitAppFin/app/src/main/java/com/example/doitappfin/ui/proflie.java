@@ -1,9 +1,13 @@
 package com.example.doitappfin.ui;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -22,11 +26,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.text.InputType;
 import android.util.Patterns;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -136,125 +142,7 @@ public class proflie extends AppCompatActivity
         heademail = header.findViewById(R.id.textView1234);
 
         acct = GoogleSignIn.getLastSignedInAccount(this);
-        if(acct!= null) {
-            UserDetails.ProfilePhoto = acct.getPhotoUrl();
-            UserDetails.name = acct.getDisplayName();
-            Glide.with(this).load(acct.getPhotoUrl()).into(photoTV);
-            heademail.setText(acct.getDisplayName());
 
-            omail=acct.getEmail().replace(".","_");
-
-
-   System.out.println( omail);
-
-                                FirebaseDatabase.getInstance().getReference().child("ProfileData").child(omail).addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        ProfileData obj=dataSnapshot.getValue(ProfileData.class);
-                                        if(obj.getName()!=null)
-                                        oname=obj.getName();
-
-                                        if(obj.getAddr()!=null)
-                                        oaddr=(obj.getAddr());
-
-                                        if(obj.getSex()!=null)
-                                        osex=(obj.getSex());
-
-                                        if(obj.getCity()!=null)
-                                        ocity=(obj.getCity());
-
-                                        if(obj.getDate()!=null)
-                                        odate=(obj.getDate());
-
-                                        if(obj.getEmail()!=null)
-                                        omail=(obj.getEmail());
-
-                                        if(obj.getNumber()!=null)
-                                        onum=obj.getNumber();
-
-                                        if(obj.getIscomplete()!=null)
-                                        oiscomp=(obj.getIscomplete());
-
-                                        if(obj.getImage()!=null)
-                                        ophoto=(obj.getImage());
-
-                                        setData();
-
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
-
-
-
-
-
-
-
-        }else{
-        //onum=mAuth.getCurrentUser().getPhoneNumber();
-            SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
-
-            onum=sp.getString("number","");
-           // System.out.println(omail+" "+onum);
-
-            if(onum.length()==10)
-{
-
-
-    FirebaseDatabase.getInstance().getReference().child("LoginData").addValueEventListener(new ValueEventListener() {
-        @Override
-        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            for(DataSnapshot d1:dataSnapshot.getChildren())
-            {
-                if((d1.getValue().toString()).equals(onum))
-                {
-                   // System.out.println(d1.getValue().toString()+" "+onum);
-                    omail=d1.getKey().toString().trim();
-
-                    FirebaseDatabase.getInstance().getReference().child("ProfileData").child(omail).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            ProfileData obj=dataSnapshot.getValue(ProfileData.class);
-                          oname=obj.getName();
-                            oaddr=(obj.getAddr());
-                            osex=(obj.getSex());
-                            ocity=(obj.getCity());
-                            odate=(obj.getDate());
-                            omail=(obj.getEmail());
-                            onum=obj.getNumber();
-                            oiscomp=(obj.getIscomplete());
-                            ophoto=(obj.getImage());
-
-                            Glide.with(getApplicationContext()).load(ophoto).into(photoTV);
-                            heademail.setText(oname);
-                            setData();
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
-
-                }
-            }
-        }
-
-        @Override
-        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-        }
-    });
-}
-
-
-        }
 
         date1=findViewById(R.id.date);
         date1.setInputType(InputType.TYPE_NULL);
@@ -283,8 +171,9 @@ public class proflie extends AppCompatActivity
             }
         });
 
-
-
+        if(connectedToNetwork()){
+            volley();
+        }else{ NoInternetAlertDialog(); }
 
 
 
@@ -294,38 +183,54 @@ public class proflie extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
 
-                    getData();
+                    if(connectedToNetwork()){
+                        getData();
+                        int selectedId = radioGroup.getCheckedRadioButtonId();
+                        if(selectedId == male.getId()) {
+                            nsex="Male";
+                        } else if(selectedId == female.getId()) {
+                            nsex="Female";
+                        } else if(selectedId == other.getId()) {
+                            nsex="Other";
+                        }
 
-                    int selectedId = radioGroup.getCheckedRadioButtonId();
-                    if(selectedId == male.getId()) {
-                        nsex="Male";
-                    } else if(selectedId == female.getId()) {
-                        nsex="Female";
-                    } else if(selectedId == other.getId()) {
-                    nsex="Other";
-                    }
+                        if(isnotempty())
+                        {
 
-                    if(isnotempty())
-                    {
+                            DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("ProfileData").child(omail.replace(".","_"));
 
-DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("ProfileData").child(omail.replace(".","_"));
+                            db.child("name").setValue(nname);
+                            db.child("number").setValue(nnum);
+                            db.child("date").setValue(ndate);
+                            db.child("sex").setValue(nsex);
+                            db.child("addr").setValue(naddr);
+                            db.child("mail").setValue(nmail);
+                            db.child("city").setValue(ncity);
+                            db.child("iscomplete").setValue("YES").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful())
+                                    {
+                                        ///
+                                    }
+                                }
+                            });
 
-db.child("name").setValue(nname);
-                        db.child("number").setValue(nnum);
-                        db.child("date").setValue(ndate);
-                        db.child("sex").setValue(nsex);
-                        db.child("addr").setValue(naddr);
-                        db.child("mail").setValue(nmail);
-                        db.child("city").setValue(ncity);
-                        db.child("iscomplete").setValue("YES");
+                            if(acct!=null){
+                                db.child("image").setValue( acct.getPhotoUrl().toString());
 
-                        if(acct!=null){
-                            db.child("image").setValue( acct.getPhotoUrl().toString());
 
+                            }
 
                         }
 
-                    }
+
+
+
+
+                    }else{ NoInternetAlertDialog(); }
+
+
 
 
 
@@ -506,7 +411,11 @@ db.child("name").setValue(nname);
 
 
                 Toast.makeText(this, "SIgned out" , Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, GoogleLoginActivity.class));
+                Intent i=new Intent(this, GoogleLoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                if(connectedToNetwork()){
+                    startActivity(i);}
+            else {NoInternetAlertDialog();}
             }
 
         }
@@ -515,4 +424,167 @@ db.child("name").setValue(nname);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public boolean connectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            return activeNetworkInfo.isConnected();
+        }
+
+        return false;
+
+    }
+
+
+    public void NoInternetAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You are not connected to the internet. ");
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
+            }
+        });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void volley() {
+
+        if(acct!= null) {
+            UserDetails.ProfilePhoto = acct.getPhotoUrl();
+            UserDetails.name = acct.getDisplayName();
+            Glide.with(this).load(acct.getPhotoUrl()).into(photoTV);
+            heademail.setText(acct.getDisplayName());
+
+            omail=acct.getEmail().replace(".","_");
+
+
+            System.out.println( omail);
+
+            FirebaseDatabase.getInstance().getReference().child("ProfileData").child(omail).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ProfileData obj=dataSnapshot.getValue(ProfileData.class);
+                    if(obj.getName()!=null)
+                        oname=obj.getName();
+
+                    if(obj.getAddr()!=null)
+                        oaddr=(obj.getAddr());
+
+                    if(obj.getSex()!=null)
+                        osex=(obj.getSex());
+
+                    if(obj.getCity()!=null)
+                        ocity=(obj.getCity());
+
+                    if(obj.getDate()!=null)
+                        odate=(obj.getDate());
+
+                    if(obj.getEmail()!=null)
+                        omail=(obj.getEmail());
+
+                    if(obj.getNumber()!=null)
+                        onum=obj.getNumber();
+
+                    if(obj.getIscomplete()!=null)
+                        oiscomp=(obj.getIscomplete());
+
+                    if(obj.getImage()!=null)
+                        ophoto=(obj.getImage());
+
+                    setData();
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+
+
+
+
+        }else{
+            //onum=mAuth.getCurrentUser().getPhoneNumber();
+            SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+
+            onum=sp.getString("number","");
+            // System.out.println(omail+" "+onum);
+
+            if(onum.length()==10)
+            {
+
+
+                FirebaseDatabase.getInstance().getReference().child("LoginData").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot d1:dataSnapshot.getChildren())
+                        {
+                            if((d1.getValue().toString()).equals(onum))
+                            {
+                                // System.out.println(d1.getValue().toString()+" "+onum);
+                                omail=d1.getKey().toString().trim();
+
+                                FirebaseDatabase.getInstance().getReference().child("ProfileData").child(omail).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                        ProfileData obj=dataSnapshot.getValue(ProfileData.class);
+                                        oname=obj.getName();
+                                        oaddr=(obj.getAddr());
+                                        osex=(obj.getSex());
+                                        ocity=(obj.getCity());
+                                        odate=(obj.getDate());
+                                        omail=(obj.getEmail());
+                                        onum=obj.getNumber();
+                                        oiscomp=(obj.getIscomplete());
+                                        ophoto=(obj.getImage());
+
+                                        Glide.with(getApplicationContext()).load(ophoto).into(photoTV);
+                                        heademail.setText(oname);
+                                        setData();
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+
+        }
+
+    }
+
 }

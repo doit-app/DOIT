@@ -1,9 +1,15 @@
 package com.example.doitappfin.ui;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 
+import android.provider.Settings;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -29,6 +35,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -64,39 +71,9 @@ String sfromcert="";
         setContentView(R.layout.activity_box);
         findViews();
 
-        sfromcert=getIntent().getStringExtra("fromcert");
-
-        modelList=new ArrayList<certModel>();
-        System.out.println("in t  "+sfromcert);
-        initToolbar("Takeoff Android");
-
-        DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification").child(sfromcert).child("DATA");
-
-        db.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                modelList.clear();
-                for(DataSnapshot d1:dataSnapshot.getChildren())
-                {
-
-                    certModel obj = d1.getValue(certModel.class);
-                    modelList.add(obj);
-                    System.out.println("in act  "+obj.getImage());
-
-                }
-                setAdapter();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        // ButterKnife.bind(this);
-
-        setAdapter();
-
+        if(connectedToNetwork()){
+            volley();
+        }else{ NoInternetAlertDialog(); }
         swipeRefreshRecyclerList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -257,6 +234,80 @@ String sfromcert="";
     }
 
 
+    public boolean connectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            return activeNetworkInfo.isConnected();
+        }
 
+        return false;
+
+    }
+
+
+    public void NoInternetAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You are not connected to the internet. ");
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
+            }
+        });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void volley() {
+
+        sfromcert=getIntent().getStringExtra("fromcert");
+
+        modelList=new ArrayList<certModel>();
+        System.out.println("in t  "+sfromcert);
+        initToolbar("Takeoff Android");
+
+        DatabaseReference db= FirebaseDatabase.getInstance().getReference().child("MainData").child("FinalCertification").child(sfromcert).child("DATA");
+
+        db.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                modelList.clear();
+                for(DataSnapshot d1:dataSnapshot.getChildren())
+                {
+
+                    certModel obj = d1.getValue(certModel.class);
+                    modelList.add(obj);
+                    System.out.println("in act  "+obj.getImage());
+
+                }
+                setAdapter();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        // ButterKnife.bind(this);
+
+        setAdapter();
+
+
+    }
 
 }

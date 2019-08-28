@@ -1,12 +1,18 @@
 package com.example.doitappfin.login;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +21,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.doitappfin.R;
 import com.example.doitappfin.ui.MainWorkActivity;
+import com.example.doitappfin.ui.proflie;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,6 +47,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GoogleLoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
@@ -42,7 +61,10 @@ public class GoogleLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText Enum;
     String mail="";
+    String  A="";
     private Button login;
+    RequestQueue requestQueue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,9 +76,12 @@ public class GoogleLoginActivity extends AppCompatActivity {
         Enum=findViewById(R.id.editText2);
 
 
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 if(Enum.getText().toString().length()!=10 || TextUtils.isEmpty(Enum.getText().toString()))
                     Enum.setError("Invalid Number");
                 else {
@@ -69,22 +94,28 @@ public class GoogleLoginActivity extends AppCompatActivity {
 
                                 //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
 
+                                if(connectedToNetwork()){
+                                    Intent intent = new Intent(GoogleLoginActivity.this, Registration.class);
+                                    intent.putExtra("number", Enum.getText().toString());
+                                    intent.putExtra("mail", "");
+                                    startActivity(intent);                                }
+                                else{ NoInternetAlertDialog(); }
 
-                                Intent intent = new Intent(GoogleLoginActivity.this, Registration.class);
-                                intent.putExtra("number", Enum.getText().toString());
-                                intent.putExtra("mail", "");
-                                startActivity(intent);
                             }
                             else
                             {
-                                SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sp.edit();
-                                editor.putString("number", Enum.getText().toString());
-                                editor.apply();
-                                finish();
+                                if(connectedToNetwork()){
+                                    SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sp.edit();
+                                    editor.putString("number", Enum.getText().toString());
+                                    editor.apply();
+                                    finish();
 
-                                Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
-                                startActivity(i);
+                                    Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(i);                                }
+                                else{ NoInternetAlertDialog(); }
+
 
                             }
                         }
@@ -102,14 +133,7 @@ public class GoogleLoginActivity extends AppCompatActivity {
             }
         });
 
-        t.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                finish();
-                startActivity(new Intent(GoogleLoginActivity.this,MainWorkActivity.class));
-            }
-        });
         SignInButton b=findViewById(R.id.button);
 // Configure Google Sign In
         GoogleSignInOptions gsop = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -127,38 +151,105 @@ public class GoogleLoginActivity extends AppCompatActivity {
         });
 
 
+        FirebaseMessaging.getInstance().subscribeToTopic("test").addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(GoogleLoginActivity.this, "Subscribed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
+
+
+    public  void sendNotification(){
+
+
+
+        requestQueue = Volley.newRequestQueue(this);
+        if(mAuth.getCurrentUser()!=null){
+            A = "teacher";
+        }
+        else{
+            GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+            A =  acct.getDisplayName();
+        }
+        JSONObject json = new JSONObject();
+        try{
+            json.put("to","/topics/test");
+            JSONObject details = new JSONObject();
+            details.put("title","Test");
+            details.put("body","this is the body");
+            json.put("notification",details);
+            JsonObjectRequest requester = new JsonObjectRequest(com.android.volley.Request.Method.POST, "https://fcm.googleapis.com/fcm/send", json, new com.android.volley.Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Toast.makeText(GoogleLoginActivity.this, "we got it", Toast.LENGTH_SHORT).show();
+                }
+            }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(GoogleLoginActivity.this, "Failed to send notification"+error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String,String>  header = new HashMap<>();
+                    header.put("content-type","application/json");
+                    header.put("authorization","key=AIzaSyDi9drhOkWLGG6MIAhI6BuHBkJiS-3TLOk");
+                    return header;
+                }
+
+            };
+            requestQueue.add(requester);
+        }
+        catch (JSONException e ){
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
 
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+
+        if(connectedToNetwork()){
+            volley();
+        }else{ NoInternetAlertDialog(); }    }
+
+    private void volley() {
         final FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser!=null)
-        {                                  //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
-            if(currentUser.getEmail()!=null)
-                mail=currentUser.getEmail().replace(".","_");
+        if(currentUser!=null) {                                  //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+            if (currentUser.getEmail() != null)
+                mail = currentUser.getEmail().replace(".", "_");
 
             System.out.println(mail);
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child("LoginData");
             rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    if (!snapshot.hasChild(mail) ) {
+                    if (!snapshot.hasChild(mail)) {
 
                         //    FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
 
-                        Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
-                        i.putExtra("mail",currentUser.getEmail());
-                        i.putExtra("number","");
-                        startActivity(i);
-                    }
-                    else
-                    {
-                        finish();
-                        Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
-                        startActivity(i);
+                        if(connectedToNetwork()){
+                            Intent i = (new Intent(GoogleLoginActivity.this, Registration.class));
+                            i.putExtra("mail", currentUser.getEmail());
+                            i.putExtra("number", "");
+                            startActivity(i);                        }
+                        else{ NoInternetAlertDialog(); }
+
+                    } else {
+
+                        if(connectedToNetwork()){
+                            Intent i = (new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                            startActivity(i);                        }
+                        else{ NoInternetAlertDialog(); }
+
 
                     }
                 }
@@ -170,16 +261,11 @@ public class GoogleLoginActivity extends AppCompatActivity {
             });
 
 
-
-
-
-
             //finish();
             //startActivity(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
 
-
         }
-    }
+        }
 
     private void signIn() {
         System.out.println("su--log");
@@ -238,17 +324,25 @@ public class GoogleLoginActivity extends AppCompatActivity {
                                         if (!snapshot.hasChild(mail)) {
 
                                             //   FirebaseDatabase.getInstance().getReference().child("LoginData").child(mail).setValue("empty");
+                                            if(connectedToNetwork()){
+                                                Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
+                                                i.putExtra("mail",acct.getEmail());
+                                                i.putExtra("number","");
+                                                startActivity(i);
+                                            }
+                                            else{ NoInternetAlertDialog(); }
 
-                                            Intent i=(new Intent(GoogleLoginActivity.this, Registration.class));
-                                            i.putExtra("mail",acct.getEmail());
-                                            i.putExtra("number","");
-                                            startActivity(i);
                                         }
                                         else
                                         {
-                                            finish();
-                                            Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
-                                            startActivity(i);
+                                            if(connectedToNetwork()){
+                                                Intent i=(new Intent(GoogleLoginActivity.this, MainWorkActivity.class));
+                                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                                                startActivity(i);                                            }
+                                            else{ NoInternetAlertDialog(); }
+
+
 
                                         }
                                     }
@@ -276,6 +370,45 @@ public class GoogleLoginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+
+    @SuppressWarnings("MissingPermission")
+    public boolean connectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            return activeNetworkInfo.isConnected();
+        }
+
+        return false;
+
+    }
+
+
+    public void NoInternetAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You are not connected to the internet. ");
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
+            }
+        });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
     }
 
 

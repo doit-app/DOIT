@@ -1,12 +1,18 @@
 package com.example.doitappfin.login;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -59,49 +65,54 @@ public class Registration extends AppCompatActivity {
         Email=findViewById(R.id.entermail);
         submit=findViewById(R.id.submit);
 
-
-        String number=getIntent().getExtras().getString("number");
-        String mail=getIntent().getExtras().getString("mail");
-        Ephone.setText(number);
-        Email.setText(mail);
+        if(connectedToNetwork()){
+            volley();
+        }else{ NoInternetAlertDialog(); }
 
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getdata();
-                if(notempty())
-                {
+                if(connectedToNetwork()){
+                    getdata();
 
-                    Toast.makeText(Registration.this,"success",Toast.LENGTH_SHORT).show();
-                    FirebaseDatabase database = FirebaseDatabase.getInstance();
-                    DatabaseReference mRef = database.getReference().child("ProfileData").child(Semail.replace(".","_"));
+                    if(notempty())
+                    {
+
+                        Toast.makeText(Registration.this,"success",Toast.LENGTH_SHORT).show();
+                        FirebaseDatabase database = FirebaseDatabase.getInstance();
+                        DatabaseReference mRef = database.getReference().child("ProfileData").child(Semail.replace(".","_"));
 
 
-                    HashMap<String,String> hashMap=new HashMap<>();
+                        HashMap<String,String> hashMap=new HashMap<>();
 
-                    hashMap.put("name",Sname);
-                    hashMap.put("email",Semail);
-                    hashMap.put("number",Sphone);
-                    hashMap.put("date","NO");
-                    hashMap.put("city","NO");
-                    hashMap.put("addr","NO");
-                    hashMap.put("sex","NO");
-                    hashMap.put("image","NO");
-                    hashMap.put("iscomplete","NO");
-                    mRef.setValue(hashMap);
+                        hashMap.put("name",Sname);
+                        hashMap.put("email",Semail);
+                        hashMap.put("number",Sphone);
+                        hashMap.put("date","NO");
+                        hashMap.put("city","NO");
+                        hashMap.put("addr","NO");
+                        hashMap.put("sex","NO");
+                        hashMap.put("image","NO");
+                        hashMap.put("iscomplete","NO");
+                        mRef.setValue(hashMap);
 
-                    SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("number", Sphone);
-                    editor.apply();
+                        SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("number", Sphone);
+                        editor.apply();
 
-                    FirebaseDatabase.getInstance().getReference().child("LoginData").child(Semail.replace(".","_")).setValue(Sphone);
-                    Intent i = new Intent(Registration.this, otp.class);
-                    i.putExtra("number",Sphone);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
+                        FirebaseDatabase.getInstance().getReference().child("LoginData").child(Semail.replace(".","_")).setValue(Sphone);
+                        Intent i = new Intent(Registration.this, otp.class);
+                        i.putExtra("number",Sphone);
+                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                    }
+
+                }else{ NoInternetAlertDialog();
                 }
+
+
 
             }
         });
@@ -157,5 +168,51 @@ public class Registration extends AppCompatActivity {
             startActivity(new Intent(this, GoogleLoginActivity.class));
         }
 
+    }
+
+
+    public boolean connectedToNetwork() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null) {
+            return activeNetworkInfo.isConnected();
+        }
+
+        return false;
+
+    }
+
+
+    public void NoInternetAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("You are not connected to the internet. ");
+        builder.setPositiveButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(connectedToNetwork()){
+                    volley();
+                }else{ NoInternetAlertDialog(); }
+            }
+        });
+        builder.setNegativeButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent openSettings = new Intent();
+                openSettings.setAction(Settings.ACTION_WIRELESS_SETTINGS);
+                openSettings.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(openSettings);
+            }
+        });
+        Dialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void volley() {
+        String number=getIntent().getExtras().getString("number");
+        String mail=getIntent().getExtras().getString("mail");
+        Ephone.setText(number);
+        Email.setText(mail);
     }
 }

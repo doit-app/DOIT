@@ -3,13 +3,23 @@ package com.example.doitappfin.utils;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.example.doitappfin.MainActivity;
 import com.example.doitappfin.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -17,46 +27,49 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
-    private static final String TAG = "MyFCMListenerService";
-
     @Override
-    public void onMessageReceived(RemoteMessage message) {
-
-        String image = message.getNotification().getIcon();
-        String title = message.getNotification().getTitle();
-        String text = message.getNotification().getBody();
-        String sound = message.getNotification().getSound();
-
-        int id = 0;
-        Object obj = message.getData().get("id");
-        if (obj != null) {
-            id = Integer.valueOf(obj.toString());
+    public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
+        Log.d("msg", "onMessageReceived: " + remoteMessage.getData().get("message"));
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        String channelId = "Default";
+        NotificationCompat.Builder builder = new  NotificationCompat.Builder(this, channelId)
+                .setSmallIcon(R.drawable.logodoit)
+                .setContentTitle(remoteMessage.getNotification().getTitle())
+                .setContentText(remoteMessage.getNotification().getBody()).setAutoCancel(true).setContentIntent(pendingIntent);;
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "Default channel", NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
         }
-
-
-        String channelId=getString(R.string.notification_channel);
-
-        NotificationCompat.Builder notificationBuilder = null;
-        try {
-            notificationBuilder = new NotificationCompat.Builder(this, channelId)
-                    .setSmallIcon(R.drawable.logodoit)
-                    .setContentTitle(URLDecoder.decode(title, "UTF-8"))
-                    .setContentText(URLDecoder.decode(text, "UTF-8"))
-                    .setAutoCancel(true)
-                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.O)
-        {
-            NotificationChannel channel = new NotificationChannel(channelId, "Message", NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-        }
-        notificationManager.notify(id, notificationBuilder.build());
+        manager.notify(0, builder.build());
 
     }
 
+
+    @Override
+    public void onNewToken(String token) {
+        // Toast.makeText(this, token, Toast.LENGTH_SHORT).show();
+        FirebaseDatabase database;
+        database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference();
+        reference.child("Tokens").child(token).setValue(token).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(getApplicationContext(), "We have uploaded the device id", Toast.LENGTH_SHORT).show();
+                // If you want to send messages to this application instance or
+                // manage this apps subscriptions on the server side, send the
+                // Instance ID token to your app server.
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
 }
