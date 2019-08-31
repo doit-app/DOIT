@@ -135,7 +135,7 @@ Location locat;
 
                 at = Double.parseDouble(bro[0].replace("\"", ""));
                 on = Double.parseDouble(bro[1].replace("\"", ""));
-            }        adapter1.UpdateItemsList(allar, dist);
+            }       // adapter1.UpdateItemsList(allar, dist);
 
 
             Location la=new Location("t"+j);
@@ -149,7 +149,7 @@ Location locat;
                 dist.add(B);
             }
 
-            System.out.println(String.join(",", bro) + " " + allar.get(j));
+      //      System.out.println(String.join(",", bro) + " " + allar.get(j));
 
             Marker m =mMap.addMarker((new MarkerOptions().position(new LatLng(at, on))).title(allar.get(j))
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
@@ -178,12 +178,11 @@ Location locat;
 
 
                 }
-
                 adapter1.UpdateItemsList(allar, dist);
+
 
             }
 
-            adapter1.UpdateItemsList(allar, dist);
 
             //    adapter1.UpdateItemsList(allar, dist);
 
@@ -254,8 +253,8 @@ Location locat;
         adapter1.setClickListener(MapsActivity.this);
         recyclerView.setNestedScrollingEnabled(true
         );
-        recyclerView.setAdapter(adapter1);
-        adapter1.UpdateItemsList(allar, dist);
+      //  recyclerView.setAdapter(adapter1);
+     //   adapter1.UpdateItemsList(allar, dist);
         //    System.out.println(addr.size()+" "+addr);
         //  System.out.println(dist.size()+" "+dist);
 
@@ -371,7 +370,9 @@ Location locat;
         Marker m= haMap.get(position);
 m.showInfoWindow();
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
-        Toast.makeText(MapsActivity.this, "hello"+position, Toast.LENGTH_SHORT).show();
+        ttitle.setText(stitle+" "+allar.get(position));
+
+        //  Toast.makeText(MapsActivity.this, "hello"+position, Toast.LENGTH_SHORT).show();
 
 
     }

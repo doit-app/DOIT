@@ -6,8 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +34,7 @@ import android.provider.Settings;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -77,22 +81,22 @@ public class MainWorkActivity extends AppCompatActivity
     private final int REQUEST_LOCATION_PERMISSION = 1;
 
     TextView heademail;
-    RecyclerView recyclerView,recyclerView1;
+    RecyclerView recyclerView, recyclerView1;
     RelativeLayout relativeLayout;
     GoogleSignInAccount acct;
-    RecyclerViewAdapter recyclerViewAdapterTrain,recyclerViewAdapterCert;
+    RecyclerViewAdapter recyclerViewAdapterTrain, recyclerViewAdapterCert;
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-private ArrayList<certModel> cert,train;
-   private String omail="",oname="",odate="",onum="",ocity="",oaddr="",osex="",oiscomp="",ophoto="";
+    private ArrayList<certModel> cert, train;
+    private String omail = "", oname = "", odate = "", onum = "", ocity = "", oaddr = "", osex = "", oiscomp = "", ophoto = "";
     RecyclerView.LayoutManager recylerViewLayoutManager;
     int images[] = {R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange};
     MyCustomPagerAdapter myCustomPagerAdapter;
-    String[]  fruits={"apple","grapes","mango","orange"};
-    String[] subjects = {"ANDROID","PHP","BLOGGER","WORDPRESS","JOOMLA","ASP.NET","JAVA","C++","MATHS","HINDI","ENGLISH"};
-    private int[] myImageList = new int[]{R.drawable.apple, R.drawable.mango,R.drawable.straw, R.drawable.pineapple,R.drawable.orange,R.drawable.blue,R.drawable.water};
-    private String[] myImageNameList = new String[]{"Apple","Mango" ,"Strawberry","Pineapple","Orange","Blueberry","Watermelon"};
+    String[] fruits = {"apple", "grapes", "mango", "orange"};
+    String[] subjects = {"ANDROID", "PHP", "BLOGGER", "WORDPRESS", "JOOMLA", "ASP.NET", "JAVA", "C++", "MATHS", "HINDI", "ENGLISH"};
+    private int[] myImageList = new int[]{R.drawable.apple, R.drawable.mango, R.drawable.straw, R.drawable.pineapple, R.drawable.orange, R.drawable.blue, R.drawable.water};
+    private String[] myImageNameList = new String[]{"Apple", "Mango", "Strawberry", "Pineapple", "Orange", "Blueberry", "Watermelon"};
 
-    private TextView tv1,tv2;
+    private TextView tv1, tv2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +106,7 @@ private ArrayList<certModel> cert,train;
         setSupportActionBar(toolbar);
         requestLocationPermission();
 
-        mGoogleInCilients = GoogleSignIn.getClient(this,gso);
+        mGoogleInCilients = GoogleSignIn.getClient(this, gso);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,23 +128,19 @@ private ArrayList<certModel> cert,train;
         heademail = header.findViewById(R.id.textView123);
 
 
-
-
-
-
-
-        tv1=findViewById(R.id.t1);
-        tv2=findViewById(R.id.t2);
+        tv1 = findViewById(R.id.t1);
+        tv2 = findViewById(R.id.t2);
 
         tv2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(MainWorkActivity.this,TrainCertActivity.class);
-                i.putExtra("val","Certification");
-                if(connectedToNetwork()){
+                Intent i = new Intent(MainWorkActivity.this, TrainCertActivity.class);
+                i.putExtra("val", "Certification");
+                if (connectedToNetwork()) {
                     startActivity(i);
+                } else {
+                    NoInternetAlertDialog();
                 }
-                else{ NoInternetAlertDialog(); }
             }
         });
 
@@ -148,20 +148,20 @@ private ArrayList<certModel> cert,train;
         tv1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i=new Intent(MainWorkActivity.this,TrainCertActivity.class);
-                i.putExtra("val","Training");
-                if(connectedToNetwork()){
+                Intent i = new Intent(MainWorkActivity.this, TrainCertActivity.class);
+                i.putExtra("val", "Training");
+                if (connectedToNetwork()) {
                     startActivity(i);
+                } else {
+                    NoInternetAlertDialog();
                 }
-                else{ NoInternetAlertDialog(); }
 
             }
         });
 
 
-
         indicator = (TabLayout) findViewById(R.id.indicator);
-        viewPager = (ViewPager)findViewById(R.id.viewPager);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         myCustomPagerAdapter = new MyCustomPagerAdapter(this, images);
         viewPager.setAdapter(myCustomPagerAdapter);
         indicator.setupWithViewPager(viewPager, true);
@@ -170,10 +170,11 @@ private ArrayList<certModel> cert,train;
         recyclerView1 = (RecyclerView) findViewById(R.id.recyclerView1);
 
 
-
-        if(connectedToNetwork()){
+        if (connectedToNetwork()) {
             volley();
-        }else{ NoInternetAlertDialog(); }
+        } else {
+            NoInternetAlertDialog();
+        }
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new MainWorkActivity.SliderTimer(), 6000, 7000);
@@ -213,6 +214,7 @@ private ArrayList<certModel> cert,train;
         return super.onOptionsItemSelected(item);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -221,12 +223,13 @@ private ArrayList<certModel> cert,train;
 
         if (id == R.id.nav_home) {
 
-            Intent i=(new Intent(getApplicationContext(),proflie.class));
+            Intent i = (new Intent(getApplicationContext(), proflie.class));
 
-            if(connectedToNetwork()){
+            if (connectedToNetwork()) {
                 startActivity(i);
+            } else {
+                NoInternetAlertDialog();
             }
-            else{ NoInternetAlertDialog(); }
 
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
@@ -237,6 +240,19 @@ private ArrayList<certModel> cert,train;
 
         } else if (id == R.id.nav_call) {
 
+            Intent i = new Intent(Intent.ACTION_CALL);
+            i.setData(Uri.parse("tel:9790718545"));
+            if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    Activity#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for Activity#requestPermissions for more details.
+                return true;
+            }
+            startActivity(i);
         } else if (id == R.id.nav_signout) {
             SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
@@ -379,7 +395,7 @@ private ArrayList<certModel> cert,train;
 
     @AfterPermissionGranted(REQUEST_LOCATION_PERMISSION)
     public void requestLocationPermission() {
-        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION};
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CALL_PHONE};
         if (EasyPermissions.hasPermissions(this, perms)) {
             Toast.makeText(this, "Permission already granted", Toast.LENGTH_SHORT).show();
         } else {

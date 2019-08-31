@@ -1,11 +1,16 @@
 package com.example.doitappfin.ui;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.provider.Settings;
@@ -34,6 +39,7 @@ import android.text.InputFilter;
 import android.text.Spanned;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -284,9 +290,16 @@ private ArrayList<certModel> recycleViewModelList;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("We couldn't find your query");
         builder.setPositiveButton("Inquire", new DialogInterface.OnClickListener() {
+            @SuppressLint("MissingPermission")
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(TrainCertActivity.this, "call proceed", Toast.LENGTH_SHORT).show();
+
+                Intent i = new Intent(Intent.ACTION_CALL);
+                i.setData(Uri.parse("tel:9790718545"));
+
+                startActivity(i);
 
             }
         });
@@ -299,6 +312,7 @@ private ArrayList<certModel> recycleViewModelList;
         builder.setNeutralButton("cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                flag=0;
                 Toast.makeText(TrainCertActivity.this, "cancel", Toast.LENGTH_SHORT).show();
 
             }

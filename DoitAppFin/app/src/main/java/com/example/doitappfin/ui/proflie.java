@@ -394,6 +394,8 @@ public class proflie extends AppCompatActivity
 
         } else if (id == R.id.nav_call) {
 
+
+
         } else if (id == R.id.nav_signout) {
             SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
