@@ -34,6 +34,7 @@
                 android:id="@+id/editTextName"
                 android:hint="Enter Your Name"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/cantarell"
                 android:layout_marginBottom="8dp"
                 android:layout_height="wrap_content" />
 
@@ -47,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Pick Date..."
+                android:fontFamily="@font/cantarell"
 
                 android:layout_marginBottom="8dp"
                 android:textSize="18sp"
@@ -63,6 +65,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Provide us Your phone"
                 android:ems="10"
+                android:fontFamily="@font/cantarell"
 
                 android:layout_marginBottom="8dp"
 
@@ -77,6 +80,7 @@
                 android:id="@+id/editcity"
                 android:hint="Enter your city"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="@font/cantarell"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -91,6 +95,7 @@
                 android:hint="enter your address"
                 android:layout_width="match_parent"
                 android:layout_marginBottom="8dp"
+                android:fontFamily="@font/cantarell"
 
                 android:layout_height="wrap_content" />
 
@@ -111,16 +116,22 @@
                     <RadioButton
                         android:id="@+id/radioButtonMale"
                         android:layout_width="wrap_content"
+                        android:fontFamily="@font/cantarell"
+
                         android:layout_height="wrap_content"
                         android:text="Male" />
                     <RadioButton
                         android:id="@+id/radioButtonFemale"
                         android:layout_width="wrap_content"
+                        android:fontFamily="@font/cantarell"
+
                         android:layout_height="wrap_content"
                         android:text="Female" />
                     <RadioButton
                         android:id="@+id/radioButtonOthers"
                         android:layout_width="wrap_content"
+                        android:fontFamily="@font/cantarell"
+
                         android:layout_height="wrap_content"
                         android:text="Others" />
                 </RadioGroup>
@@ -141,6 +152,7 @@
                 android:layout_marginBottom="8dp"
                 android:hint="Enter your gmail id"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/cantarell"
                 android:layout_height="wrap_content" />
 
 

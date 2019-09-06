@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.doitappfin.R;
 import com.example.doitappfin.utils.MyRecyclerViewAdapter;
+import com.example.doitappfin.utils.RadioListAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -47,6 +48,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -54,7 +56,7 @@ import java.util.Locale;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, MyRecyclerViewAdapter.ItemClickListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener,MyRecyclerViewAdapter.ItemClickListener {
     private GoogleMap mMap;
 
     private MyRecyclerViewAdapter adapter1;
@@ -71,7 +73,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     List<Address> addresses;
     private double lat = 0.00;
     private FusedLocationProviderClient fusedLocationClient;
-
     private double lon = 0.00;
     private final int REQUEST_LOCATION_PERMISSION = 1;
 HashMap<Integer, Marker> haMap;
@@ -121,6 +122,18 @@ Location locat;
         System.out.println("blaaaaaaa " + allar.size());
         System.out.println(allat);
 
+        ArrayList<String> allarea=new ArrayList<>();
+        for (int j = 0; j < allat.size(); j++) {
+
+            if(allarea.contains(allar.get(j)))
+            {
+                allarea.add(allar.get(j)+"-"+ Collections.frequency(allar.subList(0,j),allar.get(j)));
+            }
+            else
+            {
+                allarea.add(allar.get(j));
+            }
+        }
 
 
         for (int j = 0; j < allat.size(); j++) {
@@ -168,9 +181,9 @@ Location locat;
                     dist.set(j + 1, temp);
 
 
-                    String temp1 = allar.get(j);
-                    allar.set(j, allar.get(j + 1));
-                    allar.set(j + 1, temp1);
+                    String temp1 = allarea.get(j);
+                    allarea.set(j, allarea.get(j + 1));
+                    allarea.set(j + 1, temp1);
 
                     Marker m = haMap.get(j);
                     haMap.put(j, haMap.get(j + 1));
@@ -178,7 +191,7 @@ Location locat;
 
 
                 }
-                adapter1.UpdateItemsList(allar, dist);
+                adapter1.UpdateItemsList(allarea, dist);
 
 
             }
@@ -189,9 +202,25 @@ Location locat;
         }
 
 
-        adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, allar, dist);
-        adapter1.setClickListener(MapsActivity.this);
+        adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, allarea, dist);
+        adapter1.setClickListener(this);
+ /*       adapter1.SetOnItemClickListener(new RadioListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, String model) {
+                Marker m= haMap.get(position);
+                m.showInfoWindow();
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
+              //  Object item=view.getItemAtPosition(position);
 
+                //    ttitle.setText(stitle+" "+allar.get(position));
+                //handle item click events here
+         //    startActivity(new Intent(MapsActivity.this,PaymentActivity.class));
+                Toast.makeText(MapsActivity.this, "Hey " + model, Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+*/
         recyclerView.setAdapter(adapter1);
         //adapter1.UpdateItemsList(addr, dist);
         //recyclerView.setAdapter(adapter1);
@@ -250,9 +279,18 @@ Location locat;
 
         geocoder = new Geocoder(this, Locale.getDefault());
        adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, allar, dist);
-        adapter1.setClickListener(MapsActivity.this);
-        recyclerView.setNestedScrollingEnabled(true
-        );
+      adapter1.setClickListener(this);
+
+        /*adapter1.SetOnItemClickListener(new RadioListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position, String model) {
+
+                //handle item click events here
+                Toast.makeText(MapsActivity.this, "Heey " + model, Toast.LENGTH_SHORT).show();
+
+            }
+        });        recyclerView.setNestedScrollingEnabled(true
+        );*/
       //  recyclerView.setAdapter(adapter1);
      //   adapter1.UpdateItemsList(allar, dist);
         //    System.out.println(addr.size()+" "+addr);
@@ -365,17 +403,7 @@ Location locat;
 
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        Marker m= haMap.get(position);
-m.showInfoWindow();
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
-        ttitle.setText(stitle+" "+allar.get(position));
 
-        //  Toast.makeText(MapsActivity.this, "hello"+position, Toast.LENGTH_SHORT).show();
-
-
-    }
 
     public boolean connectedToNetwork() {
         ConnectivityManager connectivityManager =
@@ -482,7 +510,12 @@ m.showInfoWindow();
                                 String s = dataSnapshot.getValue() + "";
                                 String bal[] = s.split("-");
                                 for (int m = 0; m < bal.length; m++)
+                                {
+
                                     allar.add(bal[m].trim());
+
+                                }
+
                                 //   System.out.println(allar);
 
 
@@ -586,4 +619,16 @@ m.showInfoWindow();
 
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+        Marker m= haMap.get(position);
+        m.showInfoWindow();
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
+        //  Object item=view.getItemAtPosition(position);
+
+        //    ttitle.setText(stitle+" "+allar.get(position));
+        //handle item click events here
+        //    startActivity(new Intent(MapsActivity.this,PaymentActivity.class));
+        Toast.makeText(MapsActivity.this, "Hey ", Toast.LENGTH_SHORT).show();
+    }
 }

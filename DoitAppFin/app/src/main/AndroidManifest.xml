@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.doitappfin">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -14,15 +13,17 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logodoit"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:roundIcon="@drawable/logodoit"
         android:supportsRtl="true">
+        <activity android:name=".ui.RadioActivity"
+            android:theme="@style/NoAct"></activity>
         <activity
             android:name=".ui.ListDispActivity"
             android:label="@string/title_activity_list_disp"
-            android:theme="@style/AppTheme.Template.Base"></activity>
+            android:theme="@style/AppTheme.Template.Base" />
         <activity
             android:name=".ui.SingleActivity"
             android:theme="@style/NoAct" />
@@ -35,8 +36,8 @@
             android:resource="@drawable/logodoit" />
         <meta-data
             android:name="com.google.firebase.messaging.notification_channel"
-            android:value="@string/notification_channel"
-            />
+            android:value="@string/notification_channel" />
+
         <service
             android:name=".utils.MyFirebaseMessagingService"
             android:exported="false">
@@ -44,7 +45,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
 
         <activity
             android:name=".ui.BoxActivity"
@@ -74,6 +74,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDnVA2iXW3ksyHpvAQxDOjHaOaeM_cA6Xs" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".ui.MapsActivity"

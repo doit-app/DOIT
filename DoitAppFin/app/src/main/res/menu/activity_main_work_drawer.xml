@@ -19,19 +19,29 @@
             android:id="@+id/nav_combos"
             android:icon="@drawable/ic_attach_money"
             android:title="Combos -coming soon" />
+        <item
+            android:id="@+id/nav_placement"
+            android:icon="@drawable/ic_school_black_24dp"
+            android:title="Placement-coming soon" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_call"
-                android:icon="@drawable/ic_call_black"
-                android:title="Enquiry" />
-            <item
-                android:id="@+id/nav_signout"
-                android:icon="@drawable/ic_power_settings"
-                android:title="Sign out" />
-        </menu>
-    </item>
-
+    <group>
+        <item android:title="Contact us">
+            <menu>
+                <item
+                    android:id="@+id/nav_call"
+                    android:icon="@drawable/ic_call_black"
+                    android:title="Enquiry" />
+                <item
+                    android:id="@+id/nav_about_us"
+                    android:icon="@drawable/ic_verified_user"
+                    android:title="About us" />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_signout"
+            android:icon="@drawable/ic_power_settings"
+            android:title="Sign out" />
+    </group>
 </menu>

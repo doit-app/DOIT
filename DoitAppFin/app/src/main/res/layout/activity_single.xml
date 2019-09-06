@@ -76,6 +76,7 @@
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="TextView"
+                android:fontFamily="@font/cantarell"
                 android:textSize="15sp"
                 android:textColor="#212121"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout6"

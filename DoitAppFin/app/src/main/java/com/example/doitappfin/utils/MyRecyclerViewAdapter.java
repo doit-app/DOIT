@@ -20,6 +20,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private ArrayList examheading,clientheading;
+    Integer lastSelectedItemPos;
 
     // data is passed into the constructor
     public MyRecyclerViewAdapter(Context context, ArrayList<String> data, ArrayList<Float> data1) {
@@ -33,6 +34,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
+
+
+
+
+
         return new ViewHolder(view);
     }
 
@@ -43,14 +49,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             if (Address.get(position) != null) {
                 String addr = Address.get(position);
                 Float dist = Distance.get(position);
-                holder.myTextViewaddr.setText("Doit center " + addr);
+                holder.myTextViewaddr.setText("Doit-" + addr);
                 String c = dist + "";
                 c = c.substring(0, 4);
-                holder.myTextViewdist.setText(c + " km");
+                holder.myTextViewdist.setText((c+" km").trim());
 
                // System.out.println(Address);
             }
         }
+
+
+
+
+
+
+
+
     }
 
     // total number of rows
@@ -75,7 +89,12 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+
+
+
     }
+
+
 
     // convenience method for getting data at click position
     String getItem(int id) {
@@ -100,6 +119,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         Distance.addAll(dist);
         notifyDataSetChanged();
 
+    }
+
+    class SubcategoryGetSet{
+        //your other objects, getters and setters
+        boolean selected;
+        public boolean isSelected() { return selected; }
+        public void setSelected(boolean selected) { this.selected = selected; }
     }
 
 }

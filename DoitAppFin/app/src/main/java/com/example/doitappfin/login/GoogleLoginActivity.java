@@ -76,7 +76,6 @@ public class GoogleLoginActivity extends AppCompatActivity {
         Enum=findViewById(R.id.editText2);
 
 
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
