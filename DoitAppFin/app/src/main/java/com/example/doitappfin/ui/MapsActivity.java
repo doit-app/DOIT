@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MyRecyclerViewAdapter adapter1;
   
     ArrayList<Float> dist;
+    private Button proceed;
 
     ArrayList<String> allar, allat;
 
@@ -87,7 +89,7 @@ Location locat;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         requestLocationPermission();
-
+proceed=findViewById(R.id.button4);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if(connectedToNetwork()){
             volley();
@@ -112,6 +114,12 @@ Location locat;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
+        proceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 
@@ -257,21 +265,26 @@ Location locat;
 
 
     /**
+     *
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
      * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * we just add a marker near Sydney,Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     *  installed Google Play services and returned to the app.
+     *
      */
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    Activity#requestPermissions
+            //
+            //  TODO: Consider calling
+            //   requestPermissions
+            //
+
 
             return;
         }
@@ -410,6 +423,7 @@ Location locat;
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         if (activeNetworkInfo != null) {
+
             return activeNetworkInfo.isConnected();
         }
 
@@ -623,6 +637,7 @@ Location locat;
     public void onItemClick(View view, int position) {
         Marker m= haMap.get(position);
         m.showInfoWindow();
+        proceed.setVisibility(View.VISIBLE);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
         //  Object item=view.getItemAtPosition(position);
 
