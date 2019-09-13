@@ -7,12 +7,13 @@
     android:background="@drawable/splash"
     tools:context=".MainActivity">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/spl1"
+        android:background="@drawable/whiteround"
         android:layout_width="200dp"
-        android:layout_height="220dp"
-
-        android:background="@drawable/logodoit"
+        android:layout_height="200dp"
+android:src="@drawable/logodoit"
+        app:layout_constraintCircleRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintLeft_toLeftOf="parent"

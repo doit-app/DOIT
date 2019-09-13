@@ -261,7 +261,7 @@ private ArrayList<certModel> recycleViewModelList;
                 ArrayList<certModel> filterList = new ArrayList<certModel>();
                 if (s.length() > 0 ) {
                     for (int i = 0; i < recycleViewModelList.size(); i++) {
-                        if (recycleViewModelList.get(i).getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
+                        if (recycleViewModelList.get(i).getSearch().toLowerCase().contains(s.toString().toLowerCase())) {
                             filterList.add(recycleViewModelList.get(i));
                             mAdapter.updateList(filterList);
                         }

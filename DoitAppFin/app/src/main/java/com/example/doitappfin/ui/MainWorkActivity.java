@@ -77,7 +77,7 @@ public class MainWorkActivity extends AppCompatActivity
     private ViewPager viewPager;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     GoogleSignInClient mGoogleInCilients;
-    ImageView photoTV;
+    de.hdodenhof.circleimageview.CircleImageView photoTV;
     private final int REQUEST_LOCATION_PERMISSION = 1;
 
     TextView heademail;
@@ -124,7 +124,7 @@ public class MainWorkActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
 
-        photoTV = (ImageView) header.findViewById(R.id.imageView123);
+        photoTV = (de.hdodenhof.circleimageview.CircleImageView) header.findViewById(R.id.imageView123);
         heademail = header.findViewById(R.id.textView123);
 
 

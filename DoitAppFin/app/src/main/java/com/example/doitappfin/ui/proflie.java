@@ -69,7 +69,7 @@ public class proflie extends AppCompatActivity
     EditText name,phone,city,email,address;
     Button b1;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    ImageView photoTV;
+    de.hdodenhof.circleimageview.CircleImageView photoTV;
     DatabaseReference db;
     TextView heademail;
     GoogleSignInAccount acct;
@@ -138,7 +138,7 @@ public class proflie extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         View header = navigationView.getHeaderView(0);
 //
-        photoTV = (ImageView) header.findViewById(R.id.imageView123);
+        photoTV = (de.hdodenhof.circleimageview.CircleImageView) header.findViewById(R.id.imageView123);
         heademail = header.findViewById(R.id.textView1234);
 
         acct = GoogleSignIn.getLastSignedInAccount(this);

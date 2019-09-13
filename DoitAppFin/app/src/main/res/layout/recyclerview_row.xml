@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="horizontal"
+            android:orientation="vertical"
     android:layout_width="match_parent"
-    android:elevation="10dp"
-android:layout_margin="10dp"
+android:layout_margin="2dp"
     android:layout_height="wrap_content">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
         <TextView
-            android:layout_margin="2dp"
             android:padding="5dp"
             android:layout_weight="1.5"
             android:text="Address loading"
@@ -18,7 +20,6 @@ android:layout_margin="10dp"
             android:layout_height="wrap_content" />
 
         <TextView
-            android:layout_margin="2dp"
             android:padding="5dp"
             android:text="0 km "
             android:id="@+id/dist"
@@ -27,4 +28,9 @@ android:layout_margin="10dp"
             android:layout_weight=".5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#aaa"></TextView>
 </LinearLayout>

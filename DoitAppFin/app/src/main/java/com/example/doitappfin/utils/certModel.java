@@ -3,13 +3,13 @@ package com.example.doitappfin.utils;
 public class certModel {
 
 
-    String title,price,desc,image,addetails,area,latlong;
+    String title,price,desc,image,addetails,area,latlong,search;
 
 
     public certModel() {
     }
 
-    public certModel(String title, String price, String desc, String image, String addetails,String area,String latlong) {
+    public certModel(String title, String price, String desc, String image, String addetails,String area,String latlong,String search) {
         this.title = title;
         this.price = price;
         this.desc = desc;
@@ -17,10 +17,19 @@ public class certModel {
         this.addetails = addetails;
         this.area=area;
         this.latlong=latlong;
+        this.search=search;
     }
 
     public String getArea() {
         return area;
+    }
+
+    public String getSearch() {
+        return search;
+    }
+
+    public void setSearch(String search) {
+        this.search = search;
     }
 
     public void setArea(String area) {

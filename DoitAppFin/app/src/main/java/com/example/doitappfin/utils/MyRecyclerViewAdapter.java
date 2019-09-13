@@ -1,6 +1,7 @@
 package com.example.doitappfin.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     private ItemClickListener mClickListener;
     private ArrayList examheading,clientheading;
     Integer lastSelectedItemPos;
-
+    int selectedPosition=-1,first=1;
     // data is passed into the constructor
     public MyRecyclerViewAdapter(Context context, ArrayList<String> data, ArrayList<Float> data1) {
         this.mInflater = LayoutInflater.from(context);
@@ -45,11 +46,23 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+        if(selectedPosition==position || first==1){
+            holder.myTextViewaddr.setTextColor(Color.parseColor("#000000"));
+            holder.myTextViewdist.setTextColor(Color.parseColor("#000000"));
+
+        }
+        else{
+            holder.myTextViewaddr.setTextColor(Color.parseColor("#AAAAAA"));
+            holder.myTextViewdist.setTextColor(Color.parseColor("#AAAAAA"));
+
+        }
+
         if(Distance.size()>0) {
             if (Address.get(position) != null) {
                 String addr = Address.get(position);
                 Float dist = Distance.get(position);
-                holder.myTextViewaddr.setText("Doit-" + addr);
+                holder.myTextViewaddr.setText("DOIT-" + addr);
                 String c = dist + "";
                 c = c.substring(0, 4);
                 holder.myTextViewdist.setText((c+" km").trim());
@@ -88,6 +101,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         @Override
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            selectedPosition=getAdapterPosition();
+            first=0;
+            notifyDataSetChanged();
         }
 
 
