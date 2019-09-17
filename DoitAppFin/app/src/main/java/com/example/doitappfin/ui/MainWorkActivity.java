@@ -89,7 +89,7 @@ public class MainWorkActivity extends AppCompatActivity
     private ArrayList<certModel> cert, train;
     private String omail = "", oname = "", odate = "", onum = "", ocity = "", oaddr = "", osex = "", oiscomp = "", ophoto = "";
     RecyclerView.LayoutManager recylerViewLayoutManager;
-    int images[] = {R.drawable.apple, R.drawable.blue, R.drawable.mango, R.drawable.orange};
+    int images[] = { R.drawable.combo,R.drawable.place,R.drawable.online};
     MyCustomPagerAdapter myCustomPagerAdapter;
     String[] fruits = {"apple", "grapes", "mango", "orange"};
     String[] subjects = {"ANDROID", "PHP", "BLOGGER", "WORDPRESS", "JOOMLA", "ASP.NET", "JAVA", "C++", "MATHS", "HINDI", "ENGLISH"};
@@ -253,7 +253,12 @@ public class MainWorkActivity extends AppCompatActivity
                 return true;
             }
             startActivity(i);
-        } else if (id == R.id.nav_signout) {
+        }
+        else if(id == R.id.nav_about_us){
+            startActivity(new Intent(MainWorkActivity.this,AboutUsActivity.class));
+
+        }
+        else if (id == R.id.nav_signout) {
             SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("number","___");

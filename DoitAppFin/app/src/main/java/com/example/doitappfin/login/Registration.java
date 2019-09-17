@@ -122,17 +122,20 @@ public class Registration extends AppCompatActivity {
 
     private boolean notempty() {
 
-        Toast.makeText(Registration.this,Sname+","+Semail+","+Sphone,Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(Registration.this,Sname+","+Semail+","+Sphone,Toast.LENGTH_SHORT).show();
         if(TextUtils.isEmpty(Semail) )
             return false;
-        if(!Patterns.EMAIL_ADDRESS.matcher(Semail).matches())
-            return false;
+        if(!Patterns.EMAIL_ADDRESS.matcher(Semail).matches()){
+            Email.setError("Enter a valid mail");
+            return false;}
 
-        if(TextUtils.isEmpty(Sname) || Sname.length()<3)
+        if(TextUtils.isEmpty(Sname) || Sname.length()<3) {
+          Ename.setError("Enter a valid name");
             return false;
-        if(TextUtils.isEmpty(Sphone) || Sphone.length()!=10)
+        } if(TextUtils.isEmpty(Sphone) || Sphone.length()!=10) {
+         Ephone.setError("Enter a valid mobile number");
             return false;
-
+        }
 
 
         return true;

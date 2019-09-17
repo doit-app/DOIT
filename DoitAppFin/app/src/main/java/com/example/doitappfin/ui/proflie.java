@@ -394,9 +394,11 @@ public class proflie extends AppCompatActivity
 
         } else if (id == R.id.nav_call) {
 
-
-
-        } else if (id == R.id.nav_signout) {
+        }
+        else if(id == R.id.nav_about_us){
+startActivity(new Intent(proflie.this,AboutUsActivity.class));
+        }
+        else if (id == R.id.nav_signout) {
             SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("number","___");

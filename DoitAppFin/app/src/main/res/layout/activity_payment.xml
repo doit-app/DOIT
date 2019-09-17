@@ -6,28 +6,143 @@
     android:layout_height="match_parent"
     tools:context=".ui.PaymentActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center"
-        android:id="@+id/logout"
-        android:text="payment"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:padding="10dp"
+       android:orientation="vertical">
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:layout_margin="10dp"
+           android:background="@drawable/whitebadge"
+           android:elevation="5dp"
+           android:gravity="center"
 
-    <Button
-        android:id="@+id/butonsurya"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent">
+
+
+           <ImageView
+               android:id="@+id/imagev"
+               android:layout_width="wrap_content"
+               android:layout_height="120dp"
+
+               android:layout_gravity="center"
+               android:layout_marginStart="8dp"
+
+               android:layout_marginEnd="8dp"
+
+               app:srcCompat="@drawable/pineapple" />
+
+       </LinearLayout>
+
+       <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="4dp"
+    android:layout_marginTop="30dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/whitebadge"
+    android:orientation="vertical"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:textSize="25dp"
+        android:text="Training course"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/colorPrimary"
+        android:layout_height="wrap_content"></TextView>
+    <TextView
+        android:layout_width="match_parent"
+        android:id="@+id/domain"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:layout_margin="10dp"
+        android:textSize="18dp"
+        />
+
+</LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="venky"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        android:elevation="4dp"
+        android:background="@drawable/whitebadge"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        >
+       <TextView
+           android:layout_width="match_parent"
+           android:textSize="25dp"
+           android:text="Location"
+
+           android:layout_marginTop="20dp"
+           android:layout_marginRight="10dp"
+           android:layout_marginLeft="10dp"
+           android:textColor="@color/colorPrimary"
+           android:layout_height="wrap_content"></TextView>
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:textSize="18dp"
+           android:textColor="#000"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:id="@+id/locatio"
+           android:layout_margin="10dp"
+
+           />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:background="@drawable/whitebadge"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        >
+       <TextView
+           android:layout_width="match_parent"
+           android:textSize="25dp"
+           android:textColor="@color/colorPrimary"
+           android:layout_marginTop="20dp"
+           android:layout_marginRight="10dp"
+           android:layout_marginLeft="10dp"
+           android:text="Course fee"
+
+           android:layout_height="wrap_content"></TextView>
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:textSize="22dp"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:textColor="#064dff"
+           android:id="@+id/coursefee"
+           android:layout_margin="10dp"
+
+           />
+    </LinearLayout>
+
+       <Button
+           android:layout_marginTop="60dp"
+           android:textColor="#fff"
+           android:background="@drawable/yellowbadge"
+           android:layout_width="150dp"
+           android:text="Proceed"
+           android:id="@+id/proceedpay"
+           android:layout_gravity="center"
+           android:layout_height="wrap_content"/>
+   </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

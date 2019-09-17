@@ -59,10 +59,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
 
         if(Distance.size()>0) {
-            if (Address.get(position) != null) {
+            if (Address.get(position) != null )   {
                 String addr = Address.get(position);
                 Float dist = Distance.get(position);
-                holder.myTextViewaddr.setText("DOIT-" + addr);
+                holder.myTextViewaddr.setText("" + addr+"");
                 String c = dist + "";
                 c = c.substring(0, 4);
                 holder.myTextViewdist.setText((c+" km").trim());

@@ -53,6 +53,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -66,19 +67,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button proceed;
 
     ArrayList<String> allar, allat;
-
+    ArrayList<String> allarea;
     int a = 0;
+    String p="",l="",li="",d="",image="";
     private TextView ttitle, tdesc;
     ArrayList<String> centers;
     private RecyclerView recyclerView;
     Geocoder geocoder;
     List<Address> addresses;
+    HashMap<String,String> price,latmap;
     private double lat = 0.00;
     private FusedLocationProviderClient fusedLocationClient;
     private double lon = 0.00;
     private final int REQUEST_LOCATION_PERMISSION = 1;
 HashMap<Integer, Marker> haMap;
-    String allarea = "", alllatlong = "";
 
     private String stitle = "", sdec = "";
     LocationManager locationManager;
@@ -95,7 +97,6 @@ proceed=findViewById(R.id.button4);
             volley();
         }else{ NoInternetAlertDialog(); }
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -105,11 +106,7 @@ proceed=findViewById(R.id.button4);
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
+
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
@@ -117,7 +114,13 @@ proceed=findViewById(R.id.button4);
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent =new Intent(MapsActivity.this,PaymentActivity.class);
+                intent.putExtra("price",p);
+                intent.putExtra("domain",d);
+                intent.putExtra("locationdoit",li);
+                intent.putExtra("area",l);
+                intent.putExtra("image",image);
+                startActivity(intent);
             }
         });
 
@@ -125,24 +128,7 @@ proceed=findViewById(R.id.button4);
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void datafetched() {
-
-        System.out.println("\n-\n-\n");
-        System.out.println("blaaaaaaa " + allar.size());
-        System.out.println(allat);
-
-        ArrayList<String> allarea=new ArrayList<>();
-        for (int j = 0; j < allat.size(); j++) {
-
-            if(allarea.contains(allar.get(j)))
-            {
-                allarea.add(allar.get(j)+"-"+ Collections.frequency(allar.subList(0,j),allar.get(j)));
-            }
-            else
-            {
-                allarea.add(allar.get(j));
-            }
-        }
-
+Random rand=new Random();
 
         for (int j = 0; j < allat.size(); j++) {
 
@@ -153,24 +139,29 @@ proceed=findViewById(R.id.button4);
                 bro[0] = bro[0].replace("\"", "");
                 if(bro[1]!=null)
                 bro[1] = bro[1].replace("\"", "");
-
                 at = Double.parseDouble(bro[0].replace("\"", ""));
                 on = Double.parseDouble(bro[1].replace("\"", ""));
-            }       // adapter1.UpdateItemsList(allar, dist);
+
+
+            }
+            else {
+                System.out.println(allat.get(j)+"---"+locat.getLatitude()+"---"+at+"---"+allat.size()+"--");
+            }
 
 
             Location la=new Location("t"+j);
                 
                 la.setLatitude(at);
                 la.setLongitude(on);
+
             if(locat!=null) {
                 float B = locat.distanceTo(la) / 1000;
                 String aa = B + "";
                 aa = aa.substring(0, 4);
                 dist.add(B);
+
             }
 
-      //      System.out.println(String.join(",", bro) + " " + allar.get(j));
 
             Marker m =mMap.addMarker((new MarkerOptions().position(new LatLng(at, on))).title(allar.get(j))
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
@@ -180,6 +171,21 @@ proceed=findViewById(R.id.button4);
 
 
         }
+ allarea=new ArrayList<>();
+        try {
+
+
+
+        for (int j = 0; j < allat.size(); j++) {
+
+if(allar.size()>0 && dist.size()>0)
+            allarea.add(allar.get(j)+" DOIT-0"+ (int)(50+j*2 +dist.get(j)));
+        }
+        }catch (ArrayIndexOutOfBoundsException e)
+        {
+            System.out.println(e);
+        }
+
 
         for (int i = 0; i < dist.size(); i++) {
             for (int j = 0; j < dist.size() - i - 1; j++) {
@@ -197,6 +203,10 @@ proceed=findViewById(R.id.button4);
                     haMap.put(j, haMap.get(j + 1));
                     haMap.put(j + 1, m);
 
+                    String temp2 = allat.get(j);
+                    allat.set(j, allat.get(j + 1));
+                    allat.set(j + 1, temp2);
+
 
                 }
                 adapter1.UpdateItemsList(allarea, dist);
@@ -205,33 +215,15 @@ proceed=findViewById(R.id.button4);
             }
 
 
-            //    adapter1.UpdateItemsList(allar, dist);
 
         }
 
 
         adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, allarea, dist);
         adapter1.setClickListener(this);
- /*       adapter1.SetOnItemClickListener(new RadioListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, String model) {
-                Marker m= haMap.get(position);
-                m.showInfoWindow();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
-              //  Object item=view.getItemAtPosition(position);
 
-                //    ttitle.setText(stitle+" "+allar.get(position));
-                //handle item click events here
-         //    startActivity(new Intent(MapsActivity.this,PaymentActivity.class));
-                Toast.makeText(MapsActivity.this, "Hey " + model, Toast.LENGTH_SHORT).show();
-
-
-            }
-        });
-*/
         recyclerView.setAdapter(adapter1);
-        //adapter1.UpdateItemsList(addr, dist);
-        //recyclerView.setAdapter(adapter1);
+
         if(locat!=null) {
             LatLng syd = new LatLng(locat.getLatitude(), locat.getLongitude());
 
@@ -294,20 +286,7 @@ proceed=findViewById(R.id.button4);
        adapter1 = new MyRecyclerViewAdapter(MapsActivity.this, allar, dist);
       adapter1.setClickListener(this);
 
-        /*adapter1.SetOnItemClickListener(new RadioListAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position, String model) {
 
-                //handle item click events here
-                Toast.makeText(MapsActivity.this, "Heey " + model, Toast.LENGTH_SHORT).show();
-
-            }
-        });        recyclerView.setNestedScrollingEnabled(true
-        );*/
-      //  recyclerView.setAdapter(adapter1);
-     //   adapter1.UpdateItemsList(allar, dist);
-        //    System.out.println(addr.size()+" "+addr);
-        //  System.out.println(dist.size()+" "+dist);
 
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
@@ -331,15 +310,10 @@ proceed=findViewById(R.id.button4);
                             if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 // TODO: Consider calling
                                 //    Activity#requestPermissions
-                                // here to request the missing permissions, and then overriding
-                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                //                                          int[] grantResults)
-                                // to handle the case where the user grants the permission. See the documentation
-                                // for Activity#requestPermissions for more details.
+
                                 return;
                             }
                             mMap.setMyLocationEnabled(true);
-                  // Creates a CameraPosition from the builder
 
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),location.getLongitude())));
 
@@ -370,16 +344,12 @@ proceed=findViewById(R.id.button4);
     public void onLocationChanged(Location location) {
 
 
-//        System.out.println(location+" " +lat+" "+lon+" ");
+//
 
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    Activity#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for Activity#requestPermissions for more details.
+
             return;
         }
         mMap.setMyLocationEnabled(true);
@@ -469,6 +439,7 @@ proceed=findViewById(R.id.button4);
 
         stitle = i.getStringExtra("title");
         sdec = i.getStringExtra("desc");
+        image=i.getStringExtra("image");
         Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
 //System.out.println(stitle+" "+sdec);
         ttitle.setText(stitle);
@@ -478,36 +449,39 @@ proceed=findViewById(R.id.button4);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         centers = new ArrayList<>();
-
+        price=new HashMap<>();
+        latmap=new HashMap<>();
 
 
         if(i.getStringExtra("from").equals("main"))
         {
             FirebaseDatabase.getInstance().getReference().child("PopularData").child("Training").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+                {
                     centers.clear();
                     for (DataSnapshot d1 : dataSnapshot.getChildren()) {
-                        //     System.out.println(d1.getKey());
+                           //  System.out.println(d1.getKey()+"--"+d1.getValue());
                         String s = d1.getKey();
                         s = s.replace("_a", "&");
                         s = s.replace("_m", "-");
                         centers.add(s);
-
+                        price.put(s,d1.getValue().toString());
                     }
-
                     for (int j = 0; j < centers.size(); j++) {
-
+                        final int finalJ1 = j;
                         FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                String s = dataSnapshot.getValue() + "";
-                                String bal[] = s.split("-");
-                                for (int m = 0; m < bal.length; m++)
-                                    allat.add(bal[m].trim());
-                                //    System.out.println(allat);
+                                if(dataSnapshot.getValue()!=null) {
+                                    String s = dataSnapshot.getValue() + "";
+                                    String bal[] = s.split("-");
+                                    for (int m = 0; m < bal.length; m++) {
 
+                                        allat.add(bal[m].trim());
+                                        latmap.put(bal[m].trim(), centers.get(finalJ1));
+                                    }//    System.out.println(allat);
+                                }
                             }
 
                             @Override
@@ -530,7 +504,7 @@ proceed=findViewById(R.id.button4);
 
                                 }
 
-                                //   System.out.println(allar);
+                                  System.out.println("alla"+allar);
 
 
                                 if (finalJ == centers.size() - 1)
@@ -563,7 +537,7 @@ proceed=findViewById(R.id.button4);
             FirebaseDatabase.getInstance().getReference().child("MainData").child("TrainingData").child(stitle).child("Centers").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
+price.clear();
                     centers.clear();
                     for (DataSnapshot d1 : dataSnapshot.getChildren()) {
                         //     System.out.println(d1.getKey());
@@ -571,18 +545,22 @@ proceed=findViewById(R.id.button4);
                         s = s.replace("_a", "&");
                         s = s.replace("_m", "-");
                         centers.add(s);
+                        price.put(s,d1.getValue().toString());
 
                     }
 
                     for (int j = 0; j < centers.size(); j++) {
 
+                        final int finalJ1 = j;
                         FirebaseDatabase.getInstance().getReference().child("LocationData").child(centers.get(j)).child("latlong").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 String s = dataSnapshot.getValue() + "";
                                 String bal[] = s.split("-");
-                                for (int m = 0; m < bal.length; m++)
+                                for (int m = 0; m < bal.length; m++) {
                                     allat.add(bal[m].trim());
+                                    latmap.put(bal[m].trim(), centers.get(finalJ1));
+                                }
                                 //    System.out.println(allat);
 
                             }
@@ -602,6 +580,8 @@ proceed=findViewById(R.id.button4);
                                 String bal[] = s.split("-");
                                 for (int m = 0; m < bal.length; m++)
                                     allar.add(bal[m].trim());
+
+
                                 //   System.out.println(allar);
 
 
@@ -609,7 +589,6 @@ proceed=findViewById(R.id.button4);
                                     datafetched();
 
                             }
-
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -637,13 +616,23 @@ proceed=findViewById(R.id.button4);
     public void onItemClick(View view, int position) {
         Marker m= haMap.get(position);
         m.showInfoWindow();
-        proceed.setVisibility(View.VISIBLE);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
-        //  Object item=view.getItemAtPosition(position);
+        System.out.println(m.getPosition().latitude);
+        System.out.println(m.getPosition().longitude);
 
-        //    ttitle.setText(stitle+" "+allar.get(position));
-        //handle item click events here
-        //    startActivity(new Intent(MapsActivity.this,PaymentActivity.class));
-        Toast.makeText(MapsActivity.this, "Hey ", Toast.LENGTH_SHORT).show();
+
+p=price.get(latmap.get(allat.get(position)));
+d=stitle;
+l=allarea.get(position);
+li=latmap.get(allat.get(position));
+
+        System.out.println(price.get(latmap.get(allat.get(position))));
+        System.out.println(stitle);
+        System.out.println(latmap.get(allat.get(position)));
+        System.out.println(allarea.get(position));
+
+         proceed.setVisibility(View.VISIBLE);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(m.getPosition(),15));
+
+
     }
 }

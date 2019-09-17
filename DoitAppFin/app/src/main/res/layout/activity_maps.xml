@@ -78,6 +78,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/yellowbadge"
         android:text="Proceed"
+        android:visibility="gone"
         android:textColor="#fff"
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toEndOf="parent"
