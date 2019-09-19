@@ -53,7 +53,7 @@ private String  Sdom="",Sloc="",Sprice="0",Slocid="",Simg="";
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount acct;
-    String mail="",num="",oiscomp="";
+    String mail="",num="",oiscomp="",Sid="";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,8 @@ Sdom=i.getStringExtra("domain");
     Sloc=i.getStringExtra("area");
     Slocid=i.getStringExtra("locationdoit");
     Simg=i.getStringExtra("image");
+    Sid=i.getStringExtra("id");
+
     btproceed=findViewById(R.id.proceedpay);
 
 

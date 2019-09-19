@@ -335,6 +335,7 @@ public class MainWorkActivity extends AppCompatActivity
                     inten.putExtra("desc", model.getDesc());
                     inten.putExtra("image", model.getImage());
                     inten.putExtra("price", model.getPrice());
+                    inten.putExtra("id",model.getId());
 
                     if(connectedToNetwork()){
                         startActivity(inten);
@@ -346,7 +347,6 @@ public class MainWorkActivity extends AppCompatActivity
                     inten.putExtra("title", model.getTitle());
                     inten.putExtra("desc", model.getDesc());
                     inten.putExtra("price", model.getPrice());
-
                     inten.putExtra("image", model.getImage());
                     if(connectedToNetwork()){
                         startActivity(inten);
@@ -378,6 +378,8 @@ public class MainWorkActivity extends AppCompatActivity
                 inten.putExtra("desc",model.getDesc());
                 inten.putExtra("from","main");
                 inten.putExtra("image",model.getImage());
+                inten.putExtra("id",model.getId());
+System.out.println("model tr "+model.getId());
                 if(connectedToNetwork()){
                     startActivity(inten);
                 }

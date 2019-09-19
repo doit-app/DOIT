@@ -215,7 +215,7 @@ String sfromcert="";
                 inten.putExtra("desc",model.getDesc());
                 inten.putExtra("image",model.getImage());
                 inten.putExtra("price", model.getPrice());
-
+                inten.putExtra("id", model.getId());
                 startActivity(inten);
                 Toast.makeText(BoxActivity.this, "Hey " + model.getTitle(), Toast.LENGTH_SHORT).show();
 

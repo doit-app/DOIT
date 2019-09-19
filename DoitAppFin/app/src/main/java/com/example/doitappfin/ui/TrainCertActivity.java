@@ -365,7 +365,7 @@ private ArrayList<certModel> recycleViewModelList;
                         inten.putExtra("image", model.getImage());
                         inten.putExtra("price", model.getPrice());
 
-
+                        inten.putExtra("id", model.getId());
                         if(connectedToNetwork()){
                             startActivity(inten);
                         }
@@ -403,6 +403,8 @@ private ArrayList<certModel> recycleViewModelList;
                     inten.putExtra("desc",model.getDesc());
                     inten.putExtra("from","train");
                     inten.putExtra("image",model.getImage());
+                    inten.putExtra("id",model.getId());
+                    System.out.println("model id"+model.getId());
                     if(connectedToNetwork()){
                         startActivity(inten);
 

@@ -196,6 +196,7 @@ String stitle="",simage="";
                 inten.putExtra("desc",model.getDesc());
                 inten.putExtra("image",simage);
                 inten.putExtra("price", model.getPrice());
+                inten.putExtra("id", model.getId());
 
                 startActivity(inten);
 

@@ -47,7 +47,7 @@ public class SingleActivity extends AppCompatActivity implements PaymentResultWi
     GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
     GoogleSignInClient mGoogleSignInClient;
     GoogleSignInAccount acct;
-    String mail="",num="",oiscomp="";
+    String mail="",num="",oiscomp="",sid="";
 
     String shead="",swith="",swithot="",stax="",sinr="0",sdesc="",simage="";
     @Override
@@ -81,9 +81,12 @@ getData();
                 startPayment(sinr);
             }
         });
+        System.out.println("vv "+sid);
+
     }
 
     private void getData() {
+
         if(acct!= null) {
             System.out.println("hr");
             mail=acct.getEmail().replace(".","_");
@@ -161,7 +164,8 @@ getData();
     }
 
     private boolean iscopmlete() {
-if(oiscomp.equals("NO"))
+
+        if(oiscomp.equals("NO"))
 {
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle("Please complete your profile and proceed ");
@@ -191,9 +195,11 @@ else if(oiscomp.equals("YES"))
 else
     return false;
 
+
     }
 
     private void startPayment( String amount) {
+
 Double amt=Double.parseDouble(amount);
         Checkout checkout = new Checkout();
         checkout.setImage(R.drawable.logodoit);
@@ -251,6 +257,7 @@ Double amt=Double.parseDouble(amount);
         shead=i.getStringExtra("title");
         sdesc=i.getStringExtra("desc");
         simage=i.getStringExtra("image");
+        sid=i.getStringExtra("id");
         String tot[]=i.getStringExtra("price").split("-");
 
 

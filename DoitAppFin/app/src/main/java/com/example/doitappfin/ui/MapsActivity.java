@@ -69,7 +69,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList<String> allar, allat;
     ArrayList<String> allarea;
     int a = 0;
-    String p="",l="",li="",d="",image="";
+    String p="",l="",li="",d="",image="",id="";
+
     private TextView ttitle, tdesc;
     ArrayList<String> centers;
     private RecyclerView recyclerView;
@@ -120,6 +121,7 @@ proceed=findViewById(R.id.button4);
                 intent.putExtra("locationdoit",li);
                 intent.putExtra("area",l);
                 intent.putExtra("image",image);
+                intent.putExtra("id",id);
                 startActivity(intent);
             }
         });
@@ -435,6 +437,7 @@ if(allar.size()>0 && dist.size()>0)
         stitle = i.getStringExtra("title");
         sdec = i.getStringExtra("desc");
         image=i.getStringExtra("image");
+        id=i.getStringExtra("id");
         Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
 //System.out.println(stitle+" "+sdec);
         ttitle.setText(stitle);
