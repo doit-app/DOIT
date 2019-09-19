@@ -18,14 +18,13 @@
         android:largeHeap="true"
         android:roundIcon="@drawable/logodoit"
         android:supportsRtl="true">
-        <activity android:name=".ui.ContactUsActivity"
-            android:theme="@style/NoAct"
-            >
-
-        </activity>
-        <activity android:name=".ui.AboutUsActivity"
-            android:theme="@style/NoAct"
-            />
+        <activity android:name=".ui.MyCourseActivity"></activity>
+        <activity
+            android:name=".ui.ContactUsActivity"
+            android:theme="@style/NoAct"></activity>
+        <activity
+            android:name=".ui.AboutUsActivity"
+            android:theme="@style/NoAct" />
         <activity
             android:name=".ui.RadioActivity"
             android:theme="@style/NoAct" />
@@ -88,7 +87,7 @@
             android:resource="@array/preloaded_fonts" />
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_live_Qgv5qahgWwVCDn"/>
+            android:value="rzp_live_Qgv5qahgWwVCDn" />
 
         <activity
             android:name=".ui.MapsActivity"

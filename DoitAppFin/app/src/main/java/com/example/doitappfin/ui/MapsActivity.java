@@ -169,12 +169,9 @@ Random rand=new Random();
             if(m!=null)
             haMap.put(j,m);
 
-
         }
  allarea=new ArrayList<>();
         try {
-
-
 
         for (int j = 0; j < allat.size(); j++) {
 
@@ -207,13 +204,11 @@ if(allar.size()>0 && dist.size()>0)
                     allat.set(j, allat.get(j + 1));
                     allat.set(j + 1, temp2);
 
-
                 }
                 adapter1.UpdateItemsList(allarea, dist);
 
 
             }
-
 
 
         }

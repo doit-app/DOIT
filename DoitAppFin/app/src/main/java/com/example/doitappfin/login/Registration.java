@@ -83,8 +83,9 @@ public class Registration extends AppCompatActivity {
                         FirebaseDatabase database = FirebaseDatabase.getInstance();
                         DatabaseReference mRef = database.getReference().child("ProfileData").child(Semail.replace(".","_"));
 
-
+DatabaseReference dbpay=database.getReference().child("Payment").child(Semail.replace(".","_"));
                         HashMap<String,String> hashMap=new HashMap<>();
+
 
                         hashMap.put("name",Sname);
                         hashMap.put("email",Semail);
@@ -93,9 +94,12 @@ public class Registration extends AppCompatActivity {
                         hashMap.put("city","NO");
                         hashMap.put("addr","NO");
                         hashMap.put("sex","NO");
-                        hashMap.put("image","NO");
+                        hashMap.put("image","https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
                         hashMap.put("iscomplete","NO");
                         mRef.setValue(hashMap);
+
+                        dbpay.child("Training").setValue("empty");
+                        dbpay.child("Certification").setValue("empty");
 
                         SharedPreferences sp = getApplicationContext().getSharedPreferences("com.doitAppfin.PRIVATEDATA", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();

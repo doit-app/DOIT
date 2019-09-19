@@ -35,7 +35,6 @@ public class RecyclerViewAdapterTrainCert extends RecyclerView.Adapter<RecyclerV
     public RecyclerViewAdapterTrainCert(Context context, ArrayList<certModel> modelList) {
         this.mContext = context;
         this.modelList = modelList;
-
         System.out.println(modelList);
     }
 
