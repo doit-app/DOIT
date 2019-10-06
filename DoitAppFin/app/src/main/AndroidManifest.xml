@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.doitappfin">
+    package="com.doit.doitappfin"
+
+    android:versionCode="2"
+    android:versionName="2.0001">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -18,25 +21,25 @@
         android:largeHeap="true"
         android:roundIcon="@drawable/logodoit"
         android:supportsRtl="true">
-        <activity android:name=".ui.MyCourseActivity"></activity>
+        <activity android:name="com.doit.doitappfin.ui.MyCourseActivity"></activity>
         <activity
-            android:name=".ui.ContactUsActivity"
+            android:name="com.doit.doitappfin.ui.ContactUsActivity"
             android:theme="@style/NoAct"></activity>
         <activity
-            android:name=".ui.AboutUsActivity"
+            android:name="com.doit.doitappfin.ui.AboutUsActivity"
             android:theme="@style/NoAct" />
         <activity
-            android:name=".ui.RadioActivity"
+            android:name="com.doit.doitappfin.ui.RadioActivity"
             android:theme="@style/NoAct" />
         <activity
-            android:name=".ui.ListDispActivity"
+            android:name="com.doit.doitappfin.ui.ListDispActivity"
             android:label="@string/title_activity_list_disp"
             android:theme="@style/AppTheme.Template.Base" />
         <activity
-            android:name=".ui.SingleActivity"
+            android:name="com.doit.doitappfin.ui.SingleActivity"
             android:theme="@style/NoAct" />
         <activity
-            android:name=".login.otp"
+            android:name="com.doit.doitappfin.login.otp"
             android:theme="@style/NoAct" />
 
         <meta-data
@@ -47,7 +50,7 @@
             android:value="@string/notification_channel" />
 
         <service
-            android:name=".utils.MyFirebaseMessagingService"
+            android:name="com.doit.doitappfin.utils.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -55,21 +58,21 @@
         </service>
 
         <activity
-            android:name=".ui.BoxActivity"
+            android:name="com.doit.doitappfin.ui.BoxActivity"
             android:theme="@style/AppTheme.Template.Base" />
         <activity
-            android:name=".login.Registration"
+            android:name="com.doit.doitappfin.login.Registration"
             android:theme="@style/NoAct" />
         <activity
-            android:name=".ui.proflie"
+            android:name="com.doit.doitappfin.ui.proflie"
             android:label=" "
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.MainWorkActivity"
+            android:name="com.doit.doitappfin.ui.MainWorkActivity"
             android:label=" "
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".login.GoogleLoginActivity"
+            android:name="com.doit.doitappfin.login.GoogleLoginActivity"
             android:theme="@style/NoAct" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -90,18 +93,18 @@
             android:value="rzp_live_Qgv5qahgWwVCDn" />
 
         <activity
-            android:name=".ui.MapsActivity"
+            android:name="com.doit.doitappfin.ui.MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/NoAct" />
         <activity
-            android:name=".ui.TrainCertActivity"
+            android:name="com.doit.doitappfin.ui.TrainCertActivity"
             android:label="@string/title_activity_train_cert"
             android:theme="@style/AppTheme.Template.Base" />
         <activity
-            android:name=".ui.PaymentActivity"
+            android:name="com.doit.doitappfin.ui.PaymentActivity"
             android:theme="@style/NoAct" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.doit.doitappfin.MainActivity"
             android:theme="@style/NoAct">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -164,6 +164,15 @@
                 android:textColor="#fff"
                 android:layout_height="wrap_content"
                 android:text="Update" />
+            <Button
+                android:id="@+id/buttonHome"
+                android:background="@drawable/yellowbadge"
+                android:layout_width="match_parent"
+                android:visibility="invisible"
+                android:layout_margin="10dp"
+                android:textColor="#fff"
+                android:layout_height="wrap_content"
+                android:text="Return Home" />
 
         </LinearLayout>
 

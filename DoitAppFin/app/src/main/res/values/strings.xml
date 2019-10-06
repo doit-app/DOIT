@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">DOITFIN</string>
+    <string name="app_name">DOIT</string>
     <string name="title_activity_train_cert">Training</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_maps">Map</string>
